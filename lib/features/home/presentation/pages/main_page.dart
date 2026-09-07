@@ -14,15 +14,18 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const Center(child: Text('News Page - Coming Soon')),
-    const Center(child: Text('Notifications Page - Coming Soon')),
-    const Center(child: Text('Settings Page - Coming Soon')),
+    const Center(child: Text('News Page')),
+    const Center(child: Text('Notifikasi Page')),
+    const Center(child: Text('Akun Page')),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {

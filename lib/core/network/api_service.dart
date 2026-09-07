@@ -4,6 +4,7 @@ import '../utils/app_constants.dart';
 import '../security/bni_encryption.dart';
 import '../../features/auth/data/models/api_responses.dart';
 import '../../features/auth/data/models/login_data.dart';
+import '../../features/home/data/models/pengumuman_response.dart';
 import 'dart:convert';
 
 class ApiService {
@@ -60,7 +61,12 @@ class ApiService {
       );
       
       if (response.statusCode == 200) {
-        final loginResp = LoginResponse.fromJson(response.data);
+        final Map<String, dynamic> responseData = response.data is String 
+            ? jsonDecode(response.data) 
+            : response.data;
+            
+        final loginResp = LoginResponse.fromJson(responseData);
+        
         if (loginResp.success) {
           final decryptedData = BniEncryption.parseData(
             loginResp.data,
@@ -69,9 +75,90 @@ class ApiService {
           );
           
           if (decryptedData != null) {
+            print('Decrypted Login Data: $decryptedData');
+            return LoginData.fromJson(jsonDecode(decryptedData));
+          } else {
+            // Jika data tidak terenkripsi, coba parsing langsung
+            try {
+              return LoginData.fromJson(jsonDecode(loginResp.data));
+            } catch (_) {
+              print('BniEncryption: Decryption failed and data is not valid JSON');
+            }
+          }
+        }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<LoginData?> refreshSession({
+    required String nim,
+    required String deviceId,
+    String tokenNotif = 'undefined',
+  }) async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      final versionApp = packageInfo.version;
+
+      final data = {
+        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
+      };
+
+      final response = await _dio.post(
+        'Authservices/refreshdata',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+      
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String 
+            ? jsonDecode(response.data) 
+            : response.data;
+
+        final refreshResp = RefreshSessionResponse.fromJson(responseData);
+        if (refreshResp.success && !refreshResp.forceLogout) {
+          final decryptedData = BniEncryption.parseData(
+            refreshResp.data,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          );
+          
+          if (decryptedData != null) {
             return LoginData.fromJson(jsonDecode(decryptedData));
           }
         }
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<PengumumanResponse?> getPengumuman({
+    String? kodeJen,
+    String? kodeFak,
+    String? kodePst,
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Pengumumanservices/pengumuman',
+        queryParameters: {
+          'kodejen': kodeJen,
+          'kodefak': kodeFak,
+          'kodepst': kodePst,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String 
+            ? jsonDecode(response.data) 
+            : response.data;
+        return PengumumanResponse.fromJson(responseData);
       }
       return null;
     } catch (e) {
@@ -132,48 +219,6 @@ class ApiService {
 
       if (response.statusCode == 200) {
         return response.data as Map<String, dynamic>;
-      }
-      return null;
-    } catch (e) {
-      rethrow;
-    }
-  }
-
-  Future<LoginData?> refreshSession({
-    required String nim,
-    required String deviceId,
-    String tokenNotif = 'undefined',
-  }) async {
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      final versionApp = packageInfo.version;
-
-      final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
-      };
-
-      final response = await _dio.post(
-        'Authservices/refreshdata',
-        data: data,
-        options: Options(contentType: Headers.formUrlEncodedContentType),
-      );
-      
-      if (response.statusCode == 200) {
-        final refreshResp = RefreshSessionResponse.fromJson(response.data);
-        if (refreshResp.success && !refreshResp.forceLogout) {
-          final decryptedData = BniEncryption.parseData(
-            refreshResp.data,
-            AppConstants.cidV2,
-            AppConstants.secretKeyV2,
-          );
-          
-          if (decryptedData != null) {
-            return LoginData.fromJson(jsonDecode(decryptedData));
-          }
-        }
       }
       return null;
     } catch (e) {

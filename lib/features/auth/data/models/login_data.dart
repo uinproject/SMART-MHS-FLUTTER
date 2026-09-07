@@ -53,31 +53,38 @@ class LoginData {
 
   factory LoginData.fromJson(Map<String, dynamic> json) {
     return LoginData(
-      nim: json['nim'],
-      kodeFakultas: json['kodefakultas'],
-      kodePst: json['kodepst'],
-      kodeJen: json['kodejen'],
-      nama: json['nama'],
-      fakultas: json['fakultas'],
-      programStudi: json['programstudi'],
-      semester: json['semester'],
-      ipkKumulatif: json['ipkkumulatif'],
-      sksTempuh: json['skstempuh'],
-      angkatan: json['angkatan'],
-      jenjang: json['jenjang'],
-      telp: json['telp'],
-      status: json['status'],
-      isAddEmail: json['isaddemail'] ?? false,
-      emailVerification: json['emailverifycation'] ?? false,
-      email: json['email'],
-      jenisKelamin: json['jeniskelamin'],
-      batasSubscribe: json['batassubscribe'],
-      modeSubscribe: json['modesubscribe'],
-      midtransMerchantUrl: json['midtransmerchanturl'],
-      midtransClientKey: json['midtransclientkey'],
-      minAngkatanSubs: json['minangkatansubs'],
+      nim: json['nim']?.toString(),
+      kodeFakultas: json['kodefakultas']?.toString(),
+      kodePst: json['kodepst']?.toString(),
+      kodeJen: json['kodejen']?.toString(),
+      nama: json['nama']?.toString(),
+      fakultas: json['fakultas']?.toString(),
+      programStudi: json['programstudi']?.toString(),
+      semester: _toInt(json['semester']),
+      ipkKumulatif: json['ipkkumulatif']?.toString(),
+      sksTempuh: _toInt(json['skstempuh']),
+      angkatan: _toInt(json['angkatan']),
+      jenjang: json['jenjang']?.toString(),
+      telp: json['telp']?.toString(),
+      status: json['status']?.toString(),
+      isAddEmail: json['isaddemail'] == true || json['isaddemail'] == 1,
+      emailVerification: json['emailverifycation'] == true || json['emailverifycation'] == 1,
+      email: json['email']?.toString(),
+      jenisKelamin: json['jeniskelamin']?.toString(),
+      batasSubscribe: json['batassubscribe']?.toString(),
+      modeSubscribe: json['modesubscribe']?.toString(),
+      midtransMerchantUrl: json['midtransmerchanturl']?.toString(),
+      midtransClientKey: json['midtransclientkey']?.toString(),
+      minAngkatanSubs: json['minangkatansubs']?.toString(),
       lockFitur: json['lockfitur'] != null ? List<String>.from(json['lockfitur']) : null,
     );
+  }
+
+  static int? _toInt(dynamic value) {
+    if (value == null) return null;
+    if (value is int) return value;
+    if (value is String) return int.tryParse(value);
+    return null;
   }
 
   Map<String, dynamic> toJson() {
