@@ -4,7 +4,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/app_constants.dart';
 import 'login_screen.dart';
-import '../../../home/presentation/pages/home_page.dart';
+import '../../../home/presentation/pages/main_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     if (session.isLoggedIn()) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const HomePage()),
+        MaterialPageRoute(builder: (context) => const MainPage()),
       );
     } else {
       Navigator.pushReplacement(

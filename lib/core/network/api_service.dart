@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import '../utils/app_constants.dart';
 import '../security/bni_encryption.dart';
 import '../../features/auth/data/models/api_responses.dart';
@@ -35,11 +36,13 @@ class ApiService {
     required String deviceName,
     String resyncronDevice = 'ayang',
     String tokenNotif = 'undefined',
-    String versionApp = '1.0.0',
     String language = 'in',
   }) async {
     try {
-      final formData = FormData.fromMap({
+      final packageInfo = await PackageInfo.fromPlatform();
+      final versionApp = packageInfo.version;
+
+      final data = {
         'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
         'upassword': BniEncryption.hashData(password, AppConstants.cidV2, AppConstants.secretKeyV2),
         'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
@@ -48,9 +51,13 @@ class ApiService {
         'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
         'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
         'language': language,
-      });
+      };
 
-      final response = await _dio.post('Authservices/authenticationmhs', data: formData);
+      final response = await _dio.post(
+        'Authservices/authenticationmhs',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
       
       if (response.statusCode == 200) {
         final loginResp = LoginResponse.fromJson(response.data);
@@ -72,21 +79,87 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>?> getOtp({
+    required String nim,
+    required String kdpst,
+    required String email,
+    String language = 'in',
+  }) async {
+    try {
+      final data = {
+        'unim': BniEncryption.hashData(nim, AppConstants.cid, AppConstants.secretKey),
+        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cid, AppConstants.secretKey),
+        'uemail': BniEncryption.hashData(email, AppConstants.cid, AppConstants.secretKey),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        'create_otp_verif_email',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Map<String, dynamic>?> verifyOtp({
+    required String nim,
+    required String kdpst,
+    required String email,
+    required String otp,
+    String language = 'in',
+  }) async {
+    try {
+      final data = {
+        'unim': BniEncryption.hashData(nim, AppConstants.cid, AppConstants.secretKey),
+        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cid, AppConstants.secretKey),
+        'uemail': BniEncryption.hashData(email, AppConstants.cid, AppConstants.secretKey),
+        'otp': BniEncryption.hashData(otp, AppConstants.cid, AppConstants.secretKey),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        'verif_email_mhs',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        return response.data as Map<String, dynamic>;
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<LoginData?> refreshSession({
     required String nim,
     required String deviceId,
     String tokenNotif = 'undefined',
-    String versionApp = '1.0.0',
   }) async {
     try {
-      final formData = FormData.fromMap({
+      final packageInfo = await PackageInfo.fromPlatform();
+      final versionApp = packageInfo.version;
+
+      final data = {
         'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
         'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
         'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
         'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
-      });
+      };
 
-      final response = await _dio.post('Authservices/refreshdata', data: formData);
+      final response = await _dio.post(
+        'Authservices/refreshdata',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
       
       if (response.statusCode == 200) {
         final refreshResp = RefreshSessionResponse.fromJson(response.data);

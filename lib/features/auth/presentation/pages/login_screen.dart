@@ -4,7 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/device_utils.dart';
-import '../../../home/presentation/pages/home_page.dart';
+import 'email_verification_page.dart';
+import '../../../home/presentation/pages/main_page.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -47,10 +48,18 @@ class _LoginScreenState extends State<LoginScreen> {
       if (loginData != null) {
         await _sessionManager.saveUser(loginData);
         if (!mounted) return;
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage()),
-        );
+
+        if (!loginData.emailVerification) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const EmailVerificationPage()),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
+        }
       } else {
         setState(() {
           _errorMessage = 'NIM atau Password salah';

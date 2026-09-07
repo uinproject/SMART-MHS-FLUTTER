@@ -5,7 +5,7 @@ class BniEncryption {
   static const int _timeDiffLimit = 300;
 
   static String _getTime() {
-    final now = DateTime.now().toUtc().add(const Duration(hours: 7));
+    final now = DateTime.now();
     final timeStr = (now.millisecondsSinceEpoch ~/ 1000).toString();
     return timeStr.substring(0, timeStr.length > 10 ? 10 : timeStr.length);
   }
