@@ -13,6 +13,7 @@ class SessionManager {
   SessionManager._internal();
 
   late SharedPreferences _prefs;
+  bool isJustLoggedIn = false;
 
   Future<void> init() async {
     _prefs = await SharedPreferences.getInstance();
@@ -49,10 +50,23 @@ class SessionManager {
     return _prefs.getString(_keyLocale) ?? 'id';
   }
 
+  Future<void> updateEmail(String email) async {
+    final user = getUser();
+    if (user != null) {
+      await saveUser(user.copyWith(email: email));
+    }
+  }
+
+  Future<void> setEmailVerified(bool status) async {
+    final user = getUser();
+    if (user != null) {
+      await saveUser(user.copyWith(emailVerification: status));
+    }
+  }
+
   Future<void> clear() async {
-    // Keep SK accepted status but clear user data
-    final skAccepted = isSkAccepted();
-    await _prefs.clear();
-    await setSkAccepted(skAccepted);
+    await _prefs.remove(_keyUser);
+    await _prefs.remove(_keyIsLoggedIn);
+    await _prefs.remove(_keySkAccepted);
   }
 }

@@ -11,6 +11,20 @@
   "nim": "NIM",
   "password": "Password",
   "forgotPassword": "Forgot Password?",
+  "forgotPassInstruction": "Enter your NIM and Email to reset your password",
+  "email": "Email",
+  "emailRequired": "Email is required",
+  "invalidEmail": "Invalid email format",
+  "btnResetPassword": "Reset Password",
+  "newPassword": "New Password",
+  "confirmPassword": "Confirm New Password",
+  "newPassRequired": "New password is required",
+  "confPassRequired": "Confirm password is required",
+  "passNotMatch": "Passwords do not match",
+  "changePassInstruction": "Please enter your new password, The new password is at least 8 characters long.",
+  "successChangePass": "Password successfully updated",
+  "otpResetPassInstruction": "Enter the OTP code sent to your registered email",
+  "resendOtpSuccess": "OTP code successfully resent",
   "accountSettings": "Account Settings",
   "language": "Language",
   "logout": "Logout",
@@ -51,5 +65,59 @@
   "wait": "Wait",
   "nimRequired": "NIM is required",
   "passRequired": "Password is required",
-  "connError": "Connection error occurred"
+  "connError": "Connection error occurred",
+  "termsConditions": "Terms and Conditions",
+  "agreeAndContinue": "Agree",
+  "termsContent": "By using this application I have read and agree to the applicable terms and conditions from",
+  "pleaseWait": "Please wait...",
+  "schedule": "Schedule",
+  "bills": "Bills",
+  "presence": "Presence",
+  "attendance": "Attendance",
+  "edom": "EDOM",
+  "ipHistory": "IP History",
+  "offers": "Offers",
+  "krs": "KRS",
+  "khs": "KHS",
+  "programStudy": "Program Study",
+  "faculty": "Faculty",
+  "rateApp": "Rate App",
+  "pembayaran": "Payment",
+  "justNow": "just now",
+  "minutesAgo": "{count} minutes ago",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursAgo": "{count} hours ago",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgo": "{count} days ago",
+  "@daysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "monthsAgo": "{count} months ago",
+  "@monthsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "yearsAgo": "{count} years ago",
+  "@yearsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "credit": "Credits",
+  "room": "Room",
+  "lecturer": "Lecturer",
+  "today": "Today",
+  "noSchedule": "No class schedule",
+  "scheduleTitle": "Class Schedule"
 }

@@ -76,6 +76,7 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
   @override
   Widget build(BuildContext context) {
     if (widget.announcements.isEmpty) return const SizedBox.shrink();
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       children: [
@@ -84,16 +85,16 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Pengumuman',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              Text(
+                l10n.announcements,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               InkWell(
                 onTap: () {},
-                child: const Row(
+                child: Row(
                   children: [
-                    Text('Lihat Lebih', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 13)),
-                    Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
+                    Text(l10n.showMore, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 13)),
+                    const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
                   ],
                 ),
               ),
@@ -126,7 +127,7 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
         border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.03),
+            color: Colors.black.withValues(alpha: 0.03),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),

@@ -5,27 +5,27 @@ import 'package:pinput/pinput.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
-import '../../../../core/storage/session_manager.dart';
-import '../../../home/presentation/pages/main_page.dart';
+import 'change_password_page.dart';
 
-class OtpVerificationPage extends StatefulWidget {
+class OtpResetPasswordPage extends StatefulWidget {
+  final String nim;
   final String email;
   final int initialCountdown;
 
-  const OtpVerificationPage({
+  const OtpResetPasswordPage({
     super.key,
+    required this.nim,
     required this.email,
     required this.initialCountdown,
   });
 
   @override
-  State<OtpVerificationPage> createState() => _OtpVerificationPageState();
+  State<OtpResetPasswordPage> createState() => _OtpResetPasswordPageState();
 }
 
-class _OtpVerificationPageState extends State<OtpVerificationPage> {
+class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
   final _otpController = TextEditingController();
   final _apiService = ApiService();
-  final _sessionManager = SessionManager();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -73,29 +73,32 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       _errorMessage = null;
     });
 
-    final user = _sessionManager.getUser();
-    if (user == null) return;
-
     try {
-      final response = await _apiService.verifyOtp(
-        nim: user.nim ?? '',
-        kdpst: user.kodePst ?? '',
+      final response = await _apiService.verifyOtpResetPassword(
+        nim: widget.nim,
         email: widget.email,
         otp: _otpController.text,
         language: Localizations.localeOf(context).languageCode,
       );
 
       if (response != null) {
-        final bool success = response['success'] ?? false;
-        final String message = response['message'] ?? '';
-
-        if (success) {
-          await _sessionManager.setEmailVerified(true);
+        if (response.success) {
           if (!mounted) return;
-          _showSuccessDialog(message);
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ChangePasswordPage(
+                encNim: response.nimenc,
+                email: widget.email,
+                otp: _otpController.text,
+              ),
+            ),
+          );
         } else {
-          setState(() => _errorMessage = message);
+          setState(() => _errorMessage = response.message);
         }
+      } else {
+        setState(() => _errorMessage = 'Gagal memverifikasi OTP.');
       }
     } catch (e) {
       setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
@@ -112,13 +115,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
       _errorMessage = null;
     });
 
-    final user = _sessionManager.getUser();
-    if (user == null) return;
-
     try {
-      final response = await _apiService.getOtp(
-        nim: user.nim ?? '',
-        kdpst: user.kodePst ?? '',
+      final response = await _apiService.getOtpResetPassword(
+        nim: widget.nim,
         email: widget.email,
         language: Localizations.localeOf(context).languageCode,
       );
@@ -147,65 +146,6 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
-  }
-
-  void _showSuccessDialog(String message) {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.success.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 40),
-              ),
-              const SizedBox(height: 24),
-              const Text(
-                'Berhasil',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: AppColors.textSecondary, height: 1.5),
-              ),
-              const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    final navigator = Navigator.of(context, rootNavigator: true);
-                    Navigator.pop(context);
-                    navigator.pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const MainPage()),
-                      (route) => false,
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    elevation: 0,
-                  ),
-                  child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -260,7 +200,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                         color: Colors.white.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.security_rounded, color: Colors.white, size: 60),
+                      child: const Icon(Icons.verified_user_rounded, color: Colors.white, size: 60),
                     ),
                   ),
                   const SizedBox(height: 28),
@@ -285,7 +225,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                     ),
                     child: Column(
                       children: [
-                        Text(l10n.enterOtp, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                        Text(l10n.otpResetPassInstruction, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
                         const SizedBox(height: 12),
                         Text(widget.email, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                         const SizedBox(height: 40),
@@ -314,7 +254,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                           child: ElevatedButton(
                             onPressed: _isLoading ? null : _handleVerifyOtp,
                             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)), elevation: 0),
-                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : Text(l10n.login, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : const Text('VERIFIKASI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                         ),
                         const SizedBox(height: 24),

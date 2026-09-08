@@ -30,15 +30,22 @@ class _AccountPageState extends State<AccountPage> {
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: AppColors.danger.withOpacity(0.1),
+                  color: AppColors.danger.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.logout_rounded, color: AppColors.danger, size: 32),
+                child: const Icon(
+                  Icons.logout_rounded,
+                  color: AppColors.danger,
+                  size: 32,
+                ),
               ),
               const SizedBox(height: 20),
               Text(
                 l10n.logout,
-                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 12),
               Text(
@@ -53,8 +60,10 @@ class _AccountPageState extends State<AccountPage> {
                     child: OutlinedButton(
                       onPressed: () => Navigator.pop(context),
                       style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                       child: Text(l10n.cancel),
                     ),
@@ -63,19 +72,23 @@ class _AccountPageState extends State<AccountPage> {
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () async {
+                        final navigator = Navigator.of(context, rootNavigator: true);
                         await _sessionManager.clear();
                         if (!mounted) return;
-                        Navigator.pushAndRemoveUntil(
-                          context,
-                          MaterialPageRoute(builder: (context) => const LoginScreen()),
+                        navigator.pushAndRemoveUntil(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
                           (route) => false,
                         );
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.danger,
                         foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                         elevation: 0,
                       ),
                       child: Text(l10n.ok),
@@ -95,6 +108,10 @@ class _AccountPageState extends State<AccountPage> {
     final user = _sessionManager.getUser();
     final l10n = AppLocalizations.of(context)!;
 
+    if (user == null) {
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
@@ -103,31 +120,29 @@ class _AccountPageState extends State<AccountPage> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: user == null
-          ? const Center(child: Text('Data tidak ditemukan'))
-          : CustomScrollView(
+      body: CustomScrollView(
               slivers: [
                 SliverAppBar(
                   pinned: true,
-                  expandedHeight: 80,
+                  expandedHeight: null,
+                  toolbarHeight: 64,
                   backgroundColor: const Color(0xFF003D82),
                   elevation: 0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: Text(
-                      l10n.accountSettings,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13, // Smaller font as requested
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
-                    centerTitle: false,
-                    background: Container(
-                      decoration: const BoxDecoration(gradient: mainGradient),
+                  automaticallyImplyLeading: false,
+                  title: Text(
+                    l10n.accountSettings,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
+                  titleSpacing: 24,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(gradient: mainGradient),
+                  ),
                 ),
+
                 SliverToBoxAdapter(
                   child: Stack(
                     clipBehavior: Clip.none,
@@ -143,37 +158,57 @@ class _AccountPageState extends State<AccountPage> {
                           ),
                         ),
                       ),
+
+                      // Jarak antara Action Bar dengan Card Profil
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
                         child: _buildInfoCard(user, l10n),
                       ),
                     ],
                   ),
                 ),
+
                 SliverPadding(
                   padding: const EdgeInsets.all(24),
                   sliver: SliverList(
                     delegate: SliverChildListDelegate([
                       _buildMenuSection(l10n.settings, [
-                        _buildMenuItem(Icons.lock_outline, l10n.security, () {}),
-                        _buildMenuItem(Icons.person_outline, l10n.profile, () {}),
+                        _buildMenuItem(
+                          Icons.lock_outline,
+                          l10n.security,
+                          () {},
+                        ),
+                        _buildMenuItem(
+                          Icons.person_outline,
+                          l10n.profile,
+                          () {},
+                        ),
                         _buildMenuItem(Icons.badge_outlined, 'E-KTM', () {}),
                         _buildMenuItem(Icons.language, l10n.language, () {
                           showDialog(
                             context: context,
-                            builder: (context) => const LanguageSelectorDialog(),
+                            builder: (context) =>
+                                const LanguageSelectorDialog(),
                           );
                         }),
                         if (!user.emailVerification)
-                          _buildMenuItem(Icons.email_outlined, 'Verifikasi Email', () {}),
+                          _buildMenuItem(
+                            Icons.email_outlined,
+                            l10n.emailVerif,
+                            () {},
+                          ),
                       ]),
+
                       const SizedBox(height: 24),
+
                       _buildMenuSection(l10n.help, [
                         _buildMenuItem(Icons.help_outline, l10n.help, () {}),
                         _buildMenuItem(Icons.info_outline, l10n.about, () {}),
-                        _buildMenuItem(Icons.star_outline, 'Beri Rating', () {}),
+                        _buildMenuItem(Icons.star_outline, l10n.rateApp, () {}),
                       ]),
+
                       const SizedBox(height: 32),
+
                       ElevatedButton(
                         onPressed: _handleLogout,
                         style: ElevatedButton.styleFrom(
@@ -184,6 +219,7 @@ class _AccountPageState extends State<AccountPage> {
                         ),
                         child: Text(l10n.logout),
                       ),
+
                       const SizedBox(height: 40),
                     ]),
                   ),
@@ -196,7 +232,8 @@ class _AccountPageState extends State<AccountPage> {
   Widget _buildInfoCard(dynamic user, AppLocalizations l10n) {
     final tahunAngkatan = user.angkatan?.toString().substring(0, 4) ?? '2024';
     final nimOnlyNumber = user.nim?.replaceAll(RegExp(r'[^0-9]'), '') ?? '';
-    final profileUrl = 'https://si-mona.uinsalatiga.ac.id/user_log/view_image?angkatan=$tahunAngkatan&nim=$nimOnlyNumber';
+    final profileUrl =
+        'https://si-mona.uinsalatiga.ac.id/user_log/view_image?angkatan=$tahunAngkatan&nim=$nimOnlyNumber';
 
     return Container(
       padding: const EdgeInsets.all(24),
@@ -205,7 +242,7 @@ class _AccountPageState extends State<AccountPage> {
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.06),
+            color: Colors.black.withValues(alpha: 0.06),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -220,7 +257,10 @@ class _AccountPageState extends State<AccountPage> {
                 decoration: BoxDecoration(
                   color: Colors.white, // Plain white background
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.primary.withOpacity(0.1), width: 1),
+                  border: Border.all(
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
                 ),
                 child: SizedBox(
                   width: 50,
@@ -229,7 +269,11 @@ class _AccountPageState extends State<AccountPage> {
                     child: Image.network(
                       profileUrl,
                       fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Icon(Icons.person, color: AppColors.primary, size: 30),
+                      errorBuilder: (context, error, stackTrace) => const Icon(
+                        Icons.person,
+                        color: AppColors.primary,
+                        size: 30,
+                      ),
                     ),
                   ),
                 ),
@@ -241,12 +285,20 @@ class _AccountPageState extends State<AccountPage> {
                   children: [
                     Text(
                       user.nama ?? '-',
-                      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       'Mahasiswa ${user.jenjang ?? ''}',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),
@@ -256,48 +308,88 @@ class _AccountPageState extends State<AccountPage> {
           const SizedBox(height: 24),
           const Divider(height: 1, color: Color(0xFFF1F5F9)),
           const SizedBox(height: 20),
-          _buildInfoItem('NIM', user.nim ?? '-'),
+          _buildInfoItem(l10n.nim, user.nim ?? '-'),
           const SizedBox(height: 16),
-          _buildInfoItem(l10n.status, StatusAkademik.getStatusText(user.status, user.semester, user.semester, l10n), 
-            isStatus: true, 
-            statusColor: StatusAkademik.getStatusColor(user.status, user.semester, user.semester)),
+          _buildInfoItem(
+            l10n.status,
+            StatusAkademik.getStatusText(
+              user.status,
+              user.semester,
+              user.semester,
+              l10n,
+            ),
+            isStatus: true,
+            statusColor: StatusAkademik.getStatusColor(
+              user.status,
+              user.semester,
+              user.semester,
+            ),
+          ),
           const SizedBox(height: 16),
-          _buildInfoItem('PROGRAM STUDI', user.programStudi ?? '-'),
+          _buildInfoItem(
+            l10n.programStudy.toUpperCase(),
+            user.programStudi ?? '-',
+          ),
           const SizedBox(height: 16),
-          _buildInfoItem('FAKULTAS', user.fakultas ?? '-'),
+          _buildInfoItem(l10n.faculty.toUpperCase(), user.fakultas ?? '-'),
         ],
       ),
     );
   }
 
-  Widget _buildInfoItem(String label, String value, {bool isStatus = false, Color? statusColor}) {
+  Widget _buildInfoItem(
+    String label,
+    String value, {
+    bool isStatus = false,
+    Color? statusColor,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 100,
-          child: Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.textSecondary, letterSpacing: 0.5)),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textSecondary,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
         Expanded(
-          child: isStatus 
-            ? Align(
-                alignment: Alignment.centerLeft,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: statusColor ?? AppColors.primary, // Solid color like home
-                    borderRadius: BorderRadius.circular(20),
+          child: isStatus
+              ? Align(
+                  alignment: Alignment.centerLeft,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor ?? AppColors.primary,
+                      // Solid color like home
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      value.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ), // White text like home
+                    ),
                   ),
-                  child: Text(
-                    value.toUpperCase(),
-                    style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.white), // White text like home
+                )
+              : Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
                   ),
                 ),
-              )
-            : Text(
-                value,
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700, color: AppColors.textPrimary),
-              ),
         ),
       ],
     );
@@ -309,7 +401,12 @@ class _AccountPageState extends State<AccountPage> {
       children: [
         Text(
           title.toUpperCase(),
-          style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800, color: AppColors.textSecondary, letterSpacing: 1.5),
+          style: const TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w800,
+            color: AppColors.textSecondary,
+            letterSpacing: 1.5,
+          ),
         ),
         const SizedBox(height: 16),
         Container(
@@ -318,7 +415,7 @@ class _AccountPageState extends State<AccountPage> {
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.02),
+                color: Colors.black.withValues(alpha: 0.02),
                 blurRadius: 15,
                 offset: const Offset(0, 8),
               ),
@@ -340,8 +437,19 @@ class _AccountPageState extends State<AccountPage> {
         ),
         child: Icon(icon, color: AppColors.primary, size: 20),
       ),
-      title: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-      trailing: const Icon(Icons.chevron_right_rounded, size: 22, color: AppColors.textSecondary),
+      title: Text(
+        label,
+        style: const TextStyle(
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+      ),
+      trailing: const Icon(
+        Icons.chevron_right_rounded,
+        size: 22,
+        color: AppColors.textSecondary,
+      ),
       onTap: onTap,
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),

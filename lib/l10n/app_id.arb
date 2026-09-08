@@ -11,6 +11,20 @@
   "nim": "NIM",
   "password": "Password",
   "forgotPassword": "Lupa Password?",
+  "forgotPassInstruction": "Masukkan NIM dan Email Anda untuk mengatur ulang kata sandi",
+  "email": "Email",
+  "emailRequired": "Email tidak boleh kosong",
+  "invalidEmail": "Format email tidak valid",
+  "btnResetPassword": "Atur Ulang Kata Sandi",
+  "newPassword": "Password Baru",
+  "confirmPassword": "Konfirmasi Password Baru",
+  "newPassRequired": "Password baru wajib diisi",
+  "confPassRequired": "Konfirmasi password wajib diisi",
+  "passNotMatch": "Password tidak cocok",
+  "changePassInstruction": "Silahkan masukan password baru anda, Password baru minimal 8 Karakter.",
+  "successChangePass": "Password berhasil diperbarui",
+  "otpResetPassInstruction": "Masukkan kode OTP yang dikirim ke email terdaftar Anda",
+  "resendOtpSuccess": "Kode OTP berhasil dikirim ulang",
   "accountSettings": "Pengaturan Akun",
   "language": "Bahasa",
   "logout": "Keluar",
@@ -51,5 +65,59 @@
   "wait": "Tunggu",
   "nimRequired": "NIM tidak boleh kosong",
   "passRequired": "Password tidak boleh kosong",
-  "connError": "Terjadi kesalahan koneksi"
+  "connError": "Terjadi kesalahan koneksi",
+  "termsConditions": "Syarat dan Ketentuan",
+  "agreeAndContinue": "Setuju",
+  "termsContent": "Dengan menggunakan aplikasi ini saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dari",
+  "pleaseWait": "Mohon tunggu...",
+  "schedule": "Jadwal",
+  "bills": "Tagihan",
+  "presence": "Presensi",
+  "attendance": "Kehadiran",
+  "edom": "EDOM",
+  "ipHistory": "Riwayat IP",
+  "offers": "Penawaran",
+  "krs": "KRS",
+  "khs": "KHS",
+  "programStudy": "Program Studi",
+  "faculty": "Fakultas",
+  "rateApp": "Beri Rating",
+  "pembayaran": "Pembayaran",
+  "justNow": "baru saja",
+  "minutesAgo": "{count} menit yang lalu",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursAgo": "{count} jam yang lalu",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgo": "{count} hari yang lalu",
+  "@daysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "monthsAgo": "{count} bulan yang lalu",
+  "@monthsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "yearsAgo": "{count} tahun yang lalu",
+  "@yearsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "credit": "SKS",
+  "room": "Ruang",
+  "lecturer": "Dosen",
+  "today": "Hari Ini",
+  "noSchedule": "Tidak ada jadwal kuliah",
+  "scheduleTitle": "Jadwal Kuliah"
 }

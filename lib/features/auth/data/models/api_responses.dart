@@ -43,3 +43,40 @@ class RefreshSessionResponse {
     );
   }
 }
+
+class VerOTPResetPasswordResponse {
+  final bool success;
+  final String message;
+  final String nimenc;
+
+  VerOTPResetPasswordResponse({
+    required this.success,
+    required this.message,
+    required this.nimenc,
+  });
+
+  factory VerOTPResetPasswordResponse.fromJson(Map<String, dynamic> json) {
+    return VerOTPResetPasswordResponse(
+      success: json['success'] ?? false,
+      message: json['message'] ?? '',
+      nimenc: json['nimenc'] ?? '',
+    );
+  }
+}
+
+class ChangePasswordResponse {
+  final bool success;
+  final String message;
+
+  ChangePasswordResponse({
+    required this.success,
+    required this.message,
+  });
+
+  factory ChangePasswordResponse.fromJson(Map<String, dynamic> json) {
+    return ChangePasswordResponse(
+      success: json['success'] ?? false,
+      message: json['message'] ?? '',
+    );
+  }
+}

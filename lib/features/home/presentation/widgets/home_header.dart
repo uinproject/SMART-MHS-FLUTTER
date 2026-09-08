@@ -47,7 +47,7 @@ class HomeHeader extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,7 @@ class HomeHeader extends StatelessWidget {
                 SalamWaktu.getSalam(l10n),
                 style: const TextStyle(
                   color: Colors.white70,
-                  fontSize: 8.5,
+                  fontSize: 13.0,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -67,7 +67,7 @@ class HomeHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 12,
+                  fontSize: 18.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -86,7 +86,7 @@ class HomeHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),

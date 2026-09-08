@@ -11,6 +11,20 @@
   "nim": "رقم الطالب",
   "password": "كلمة المرور",
   "forgotPassword": "هل نسيت كلمة المرور؟",
+  "forgotPassInstruction": "أدخل رقم الطالب والبريد الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك",
+  "email": "البريد الإلكتروني",
+  "emailRequired": "البريد الإلكتروني مطلوب",
+  "invalidEmail": "تنسيق البريد الإلكتروني غير صالح",
+  "btnResetPassword": "إعادة تعيين كلمة المرور",
+  "newPassword": "كلمة المرor الجديدة",
+  "confirmPassword": "تأكيد كلمة المرور الجديدة",
+  "newPassRequired": "كلمة المرور الجديدة مطلوبة",
+  "confPassRequired": "تأكيد كلمة المرور مطلوب",
+  "passNotMatch": "كلمات المرور غير متطابقة",
+  "changePassInstruction": "يرجى إدخال كلمة المرور الجديدة، يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.",
+  "successChangePass": "تم تحديث كلمة المرور بنجاح",
+  "otpResetPassInstruction": "أدخل رمز OTP المرسل إلى بريدك الإلكتروني المسجل",
+  "resendOtpSuccess": "تم إعادة إرسال رمز OTP بنجاح",
   "accountSettings": "إعدادات الحساب",
   "language": "اللغة",
   "logout": "تسجيل الخروج",
@@ -31,7 +45,7 @@
   "showAll": "عرض الكل",
   "logoutConfirm": "هل أنت متأكد أنك تريد تسجيل الخروج؟",
   "ok": "نعم",
-  "cancel": "إلغace",
+  "cancel": "إلغاء",
   "goodMorning": "صباح الخير",
   "goodAfternoon": "طاب يومك",
   "goodEvening": "مساء الخير",
@@ -51,5 +65,59 @@
   "wait": "انتظر",
   "nimRequired": "رقم الطالب مطلوب",
   "passRequired": "كلمة المرور مطلوبة",
-  "connError": "حدث خطأ في الاتصال"
+  "connError": "حدث خطأ في الاتصال",
+  "termsConditions": "الشروط والأحكام",
+  "agreeAndContinue": "أوافق",
+  "termsContent": "باستخدام هذا التطبيق، أكون قد قرأت ووافقت على الشروط والأحكام المعمول بها من",
+  "pleaseWait": "يرجى الانتظار...",
+  "schedule": "الجدول",
+  "bills": "الفواتير",
+  "presence": "الحضور",
+  "attendance": "سجل الحضور",
+  "edom": "تقييم المحاضر",
+  "ipHistory": "سجل الدرجات",
+  "offers": "العروض",
+  "krs": "خطة الدراسة",
+  "khs": "نتائج الدراسة",
+  "programStudy": "قسم الدراسة",
+  "faculty": "الكلية",
+  "rateApp": "قيم التطبيق",
+  "pembayaran": "دفع",
+  "justNow": "الآن",
+  "minutesAgo": "قبل {count} دقائق",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "hoursAgo": "قبل {count} ساعات",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "daysAgo": "قبل {count} أيام",
+  "@daysAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "monthsAgo": "قبل {count} أشهر",
+  "@monthsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "yearsAgo": "قبل {count} سنوات",
+  "@yearsAgo": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "credit": "ساعة معتمدة",
+  "room": "قاعة",
+  "lecturer": "المحاضر",
+  "today": "اليوم",
+  "noSchedule": "لا يوجد جدول دراسي",
+  "scheduleTitle": "جدول المحاضرات"
 }

@@ -1,5 +1,6 @@
 class AppConstants {
   static const String baseUrl = 'https://akademik2.uinsalatiga.ac.id/smartmobile/APIV2/';
+  static const String baseUrlLegacy = 'https://akademik2.uinsalatiga.ac.id/smartmobile/smartmhs/';
   static const String cidV2 = 'smartmhs';
   static const String secretKeyV2 = 'xc67jdnc98d12xf';
 

@@ -7,6 +7,7 @@ import '../widgets/home_header.dart';
 import '../widgets/main_menu_grid.dart';
 import '../widgets/announcement_carousel.dart';
 import '../../data/models/pengumuman_response.dart';
+import 'package:smartmahsiswaflutter/features/auth/presentation/pages/login_screen.dart';
 import '../../../../core/utils/device_utils.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,25 +30,29 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   @override
   void initState() {
     super.initState();
-    _loadData();
+    _loadData(isRefresh: false);
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadData({bool isRefresh = false}) async {
     if (!mounted) return;
     setState(() => _isLoading = true);
     try {
       final user = _sessionManager.getUser();
       if (user != null) {
-        final deviceId = await DeviceUtils.getDeviceId();
-        
-        final updatedUser = await _apiService.refreshSession(
-          nim: user.nim ?? '',
-          deviceId: deviceId,
-        );
+        final bool shouldRefresh = isRefresh || !_sessionManager.isJustLoggedIn;
+        if (shouldRefresh) {
+          final deviceId = await DeviceUtils.getDeviceId();
+          
+          final updatedUser = await _apiService.refreshSession(
+            nim: user.nim ?? '',
+            deviceId: deviceId,
+          );
 
-        if (updatedUser != null) {
-          await _sessionManager.saveUser(updatedUser);
+          if (updatedUser != null) {
+            await _sessionManager.saveUser(updatedUser);
+          }
         }
+        _sessionManager.isJustLoggedIn = false;
         
         final pengumuman = await _apiService.getPengumuman(
           kodeJen: user.kodeJen,
@@ -62,6 +67,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           });
         }
       }
+    } on ForceLogoutException catch (_) {
+      final navigator = Navigator.of(context, rootNavigator: true);
+      await _sessionManager.clear();
+      if (mounted) {
+        navigator.pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          (route) => false,
+        );
+      }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -73,6 +87,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     final user = _sessionManager.getUser();
     final l10n = AppLocalizations.of(context)!;
     
+    if (user == null) {
+      return const Scaffold(body: SizedBox.shrink());
+    }
+
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
@@ -81,74 +99,72 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: user == null 
-        ? const Center(child: Text('Data tidak ditemukan'))
-        : RefreshIndicator(
-            onRefresh: _loadData,
-            child: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  expandedHeight: 90,
-                  backgroundColor: const Color(0xFF003D82),
-                  elevation: 0,
-                  flexibleSpace: FlexibleSpaceBar(
-                    title: HomeHeader(user: user),
-                    titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
-                    centerTitle: false,
-                    background: Container(
-                      decoration: const BoxDecoration(gradient: mainGradient),
-                    ),
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        height: 60,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          gradient: mainGradient,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-                        child: HomeHeader.buildAcademicCard(user, l10n),
-                      ),
-                    ],
-                  ),
-                ),
-                if (_pengumuman?.pesanPenting != null && _pengumuman!.pesanPenting!.isNotEmpty)
-                  SliverToBoxAdapter(
-                    child: _buildSmallImportantMessage(_pengumuman!.pesanPenting!, l10n),
-                  ),
-                const SliverToBoxAdapter(
-                  child: MainMenuGrid(),
-                ),
-                if (_isLoading)
-                  const SliverToBoxAdapter(
-                    child: Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(20),
-                        child: CircularProgressIndicator(),
-                      ),
-                    ),
-                  )
-                else
-                  SliverToBoxAdapter(
-                    child: AnnouncementCarousel(
-                      announcements: _pengumuman?.data ?? [],
-                    ),
-                  ),
-                const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
-              ],
+      body: RefreshIndicator(
+        onRefresh: () => _loadData(isRefresh: true),
+        child: CustomScrollView(
+          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          slivers: [
+            SliverAppBar(
+              pinned: true,
+              toolbarHeight: 70,
+              backgroundColor: const Color(0xFF003D82),
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              titleSpacing: 20,
+              title: HomeHeader(user: user),
+              centerTitle: false,
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(gradient: mainGradient),
+              ),
             ),
-          ),
+            SliverToBoxAdapter(
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      gradient: mainGradient,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    child: HomeHeader.buildAcademicCard(user, l10n),
+                  ),
+                ],
+              ),
+            ),
+            if (_pengumuman?.pesanPenting != null && _pengumuman!.pesanPenting!.isNotEmpty)
+              SliverToBoxAdapter(
+                child: _buildSmallImportantMessage(_pengumuman!.pesanPenting!, l10n),
+              ),
+            const SliverToBoxAdapter(
+              child: MainMenuGrid(),
+            ),
+            if (_isLoading)
+              const SliverToBoxAdapter(
+                child: Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(20),
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+              )
+            else
+              SliverToBoxAdapter(
+                child: AnnouncementCarousel(
+                  announcements: _pengumuman?.data ?? [],
+                ),
+              ),
+            const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
+          ],
+        ),
+      ),
     );
   }
 

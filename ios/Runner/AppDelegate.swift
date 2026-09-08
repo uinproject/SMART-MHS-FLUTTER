@@ -8,6 +8,10 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+
+    return super.application(
+      application,
+      didFinishLaunchingWithOptions: launchOptions
+    )
   }
 }

@@ -46,6 +46,51 @@ class AppLocalizationsAr extends AppLocalizations {
   String get forgotPassword => 'هل نسيت كلمة المرور؟';
 
   @override
+  String get forgotPassInstruction =>
+      'أدخل رقم الطالب والبريد الإلكتروني لإعادة تعيين كلمة المرور الخاصة بك';
+
+  @override
+  String get email => 'البريد الإلكتروني';
+
+  @override
+  String get emailRequired => 'البريد الإلكتروني مطلوب';
+
+  @override
+  String get invalidEmail => 'تنسيق البريد الإلكتروني غير صالح';
+
+  @override
+  String get btnResetPassword => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get newPassword => 'كلمة المرor الجديدة';
+
+  @override
+  String get confirmPassword => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get newPassRequired => 'كلمة المرور الجديدة مطلوبة';
+
+  @override
+  String get confPassRequired => 'تأكيد كلمة المرور مطلوب';
+
+  @override
+  String get passNotMatch => 'كلمات المرور غير متطابقة';
+
+  @override
+  String get changePassInstruction =>
+      'يرجى إدخال كلمة المرور الجديدة، يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.';
+
+  @override
+  String get successChangePass => 'تم تحديث كلمة المرور بنجاح';
+
+  @override
+  String get otpResetPassInstruction =>
+      'أدخل رمز OTP المرسل إلى بريدك الإلكتروني المسجل';
+
+  @override
+  String get resendOtpSuccess => 'تم إعادة إرسال رمز OTP بنجاح';
+
+  @override
   String get accountSettings => 'إعدادات الحساب';
 
   @override
@@ -106,7 +151,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get ok => 'نعم';
 
   @override
-  String get cancel => 'إلغace';
+  String get cancel => 'إلغاء';
 
   @override
   String get goodMorning => 'صباح الخير';
@@ -167,4 +212,102 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get connError => 'حدث خطأ في الاتصال';
+
+  @override
+  String get termsConditions => 'الشروط والأحكام';
+
+  @override
+  String get agreeAndContinue => 'أوافق';
+
+  @override
+  String get termsContent =>
+      'باستخدام هذا التطبيق، أكون قد قرأت ووافقت على الشروط والأحكام المعمول بها من';
+
+  @override
+  String get pleaseWait => 'يرجى الانتظار...';
+
+  @override
+  String get schedule => 'الجدول';
+
+  @override
+  String get bills => 'الفواتير';
+
+  @override
+  String get presence => 'الحضور';
+
+  @override
+  String get attendance => 'سجل الحضور';
+
+  @override
+  String get edom => 'تقييم المحاضر';
+
+  @override
+  String get ipHistory => 'سجل الدرجات';
+
+  @override
+  String get offers => 'العروض';
+
+  @override
+  String get krs => 'خطة الدراسة';
+
+  @override
+  String get khs => 'نتائج الدراسة';
+
+  @override
+  String get programStudy => 'قسم الدراسة';
+
+  @override
+  String get faculty => 'الكلية';
+
+  @override
+  String get rateApp => 'قيم التطبيق';
+
+  @override
+  String get pembayaran => 'دفع';
+
+  @override
+  String get justNow => 'الآن';
+
+  @override
+  String minutesAgo(int count) {
+    return 'قبل $count دقائق';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return 'قبل $count ساعات';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return 'قبل $count أيام';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return 'قبل $count أشهر';
+  }
+
+  @override
+  String yearsAgo(int count) {
+    return 'قبل $count سنوات';
+  }
+
+  @override
+  String get credit => 'ساعة معتمدة';
+
+  @override
+  String get room => 'قاعة';
+
+  @override
+  String get lecturer => 'المحاضر';
+
+  @override
+  String get today => 'اليوم';
+
+  @override
+  String get noSchedule => 'لا يوجد جدول دراسي';
+
+  @override
+  String get scheduleTitle => 'جدول المحاضرات';
 }

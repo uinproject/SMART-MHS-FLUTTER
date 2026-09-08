@@ -172,6 +172,90 @@ abstract class AppLocalizations {
   /// **'Lupa Password?'**
   String get forgotPassword;
 
+  /// No description provided for @forgotPassInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan NIM dan Email Anda untuk mengatur ulang kata sandi'**
+  String get forgotPassInstruction;
+
+  /// No description provided for @email.
+  ///
+  /// In id, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @emailRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Email tidak boleh kosong'**
+  String get emailRequired;
+
+  /// No description provided for @invalidEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Format email tidak valid'**
+  String get invalidEmail;
+
+  /// No description provided for @btnResetPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Atur Ulang Kata Sandi'**
+  String get btnResetPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Password Baru'**
+  String get newPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Konfirmasi Password Baru'**
+  String get confirmPassword;
+
+  /// No description provided for @newPassRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Password baru wajib diisi'**
+  String get newPassRequired;
+
+  /// No description provided for @confPassRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Konfirmasi password wajib diisi'**
+  String get confPassRequired;
+
+  /// No description provided for @passNotMatch.
+  ///
+  /// In id, this message translates to:
+  /// **'Password tidak cocok'**
+  String get passNotMatch;
+
+  /// No description provided for @changePassInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Silahkan masukan password baru anda, Password baru minimal 8 Karakter.'**
+  String get changePassInstruction;
+
+  /// No description provided for @successChangePass.
+  ///
+  /// In id, this message translates to:
+  /// **'Password berhasil diperbarui'**
+  String get successChangePass;
+
+  /// No description provided for @otpResetPassInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan kode OTP yang dikirim ke email terdaftar Anda'**
+  String get otpResetPassInstruction;
+
+  /// No description provided for @resendOtpSuccess.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode OTP berhasil dikirim ulang'**
+  String get resendOtpSuccess;
+
   /// No description provided for @accountSettings.
   ///
   /// In id, this message translates to:
@@ -417,6 +501,180 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Terjadi kesalahan koneksi'**
   String get connError;
+
+  /// No description provided for @termsConditions.
+  ///
+  /// In id, this message translates to:
+  /// **'Syarat dan Ketentuan'**
+  String get termsConditions;
+
+  /// No description provided for @agreeAndContinue.
+  ///
+  /// In id, this message translates to:
+  /// **'Setuju'**
+  String get agreeAndContinue;
+
+  /// No description provided for @termsContent.
+  ///
+  /// In id, this message translates to:
+  /// **'Dengan menggunakan aplikasi ini saya telah membaca dan menyetujui syarat dan ketentuan yang berlaku dari'**
+  String get termsContent;
+
+  /// No description provided for @pleaseWait.
+  ///
+  /// In id, this message translates to:
+  /// **'Mohon tunggu...'**
+  String get pleaseWait;
+
+  /// No description provided for @schedule.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal'**
+  String get schedule;
+
+  /// No description provided for @bills.
+  ///
+  /// In id, this message translates to:
+  /// **'Tagihan'**
+  String get bills;
+
+  /// No description provided for @presence.
+  ///
+  /// In id, this message translates to:
+  /// **'Presensi'**
+  String get presence;
+
+  /// No description provided for @attendance.
+  ///
+  /// In id, this message translates to:
+  /// **'Kehadiran'**
+  String get attendance;
+
+  /// No description provided for @edom.
+  ///
+  /// In id, this message translates to:
+  /// **'EDOM'**
+  String get edom;
+
+  /// No description provided for @ipHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat IP'**
+  String get ipHistory;
+
+  /// No description provided for @offers.
+  ///
+  /// In id, this message translates to:
+  /// **'Penawaran'**
+  String get offers;
+
+  /// No description provided for @krs.
+  ///
+  /// In id, this message translates to:
+  /// **'KRS'**
+  String get krs;
+
+  /// No description provided for @khs.
+  ///
+  /// In id, this message translates to:
+  /// **'KHS'**
+  String get khs;
+
+  /// No description provided for @programStudy.
+  ///
+  /// In id, this message translates to:
+  /// **'Program Studi'**
+  String get programStudy;
+
+  /// No description provided for @faculty.
+  ///
+  /// In id, this message translates to:
+  /// **'Fakultas'**
+  String get faculty;
+
+  /// No description provided for @rateApp.
+  ///
+  /// In id, this message translates to:
+  /// **'Beri Rating'**
+  String get rateApp;
+
+  /// No description provided for @pembayaran.
+  ///
+  /// In id, this message translates to:
+  /// **'Pembayaran'**
+  String get pembayaran;
+
+  /// No description provided for @justNow.
+  ///
+  /// In id, this message translates to:
+  /// **'baru saja'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} menit yang lalu'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} jam yang lalu'**
+  String hoursAgo(int count);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} hari yang lalu'**
+  String daysAgo(int count);
+
+  /// No description provided for @monthsAgo.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} bulan yang lalu'**
+  String monthsAgo(int count);
+
+  /// No description provided for @yearsAgo.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} tahun yang lalu'**
+  String yearsAgo(int count);
+
+  /// No description provided for @credit.
+  ///
+  /// In id, this message translates to:
+  /// **'SKS'**
+  String get credit;
+
+  /// No description provided for @room.
+  ///
+  /// In id, this message translates to:
+  /// **'Ruang'**
+  String get room;
+
+  /// No description provided for @lecturer.
+  ///
+  /// In id, this message translates to:
+  /// **'Dosen'**
+  String get lecturer;
+
+  /// No description provided for @today.
+  ///
+  /// In id, this message translates to:
+  /// **'Hari Ini'**
+  String get today;
+
+  /// No description provided for @noSchedule.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada jadwal kuliah'**
+  String get noSchedule;
+
+  /// No description provided for @scheduleTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal Kuliah'**
+  String get scheduleTitle;
 }
 
 class _AppLocalizationsDelegate

@@ -1,63 +1,31 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
-import '../../../../core/storage/session_manager.dart';
-import '../../../home/presentation/pages/main_page.dart';
-import 'otp_verification_page.dart';
+import 'otp_reset_password_page.dart';
 
-class EmailVerificationPage extends StatefulWidget {
-  const EmailVerificationPage({super.key});
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({super.key});
 
   @override
-  State<EmailVerificationPage> createState() => _EmailVerificationPageState();
+  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
-class _EmailVerificationPageState extends State<EmailVerificationPage> {
+class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final _formKey = GlobalKey<FormState>();
+  final _nimController = TextEditingController();
   final _emailController = TextEditingController();
   final _apiService = ApiService();
-  final _sessionManager = SessionManager();
 
   bool _isLoading = false;
   String? _errorMessage;
-  int _secondsRemaining = 0;
-  Timer? _timer;
-
-  @override
-  void initState() {
-    super.initState();
-    final user = _sessionManager.getUser();
-    if (user?.email != null) {
-      _emailController.text = user!.email!;
-    }
-  }
 
   @override
   void dispose() {
-    _timer?.cancel();
+    _nimController.dispose();
     _emailController.dispose();
     super.dispose();
-  }
-
-  void _startTimer(int seconds) {
-    _timer?.cancel();
-    setState(() => _secondsRemaining = seconds);
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (_secondsRemaining > 0) {
-        setState(() => _secondsRemaining--);
-      } else {
-        timer.cancel();
-      }
-    });
-  }
-
-  String _formatTime(int seconds) {
-    final mins = (seconds / 60).floor().toString().padLeft(2, '0');
-    final secs = (seconds % 60).toString().padLeft(2, '0');
-    return "$mins:$secs";
   }
 
   Future<void> _handleGetOtp() async {
@@ -68,13 +36,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
       _errorMessage = null;
     });
 
-    final user = _sessionManager.getUser();
-    if (user == null) return;
-
     try {
-      final response = await _apiService.getOtp(
-        nim: user.nim ?? '',
-        kdpst: user.kodePst ?? '',
+      final response = await _apiService.getOtpResetPassword(
+        nim: _nimController.text.trim(),
         email: _emailController.text.trim(),
         language: Localizations.localeOf(context).languageCode,
       );
@@ -85,25 +49,22 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         final int countdown = response['countdown'] ?? 0;
 
         if (success) {
-          await _sessionManager.updateEmail(_emailController.text.trim());
           if (!mounted) return;
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => OtpVerificationPage(
+              builder: (context) => OtpResetPasswordPage(
+                nim: _nimController.text.trim(),
                 email: _emailController.text.trim(),
                 initialCountdown: countdown,
               ),
             ),
           );
         } else {
-          if (countdown > 0) {
-            _startTimer(countdown);
-            setState(() => _errorMessage = message);
-          } else {
-            setState(() => _errorMessage = message);
-          }
+          setState(() => _errorMessage = message);
         }
+      } else {
+        setState(() => _errorMessage = 'Gagal menghubungi server.');
       }
     } catch (e) {
       setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
@@ -165,7 +126,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
-                          Icons.mark_email_read_rounded,
+                          Icons.lock_reset_rounded,
                           color: Colors.white,
                           size: 60,
                         ),
@@ -176,7 +137,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     Column(
                       children: [
                         Text(
-                          l10n.emailVerif.toUpperCase(),
+                          l10n.forgotPassword.toUpperCase(),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 24,
@@ -216,7 +177,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n.welcome,
+                            l10n.forgotPassword,
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -224,9 +185,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'Tautkan email aktif Anda untuk mendapatkan kode verifikasi keamanan.',
-                            style: TextStyle(
+                          Text(
+                            l10n.forgotPassInstruction,
+                            style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.textSecondary,
                               height: 1.5,
@@ -251,14 +212,23 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             const SizedBox(height: 20),
                           ],
                           _buildTextField(
+                            controller: _nimController,
+                            label: l10n.nim.toUpperCase(),
+                            hint: 'Masukkan ${l10n.nim}',
+                            icon: Icons.person_outline_rounded,
+                            validator: (value) => value == null || value.isEmpty ? l10n.nimRequired : null,
+                          ),
+                          const SizedBox(height: 24),
+                          _buildTextField(
                             controller: _emailController,
-                            label: 'ALAMAT EMAIL',
-                            hint: 'contoh@email.com',
+                            label: l10n.email.toUpperCase(),
+                            hint: 'Masukkan ${l10n.email}',
                             icon: Icons.mail_outline_rounded,
+                            keyboardType: TextInputType.emailAddress,
                             validator: (value) {
-                              if (value == null || value.isEmpty) return 'Email wajib diisi';
+                              if (value == null || value.isEmpty) return l10n.emailRequired;
                               if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                return 'Format email tidak valid';
+                                return l10n.invalidEmail;
                               }
                               return null;
                             },
@@ -268,42 +238,22 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             width: double.infinity,
                             height: 56,
                             child: ElevatedButton(
-                              onPressed: (_isLoading || _secondsRemaining > 0) ? null : _handleGetOtp,
+                              onPressed: _isLoading ? null : _handleGetOtp,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
                                 elevation: 0,
-                                disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.1),
                               ),
                               child: _isLoading
                                   ? const SpinKitThreeBounce(color: Colors.white, size: 20)
                                   : Text(
-                                      _secondsRemaining > 0 
-                                          ? "${l10n.wait} (${_formatTime(_secondsRemaining)})"
-                                          : 'DAPATKAN KODE OTP',
+                                      l10n.btnResetPassword.toUpperCase(),
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                     ),
                             ),
                           ),
                         ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MainPage()),
-                        );
-                      },
-                      child: Text(
-                        l10n.examineLater,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
-                        ),
                       ),
                     ),
                     const SizedBox(height: 40),
@@ -322,6 +272,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
     required String label,
     required String hint,
     required IconData icon,
+    TextInputType keyboardType = TextInputType.text,
     String? Function(String?)? validator,
   }) {
     return Column(
@@ -336,9 +287,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         ),
         TextFormField(
           controller: controller,
-          enabled: !_isLoading && _secondsRemaining == 0,
+          enabled: !_isLoading,
           style: const TextStyle(fontWeight: FontWeight.w600, color: AppColors.textPrimary),
-          keyboardType: TextInputType.emailAddress,
+          keyboardType: keyboardType,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: const TextStyle(color: Color(0xFF94A3B8), fontSize: 14, fontWeight: FontWeight.normal),

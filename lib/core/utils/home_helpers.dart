@@ -60,16 +60,16 @@ class FormatTanggalIndo {
       final date = DateTime.parse(cleanDate);
       final diff = DateTime.now().difference(date);
       
-      if (diff.inSeconds < 60) return 'baru saja'; // Could add this to l10n too
-      if (diff.inMinutes < 60) return '${diff.inMinutes} menit yang lalu';
-      if (diff.inHours < 24) return '${diff.inHours} jam yang lalu';
-      if (diff.inDays < 30) return '${diff.inDays} hari yang lalu';
+      if (diff.inSeconds < 60) return l10n.justNow;
+      if (diff.inMinutes < 60) return l10n.minutesAgo(diff.inMinutes);
+      if (diff.inHours < 24) return l10n.hoursAgo(diff.inHours);
+      if (diff.inDays < 30) return l10n.daysAgo(diff.inDays);
       
       final months = (diff.inDays / 30).floor();
-      if (months < 12) return '$months bulan yang lalu';
+      if (months < 12) return l10n.monthsAgo(months);
       
       final years = (diff.inDays / 365).floor();
-      return '$years tahun yang lalu';
+      return l10n.yearsAgo(years);
     } catch (e) {
       return dateStr;
     }

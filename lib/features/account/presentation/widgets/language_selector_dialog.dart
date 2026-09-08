@@ -17,7 +17,7 @@ class LanguageSelectorDialog extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.1),
+                color: AppColors.primary.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.language_rounded, color: AppColors.primary, size: 32),
@@ -44,7 +44,7 @@ class LanguageSelectorDialog extends StatelessWidget {
     final bool isSelected = Localizations.localeOf(context).languageCode == code;
 
     return Material(
-      color: isSelected ? AppColors.primary.withOpacity(0.05) : Colors.transparent,
+      color: isSelected ? AppColors.primary.withValues(alpha: 0.05) : Colors.transparent,
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         onTap: () {

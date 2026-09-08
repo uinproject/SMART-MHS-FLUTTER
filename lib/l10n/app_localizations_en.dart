@@ -45,6 +45,51 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgotPassword => 'Forgot Password?';
 
   @override
+  String get forgotPassInstruction =>
+      'Enter your NIM and Email to reset your password';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get emailRequired => 'Email is required';
+
+  @override
+  String get invalidEmail => 'Invalid email format';
+
+  @override
+  String get btnResetPassword => 'Reset Password';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmPassword => 'Confirm New Password';
+
+  @override
+  String get newPassRequired => 'New password is required';
+
+  @override
+  String get confPassRequired => 'Confirm password is required';
+
+  @override
+  String get passNotMatch => 'Passwords do not match';
+
+  @override
+  String get changePassInstruction =>
+      'Please enter your new password, The new password is at least 8 characters long.';
+
+  @override
+  String get successChangePass => 'Password successfully updated';
+
+  @override
+  String get otpResetPassInstruction =>
+      'Enter the OTP code sent to your registered email';
+
+  @override
+  String get resendOtpSuccess => 'OTP code successfully resent';
+
+  @override
   String get accountSettings => 'Account Settings';
 
   @override
@@ -166,4 +211,102 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get connError => 'Connection error occurred';
+
+  @override
+  String get termsConditions => 'Terms and Conditions';
+
+  @override
+  String get agreeAndContinue => 'Agree';
+
+  @override
+  String get termsContent =>
+      'By using this application I have read and agree to the applicable terms and conditions from';
+
+  @override
+  String get pleaseWait => 'Please wait...';
+
+  @override
+  String get schedule => 'Schedule';
+
+  @override
+  String get bills => 'Bills';
+
+  @override
+  String get presence => 'Presence';
+
+  @override
+  String get attendance => 'Attendance';
+
+  @override
+  String get edom => 'EDOM';
+
+  @override
+  String get ipHistory => 'IP History';
+
+  @override
+  String get offers => 'Offers';
+
+  @override
+  String get krs => 'KRS';
+
+  @override
+  String get khs => 'KHS';
+
+  @override
+  String get programStudy => 'Program Study';
+
+  @override
+  String get faculty => 'Faculty';
+
+  @override
+  String get rateApp => 'Rate App';
+
+  @override
+  String get pembayaran => 'Payment';
+
+  @override
+  String get justNow => 'just now';
+
+  @override
+  String minutesAgo(int count) {
+    return '$count minutes ago';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    return '$count hours ago';
+  }
+
+  @override
+  String daysAgo(int count) {
+    return '$count days ago';
+  }
+
+  @override
+  String monthsAgo(int count) {
+    return '$count months ago';
+  }
+
+  @override
+  String yearsAgo(int count) {
+    return '$count years ago';
+  }
+
+  @override
+  String get credit => 'Credits';
+
+  @override
+  String get room => 'Room';
+
+  @override
+  String get lecturer => 'Lecturer';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get noSchedule => 'No class schedule';
+
+  @override
+  String get scheduleTitle => 'Class Schedule';
 }
