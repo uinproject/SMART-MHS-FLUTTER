@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/home_helpers.dart';
 import '../../data/models/pengumuman_response.dart';
@@ -116,6 +117,7 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
   }
 
   Widget _buildAnnouncementCard(BuildContext context, PengumumanData item) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 4),
       decoration: BoxDecoration(
@@ -140,7 +142,7 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    FormatTanggalIndo.timeAgo(item.tanggal),
+                    FormatTanggalIndo.timeAgo(item.tanggal, l10n),
                     style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
                   ),
                   const SizedBox(height: 8),

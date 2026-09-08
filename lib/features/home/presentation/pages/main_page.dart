@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'home_page.dart';
+import '../../../account/presentation/pages/account_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -16,7 +17,7 @@ class _MainPageState extends State<MainPage> {
     const HomePage(),
     const Center(child: Text('News Page')),
     const Center(child: Text('Notifikasi Page')),
-    const Center(child: Text('Akun Page')),
+    const AccountPage(),
   ];
 
   @override

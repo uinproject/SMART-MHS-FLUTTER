@@ -6,6 +6,7 @@ class SessionManager {
   static const String _keyUser = 'user_data';
   static const String _keyIsLoggedIn = 'is_logged_in';
   static const String _keySkAccepted = 'sk_accepted';
+  static const String _keyLocale = 'app_locale';
 
   static final SessionManager _instance = SessionManager._internal();
   factory SessionManager() => _instance;
@@ -38,6 +39,14 @@ class SessionManager {
 
   bool isSkAccepted() {
     return _prefs.getBool(_keySkAccepted) ?? false;
+  }
+
+  Future<void> setLocale(String languageCode) async {
+    await _prefs.setString(_keyLocale, languageCode);
+  }
+
+  String getLocale() {
+    return _prefs.getString(_keyLocale) ?? 'id';
   }
 
   Future<void> clear() async {

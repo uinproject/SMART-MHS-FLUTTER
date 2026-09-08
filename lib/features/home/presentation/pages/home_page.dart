@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   Widget build(BuildContext context) {
     super.build(context);
     final user = _sessionManager.getUser();
+    final l10n = AppLocalizations.of(context)!;
     
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
@@ -87,12 +89,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               slivers: [
                 SliverAppBar(
                   pinned: true,
-                  expandedHeight: 90, // Increased from 60 to prevent overlap
+                  expandedHeight: 90,
                   backgroundColor: const Color(0xFF003D82),
                   elevation: 0,
                   flexibleSpace: FlexibleSpaceBar(
                     title: HomeHeader(user: user),
-                    titlePadding: const EdgeInsets.only(left: 24, bottom: 16),
+                    titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
+                    centerTitle: false,
                     background: Container(
                       decoration: const BoxDecoration(gradient: mainGradient),
                     ),
@@ -114,15 +117,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0), // Added 16px top margin
-                        child: HomeHeader.buildAcademicCard(user),
+                        padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
+                        child: HomeHeader.buildAcademicCard(user, l10n),
                       ),
                     ],
                   ),
                 ),
                 if (_pengumuman?.pesanPenting != null && _pengumuman!.pesanPenting!.isNotEmpty)
                   SliverToBoxAdapter(
-                    child: _buildSmallImportantMessage(_pengumuman!.pesanPenting!),
+                    child: _buildSmallImportantMessage(_pengumuman!.pesanPenting!, l10n),
                   ),
                 const SliverToBoxAdapter(
                   child: MainMenuGrid(),
@@ -149,7 +152,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     );
   }
 
-  Widget _buildSmallImportantMessage(String pesan) {
+  Widget _buildSmallImportantMessage(String pesan, AppLocalizations l10n) {
     return Container(
       margin: const EdgeInsets.fromLTRB(24, 16, 24, 0),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -164,9 +167,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  'INFO AKADEMIK',
-                  style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primary),
+                Text(
+                  l10n.checkKrs.toUpperCase(),
+                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primary),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -187,7 +190,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               padding: const EdgeInsets.symmetric(horizontal: 12),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
             ),
-            child: const Text('Periksa', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+            child: Text(l10n.examine, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

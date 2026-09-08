@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
@@ -184,6 +185,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
@@ -202,7 +204,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Verifikasi OTP'),
+        title: Text(l10n.otpVerif),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -214,9 +216,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
             children: [
               const SizedBox(height: 20),
               Text(
-                'Masukkan kode OTP yang dikirim ke:',
+                l10n.enterOtp,
                 textAlign: TextAlign.center,
-                style: TextStyle(color: AppColors.textSecondary),
+                style: const TextStyle(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 8),
               Text(
@@ -262,19 +264,19 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                           color: Colors.white,
                         ),
                       )
-                    : const Text('Verifikasi OTP'),
+                    : Text(l10n.otpVerif),
               ),
               const SizedBox(height: 24),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Text('Tidak menerima kode? '),
+                  const Text('Tidak menerima kode? '), // Need l10n key for this
                   TextButton(
                     onPressed: _secondsRemaining == 0 ? _handleResendOtp : null,
                     child: Text(
                       _secondsRemaining == 0
-                          ? 'Kirim Ulang'
-                          : 'Tunggu (${_formatTime(_secondsRemaining)})',
+                          ? l10n.resendOtp
+                          : '${l10n.wait} (${_formatTime(_secondsRemaining)})',
                       style: TextStyle(
                         color: _secondsRemaining == 0
                             ? AppColors.secondary

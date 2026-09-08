@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
@@ -88,6 +89,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -138,10 +141,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    const Text(
-                      'Smart Student',
+                    Text(
+                      l10n.appTitle,
                       textAlign: TextAlign.center,
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
@@ -166,17 +169,17 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            'Selamat Datang',
-                            style: TextStyle(
+                          Text(
+                            l10n.welcome,
+                            style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
                             ),
                           ),
-                          const Text(
-                            'Silakan masuk dengan akun SIAKAD Anda',
-                            style: TextStyle(
+                          Text(
+                            l10n.loginInstruction,
+                            style: const TextStyle(
                               fontSize: 14,
                               color: AppColors.textSecondary,
                             ),
@@ -192,26 +195,28 @@ class _LoginScreenState extends State<LoginScreen> {
                           ],
                           _buildTextField(
                             controller: _nimController,
-                            label: 'NIM',
-                            hint: 'Masukkan NIM',
+                            label: l10n.nim,
+                            hint: 'Masukkan ${l10n.nim}',
                             icon: Icons.person_outline,
+                            validator: (value) => value == null || value.isEmpty ? l10n.nimRequired : null,
                           ),
                           const SizedBox(height: 20),
                           _buildTextField(
                             controller: _passwordController,
-                            label: 'Password',
-                            hint: 'Masukkan Password',
+                            label: l10n.password,
+                            hint: 'Masukkan ${l10n.password}',
                             icon: Icons.lock_outline,
                             isPassword: true,
+                            validator: (value) => value == null || value.isEmpty ? l10n.passRequired : null,
                           ),
                           const SizedBox(height: 12),
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
                               onPressed: () {},
-                              child: const Text(
-                                'Lupa Password?',
-                                style: TextStyle(color: Color(0xFF003D82), fontWeight: FontWeight.bold),
+                              child: Text(
+                                l10n.forgotPassword,
+                                style: const TextStyle(color: Color(0xFF003D82), fontWeight: FontWeight.bold),
                               ),
                             ),
                           ),
@@ -224,7 +229,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             child: _isLoading
                                 ? const SpinKitThreeBounce(color: Colors.white, size: 20)
-                                : const Text('Masuk', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                                : Text(l10n.login, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                         ],
                       ),
@@ -252,6 +257,7 @@ class _LoginScreenState extends State<LoginScreen> {
     required String hint,
     required IconData icon,
     bool isPassword = false,
+    String? Function(String?)? validator,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,7 +291,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             contentPadding: const EdgeInsets.symmetric(vertical: 16),
           ),
-          validator: (value) => value == null || value.isEmpty ? '$label tidak boleh kosong' : null,
+          validator: validator,
         ),
       ],
     );

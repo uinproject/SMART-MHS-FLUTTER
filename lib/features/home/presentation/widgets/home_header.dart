@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/home_helpers.dart';
 import '../../../auth/data/models/login_data.dart';
@@ -10,10 +11,11 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildIdentity(context);
+    final l10n = AppLocalizations.of(context)!;
+    return _buildIdentity(context, l10n);
   }
 
-  Widget _buildIdentity(BuildContext context) {
+  Widget _buildIdentity(BuildContext context, AppLocalizations l10n) {
     final tahunAngkatan = user.angkatan?.toString().substring(0, 4) ?? '2024';
     final nimOnlyNumber = user.nim?.replaceAll(RegExp(r'[^0-9]'), '') ?? '';
     final profileUrl = 'https://si-mona.uinsalatiga.ac.id/user_log/view_image?angkatan=$tahunAngkatan&nim=$nimOnlyNumber';
@@ -27,7 +29,7 @@ class HomeHeader extends StatelessWidget {
             shape: BoxShape.circle,
           ),
           child: SizedBox(
-            width: 34, // Slightly smaller
+            width: 34,
             height: 34,
             child: ClipOval(
               child: Image.network(
@@ -52,10 +54,10 @@ class HomeHeader extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                SalamWaktu.getSalam(),
+                SalamWaktu.getSalam(l10n),
                 style: const TextStyle(
                   color: Colors.white70,
-                  fontSize: 8.5, // Significantly smaller
+                  fontSize: 8.5,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -65,7 +67,7 @@ class HomeHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 12, // Significantly smaller
+                  fontSize: 12,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -76,7 +78,7 @@ class HomeHeader extends StatelessWidget {
     );
   }
 
-  static Widget buildAcademicCard(LoginData user) {
+  static Widget buildAcademicCard(LoginData user, AppLocalizations l10n) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -84,7 +86,7 @@ class HomeHeader extends StatelessWidget {
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04), // Even softer shadow
+            color: Colors.black.withOpacity(0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -94,9 +96,9 @@ class HomeHeader extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: _academicItem('IP KUMULATIF', user.ipkKumulatif ?? '0.00', isLarge: true)),
+              Expanded(child: _academicItem(l10n.ipk.toUpperCase(), user.ipkKumulatif ?? '0.00', isLarge: true)),
               _verticalDivider(),
-              Expanded(child: _statusItem(user)),
+              Expanded(child: _statusItem(user, l10n)),
             ],
           ),
           const Padding(
@@ -105,9 +107,9 @@ class HomeHeader extends StatelessWidget {
           ),
           Row(
             children: [
-              Expanded(child: _academicItem('SKS DITEMPUH', user.sksTempuh?.toString() ?? '0')),
+              Expanded(child: _academicItem(l10n.sks.toUpperCase(), user.sksTempuh?.toString() ?? '0')),
               _verticalDivider(),
-              Expanded(child: _academicItem('SEMESTER', user.semester?.toString() ?? '0')),
+              Expanded(child: _academicItem(l10n.semester.toUpperCase(), user.semester?.toString() ?? '0')),
             ],
           ),
         ],
@@ -147,20 +149,21 @@ class HomeHeader extends StatelessWidget {
     );
   }
 
-  static Widget _statusItem(LoginData user) {
-    final statusText = StatusAkademik.getStatusText(user.status, user.semester, user.semester);
+  static Widget _statusItem(LoginData user, AppLocalizations l10n) {
+    final statusText = StatusAkademik.getStatusText(user.status, user.semester, user.semester, l10n);
+    final statusColor = StatusAkademik.getStatusColor(user.status, user.semester, user.semester);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'STATUS MAHASISWA',
-          style: TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold),
+        Text(
+          l10n.status.toUpperCase(),
+          style: const TextStyle(color: AppColors.textSecondary, fontSize: 10, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
           decoration: BoxDecoration(
-            color: AppColors.success,
+            color: statusColor,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(

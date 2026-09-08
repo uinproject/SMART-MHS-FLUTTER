@@ -6,6 +6,8 @@ import '../../../../core/utils/app_constants.dart';
 import 'login_screen.dart';
 import '../../../home/presentation/pages/main_page.dart';
 
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -57,6 +59,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -75,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      AppConstants.appName.toUpperCase(),
+                      l10n.appTitle.toUpperCase(),
                       style: const TextStyle(
                         fontSize: 24,
                         fontWeight: FontWeight.bold,
@@ -84,9 +88,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
-                      'Sistem Informasi Akademik Mahasiswa',
-                      style: TextStyle(
+                    Text(
+                      l10n.appDesc,
+                      style: const TextStyle(
                         fontSize: 12,
                         color: AppColors.textSecondary,
                       ),

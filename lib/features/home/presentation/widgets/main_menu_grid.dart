@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class MainMenuGrid extends StatefulWidget {
@@ -13,6 +14,8 @@ class _MainMenuGridState extends State<MainMenuGrid> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     final List<Map<String, dynamic>> allMenus = [
       {'icon': Icons.calendar_today, 'label': 'Jadwal'},
       {'icon': Icons.receipt_long, 'label': 'Tagihan'},
@@ -34,9 +37,9 @@ class _MainMenuGridState extends State<MainMenuGrid> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Menu Utama',
-                style: TextStyle(
+              Text(
+                l10n.mainMenu,
+                style: const TextStyle(
                   fontSize: 17,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
@@ -45,7 +48,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
               InkWell(
                 onTap: () => setState(() => _showAll = !_showAll),
                 child: Text(
-                  _showAll ? 'Sembunyikan' : 'Lihat Semua',
+                  _showAll ? l10n.cancel : l10n.showAll,
                   style: const TextStyle(
                     color: AppColors.primary,
                     fontWeight: FontWeight.bold,
@@ -95,7 +98,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
             onTap: onTap,
             borderRadius: BorderRadius.circular(16),
             child: Container(
-              width: 56, // Fixed size to ensure symmetry
+              width: 56,
               height: 56,
               alignment: Alignment.center,
               decoration: BoxDecoration(

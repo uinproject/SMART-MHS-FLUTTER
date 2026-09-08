@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
@@ -78,10 +79,12 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Tautkan Email'),
+        title: Text(l10n.emailVerif),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -99,10 +102,10 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                   color: AppColors.primary,
                 ),
                 const SizedBox(height: 24),
-                const Text(
-                  'Verifikasi Email Anda',
+                Text(
+                  l10n.welcome,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -136,10 +139,10 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                 ],
                 TextFormField(
                   controller: _emailController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Email',
                     hintText: 'contoh@email.com',
-                    prefixIcon: Icon(Icons.mail_outline, color: AppColors.primary),
+                    prefixIcon: const Icon(Icons.mail_outline, color: AppColors.primary),
                   ),
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
@@ -162,7 +165,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             color: Colors.white,
                           ),
                         )
-                      : const Text('Dapatkan Kode OTP'),
+                      : Text(l10n.goodNight.contains('Malam') ? 'Dapatkan OTP' : 'Get OTP'), // Temporary manual for specialized text
                 ),
                 const SizedBox(height: 16),
                 TextButton(
@@ -172,9 +175,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       MaterialPageRoute(builder: (context) => const MainPage()),
                     );
                   },
-                  child: const Text(
-                    'Verifikasi Nanti',
-                    style: TextStyle(color: AppColors.textSecondary),
+                  child: Text(
+                    l10n.examineLater,
+                    style: const TextStyle(color: AppColors.textSecondary),
                   ),
                 ),
               ],
