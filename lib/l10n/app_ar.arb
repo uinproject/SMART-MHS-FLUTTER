@@ -119,5 +119,74 @@
   "lecturer": "المحاضر",
   "today": "اليوم",
   "noSchedule": "لا يوجد جدول دراسي",
-  "scheduleTitle": "جدول المحاضرات"
+  "scheduleTitle": "جدول المحاضرات",
+  "chooseLanguage": "اختر اللغة",
+  "indonesian": "الإندونيسية",
+  "english": "الإنجليزية",
+  "arabic": "العربية",
+  "paymentHistory": "سجل الدفع",
+  "tuitionFee": "الرسوم الدراسية",
+  "paymentInstructions": "تعليمات الدفع",
+  "receipt": "إيصال",
+  "copySuccess": "تم النسخ بنجاح",
+  "proceed": "متابعة",
+  "billLabel": "الفاتورة",
+  "totalBills": "إجمالي الفواتير",
+  "noActiveBills": "لا توجد فواتير مستحقة الدفع",
+  "billStatusUnpaid": "غير مدفوعة",
+  "billStatusPaid": "مدفوعة",
+  "noPaymentHistoryFound": "لا يوجد سجل دفع",
+  "paymentMethod": "طريقة الدفع",
+  "noPaymentMethods": "لا توجد طرق دفع متاحة",
+  "paymentNumber": "رقم الدفع",
+  "copy": "نسخ",
+  "adminFee": "رسوم إدارية",
+  "totalPay": "المجموع للدفع",
+  "automaticVerification": "تحقق تلقائي",
+  "paymentNumberCopied": "تم نسخ رقم الدفع",
+  "via": "عبر",
+  "downloadReceipt": "تنزيل الإيصال",
+  "downloadingReceipt": "جارٍ تنزيل الإيصال... تحقق من مجلد التنزيلات",
+  "cantOpenReceipt": "لا يمكن فتح الإيصال",
+  "checkConnection": "تحقق من اتصالك، تعذر الاتصال بالشبكة",
+  "historyItemDetail": "{name} (الفصل الدراسي {semester})",
+  "@historyItemDetail": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "semester": { "type": "String" }
+    }
+  },
+  "offersTitle": "عرض المواد الدراسية",
+  "inputOfferTitle": "إدخال عرض المواد الدراسية",
+  "offerHistoryTitle": "سجل إدخال عرض المواد",
+  "semesterPackage": "حزمة الفصل الدراسي",
+  "sksQuota": "حصة الساعات المعتمدة",
+  "offerStartLabel": "تاريخ بدء إدخال عرض المواد",
+  "offerEndLabel": "تاريخ انتهاء إدخال عرض المواد",
+  "information": "معلومات",
+  "noOfferings": "لا توجد عروض مواد دراسية متاحة",
+  "noOfferHistory": "لم يتم العثور على سجل إدخال العروض",
+  "selectedCoursesCount": "{count} مواد ({sks} ساعة معتمدة)",
+  "@selectedCoursesCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "sks": { "type": "int" }
+    }
+  },
+  "sksLimitExceeded": "لا يمكن إدخال عرض مواد يتجاوز {sks} ساعة معتمدة",
+  "@sksLimitExceeded": {
+    "placeholders": {
+      "sks": { "type": "int" }
+    }
+  },
+  "khsYear": "العام الدراسي: {year}",
+  "@khsYear": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "save": "حفظ",
+  "okButton": "موافق",
+  "evalRequiredMessage": "للمتابعة، يرجى إكمال تقييم المحاضرين لجميع الفصول الدراسية التي اجتزتها",
+  "completeLecturerEval": "أكمل تقييم المحاضر"
 }

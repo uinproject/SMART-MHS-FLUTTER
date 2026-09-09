@@ -119,5 +119,74 @@
   "lecturer": "Dosen",
   "today": "Hari Ini",
   "noSchedule": "Tidak ada jadwal kuliah",
-  "scheduleTitle": "Jadwal Kuliah"
+  "scheduleTitle": "Jadwal Kuliah",
+  "chooseLanguage": "Pilih Bahasa",
+  "indonesian": "Indonesia",
+  "english": "Inggris",
+  "arabic": "Arab",
+  "paymentHistory": "Riwayat Pembayaran",
+  "tuitionFee": "Biaya Kuliah",
+  "paymentInstructions": "Petunjuk Pembayaran",
+  "receipt": "Kuitansi",
+  "copySuccess": "Berhasil disalin",
+  "proceed": "Lanjutkan",
+  "billLabel": "Tagihan",
+  "totalBills": "Total Tagihan",
+  "noActiveBills": "Tidak ada tagihan yang harus dibayar",
+  "billStatusUnpaid": "BELUM LUNAS",
+  "billStatusPaid": "LUNAS",
+  "noPaymentHistoryFound": "Riwayat Pembayaran Tidak Ditemukan",
+  "paymentMethod": "Metode Pembayaran",
+  "noPaymentMethods": "Tidak ada metode pembayaran tersedia",
+  "paymentNumber": "Nomor Pembayaran",
+  "copy": "Salin",
+  "adminFee": "Biaya Admin",
+  "totalPay": "Total Bayar",
+  "automaticVerification": "Verifikasi Otomatis",
+  "paymentNumberCopied": "Nomor pembayaran berhasil disalin",
+  "via": "Melalui",
+  "downloadReceipt": "Unduh Kuitansi",
+  "downloadingReceipt": "Mengunduh kuitansi... Periksa di folder Download",
+  "cantOpenReceipt": "Tidak dapat membuka kuitansi",
+  "checkConnection": "Periksa koneksimu, Tidak dapat terhubung ke jaringan",
+  "historyItemDetail": "{name} (Semester {semester})",
+  "@historyItemDetail": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "semester": { "type": "String" }
+    }
+  },
+  "offersTitle": "Penawaran MK",
+  "inputOfferTitle": "Input Penawaran Mata Kuliah",
+  "offerHistoryTitle": "Riwayat Input PMK",
+  "semesterPackage": "Paket Semester",
+  "sksQuota": "Jatah SKS",
+  "offerStartLabel": "Tanggal mulai input PMK",
+  "offerEndLabel": "Tanggal akhir input PMK",
+  "information": "Informasi",
+  "noOfferings": "Tidak ada penawaran mata kuliah yang tersedia",
+  "noOfferHistory": "Riwayat input penawaran tidak ditemukan",
+  "selectedCoursesCount": "{count} Mata Kuliah ({sks} SKS)",
+  "@selectedCoursesCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "sks": { "type": "int" }
+    }
+  },
+  "sksLimitExceeded": "Tidak dapat input PMK melebihi {sks} sks",
+  "@sksLimitExceeded": {
+    "placeholders": {
+      "sks": { "type": "int" }
+    }
+  },
+  "khsYear": "KHS TA: {year}",
+  "@khsYear": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "save": "Simpan",
+  "okButton": "Ok",
+  "evalRequiredMessage": "Untuk melanjutkan silahkan lengkapi penilaian evaluasi dosen pada seluruh semester yang telah dilalui",
+  "completeLecturerEval": "Isi Penilaian Dosen"
 }

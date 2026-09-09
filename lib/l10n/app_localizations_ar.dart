@@ -310,4 +310,155 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get scheduleTitle => 'جدول المحاضرات';
+
+  @override
+  String get chooseLanguage => 'اختر اللغة';
+
+  @override
+  String get indonesian => 'الإندونيسية';
+
+  @override
+  String get english => 'الإنجليزية';
+
+  @override
+  String get arabic => 'العربية';
+
+  @override
+  String get paymentHistory => 'سجل الدفع';
+
+  @override
+  String get tuitionFee => 'الرسوم الدراسية';
+
+  @override
+  String get paymentInstructions => 'تعليمات الدفع';
+
+  @override
+  String get receipt => 'إيصال';
+
+  @override
+  String get copySuccess => 'تم النسخ بنجاح';
+
+  @override
+  String get proceed => 'متابعة';
+
+  @override
+  String get billLabel => 'الفاتورة';
+
+  @override
+  String get totalBills => 'إجمالي الفواتير';
+
+  @override
+  String get noActiveBills => 'لا توجد فواتير مستحقة الدفع';
+
+  @override
+  String get billStatusUnpaid => 'غير مدفوعة';
+
+  @override
+  String get billStatusPaid => 'مدفوعة';
+
+  @override
+  String get noPaymentHistoryFound => 'لا يوجد سجل دفع';
+
+  @override
+  String get paymentMethod => 'طريقة الدفع';
+
+  @override
+  String get noPaymentMethods => 'لا توجد طرق دفع متاحة';
+
+  @override
+  String get paymentNumber => 'رقم الدفع';
+
+  @override
+  String get copy => 'نسخ';
+
+  @override
+  String get adminFee => 'رسوم إدارية';
+
+  @override
+  String get totalPay => 'المجموع للدفع';
+
+  @override
+  String get automaticVerification => 'تحقق تلقائي';
+
+  @override
+  String get paymentNumberCopied => 'تم نسخ رقم الدفع';
+
+  @override
+  String get via => 'عبر';
+
+  @override
+  String get downloadReceipt => 'تنزيل الإيصال';
+
+  @override
+  String get downloadingReceipt =>
+      'جارٍ تنزيل الإيصال... تحقق من مجلد التنزيلات';
+
+  @override
+  String get cantOpenReceipt => 'لا يمكن فتح الإيصال';
+
+  @override
+  String get checkConnection => 'تحقق من اتصالك، تعذر الاتصال بالشبكة';
+
+  @override
+  String historyItemDetail(String name, String semester) {
+    return '$name (الفصل الدراسي $semester)';
+  }
+
+  @override
+  String get offersTitle => 'عرض المواد الدراسية';
+
+  @override
+  String get inputOfferTitle => 'إدخال عرض المواد الدراسية';
+
+  @override
+  String get offerHistoryTitle => 'سجل إدخال عرض المواد';
+
+  @override
+  String get semesterPackage => 'حزمة الفصل الدراسي';
+
+  @override
+  String get sksQuota => 'حصة الساعات المعتمدة';
+
+  @override
+  String get offerStartLabel => 'تاريخ بدء إدخال عرض المواد';
+
+  @override
+  String get offerEndLabel => 'تاريخ انتهاء إدخال عرض المواد';
+
+  @override
+  String get information => 'معلومات';
+
+  @override
+  String get noOfferings => 'لا توجد عروض مواد دراسية متاحة';
+
+  @override
+  String get noOfferHistory => 'لم يتم العثور على سجل إدخال العروض';
+
+  @override
+  String selectedCoursesCount(int count, int sks) {
+    return '$count مواد ($sks ساعة معتمدة)';
+  }
+
+  @override
+  String sksLimitExceeded(int sks) {
+    return 'لا يمكن إدخال عرض مواد يتجاوز $sks ساعة معتمدة';
+  }
+
+  @override
+  String khsYear(String year) {
+    return 'العام الدراسي: $year';
+  }
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get okButton => 'موافق';
+
+  @override
+  String get evalRequiredMessage =>
+      'للمتابعة، يرجى إكمال تقييم المحاضرين لجميع الفصول الدراسية التي اجتزتها';
+
+  @override
+  String get completeLecturerEval => 'أكمل تقييم المحاضر';
 }

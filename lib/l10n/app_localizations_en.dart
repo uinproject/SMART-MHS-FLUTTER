@@ -309,4 +309,156 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scheduleTitle => 'Class Schedule';
+
+  @override
+  String get chooseLanguage => 'Choose Language';
+
+  @override
+  String get indonesian => 'Indonesian';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get paymentHistory => 'Payment History';
+
+  @override
+  String get tuitionFee => 'Tuition Fee';
+
+  @override
+  String get paymentInstructions => 'Payment Instructions';
+
+  @override
+  String get receipt => 'Receipt';
+
+  @override
+  String get copySuccess => 'Copied successfully';
+
+  @override
+  String get proceed => 'Proceed';
+
+  @override
+  String get billLabel => 'Bill';
+
+  @override
+  String get totalBills => 'Total Bills';
+
+  @override
+  String get noActiveBills => 'There are no bills to pay';
+
+  @override
+  String get billStatusUnpaid => 'UNPAID';
+
+  @override
+  String get billStatusPaid => 'PAID';
+
+  @override
+  String get noPaymentHistoryFound => 'Payment History Not Found';
+
+  @override
+  String get paymentMethod => 'Payment Method';
+
+  @override
+  String get noPaymentMethods => 'No payment methods available';
+
+  @override
+  String get paymentNumber => 'Payment Number';
+
+  @override
+  String get copy => 'Copy';
+
+  @override
+  String get adminFee => 'Admin fee';
+
+  @override
+  String get totalPay => 'Total Payment';
+
+  @override
+  String get automaticVerification => 'Automatic Verification';
+
+  @override
+  String get paymentNumberCopied => 'Payment number successfully copied';
+
+  @override
+  String get via => 'Via';
+
+  @override
+  String get downloadReceipt => 'Download Receipt';
+
+  @override
+  String get downloadingReceipt =>
+      'Downloading receipt... Check the Download folder';
+
+  @override
+  String get cantOpenReceipt => 'Cannot open receipt';
+
+  @override
+  String get checkConnection =>
+      'Check your connection, Unable connect to network';
+
+  @override
+  String historyItemDetail(String name, String semester) {
+    return '$name (Semester $semester)';
+  }
+
+  @override
+  String get offersTitle => 'Course Offers';
+
+  @override
+  String get inputOfferTitle => 'Enter Course Offers';
+
+  @override
+  String get offerHistoryTitle => 'Course Offers Entry History';
+
+  @override
+  String get semesterPackage => 'Semester Package';
+
+  @override
+  String get sksQuota => 'Credits Quota';
+
+  @override
+  String get offerStartLabel => 'Start date input course offer';
+
+  @override
+  String get offerEndLabel => 'End date input course offer';
+
+  @override
+  String get information => 'Information';
+
+  @override
+  String get noOfferings => 'No course offerings available';
+
+  @override
+  String get noOfferHistory => 'Offer input history not found';
+
+  @override
+  String selectedCoursesCount(int count, int sks) {
+    return '$count Courses ($sks Credits)';
+  }
+
+  @override
+  String sksLimitExceeded(int sks) {
+    return 'Cannot enter Course Offers exceeding $sks credits';
+  }
+
+  @override
+  String khsYear(String year) {
+    return 'Academic Year: $year';
+  }
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get okButton => 'Ok';
+
+  @override
+  String get evalRequiredMessage =>
+      'To continue, please complete the lecturer evaluation assessment for all semesters that have passed';
+
+  @override
+  String get completeLecturerEval => 'Complete lecturer evaluation';
 }

@@ -67,7 +67,7 @@ class HomeHeader extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18.0,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.bold,
                 ),
               ),

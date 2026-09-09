@@ -3,9 +3,17 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
-import '../models/metode_pembayaran_response.dart';
+import '../../data/models/payment_method_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../widgets/error_state_widget.dart';
 import 'payment_instruction_page.dart';
+
+/// Mirrors the legacy `MetodePembayaranActivity` business logic:
+/// - loads payment methods on create (Future.microtask so context is ready)
+/// - sends the `language` field (legacy does send it for this endpoint)
+/// - tap a method -> detail/instructions page with the total amount
+/// - pull-to-refresh (legacy SwipeRefreshLayout)
+enum _MethodLoadState { loading, success, noData, serverError, noInternet }
 
 class SelectPaymentMethodPage extends StatefulWidget {
   final int totalAmount;
@@ -18,41 +26,52 @@ class SelectPaymentMethodPage extends StatefulWidget {
 class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
-  
-  MetodePembayaranResponse? _methods;
-  bool _isLoading = true;
+
+  PaymentMethodResponse? _methods;
+  _MethodLoadState _state = _MethodLoadState.loading;
 
   @override
   void initState() {
     super.initState();
-    _loadMethods();
+    Future.microtask(() => _loadMethods());
   }
 
   Future<void> _loadMethods() async {
-    setState(() => _isLoading = true);
-    try {
-      final user = _sessionManager.getUser();
-      if (user != null) {
-        final result = await _apiService.getMetodePembayaran(
-          nim: user.nim ?? '',
-          language: Localizations.localeOf(context).languageCode,
-        );
-        if (mounted) {
-          setState(() {
-            _methods = result;
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
+    if (!mounted) return;
+    setState(() => _state = _MethodLoadState.loading);
+    final user = _sessionManager.getUser();
+    if (user == null) {
+      if (mounted) setState(() => _state = _MethodLoadState.noInternet);
+      return;
     }
+
+    // NIM is filtered to digits-only inside the service (same as legacy).
+    // Legacy sends the language field for this endpoint (unlike tagihan/rekap).
+    final result = await _apiService.getPaymentMethods(
+      nim: user.nim ?? '',
+      language: Localizations.localeOf(context).languageCode,
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _methods = result;
+      if (result.success && result.data != null && result.data!.isNotEmpty) {
+        _state = _MethodLoadState.success;
+      } else if (result.success) {
+        _state = _MethodLoadState.noData;
+      } else if (result.message != null) {
+        // legacy: success == false && message != null -> show server message
+        _state = _MethodLoadState.serverError;
+      } else {
+        // legacy: onFailure -> no internet animation
+        _state = _MethodLoadState.noInternet;
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
       end: Alignment.bottomLeft,
@@ -62,7 +81,6 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        pinned: true,
         toolbarHeight: 70,
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
@@ -70,31 +88,52 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Pilih Metode Pembayaran',
-          style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+        title: Text(
+          l10n.paymentMethod,
+          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(gradient: mainGradient),
         ),
       ),
-      body: _isLoading
-          ? const Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30))
-          : _methods?.data == null || _methods!.data!.isEmpty
-              ? const Center(child: Text('Tidak ada metode pembayaran tersedia'))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: _methods!.data!.length,
-                  itemBuilder: (context, index) {
-                    final item = _methods!.data![index];
-                    return _buildMethodCard(item);
-                  },
-                ),
+      body: RefreshIndicator(
+        onRefresh: _loadMethods,
+        color: AppColors.primary,
+        child: switch (_state) {
+          _MethodLoadState.loading => ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [
+                SizedBox(height: 300),
+                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+              ],
+            ),
+          _MethodLoadState.noData => ErrorStateWidget(
+              type: ErrorStateType.noData,
+              noDataMessage: l10n.noPaymentMethods,
+              noDataIcon: Icons.account_balance_rounded,
+            ),
+          _MethodLoadState.serverError => ErrorStateWidget(
+              type: ErrorStateType.serverError,
+              serverMessage: _methods?.message,
+              noDataMessage: l10n.noPaymentMethods,
+              noDataIcon: Icons.account_balance_rounded,
+            ),
+          _MethodLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+          _MethodLoadState.success => ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: _methods!.data!.length,
+              itemBuilder: (context, index) {
+                final item = _methods!.data![index];
+                return _buildMethodCard(item);
+              },
+            ),
+        },
+      ),
     );
   }
 
-  Widget _buildMethodCard(MetodePembayaranData item) {
+  Widget _buildMethodCard(PaymentMethodItem item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(

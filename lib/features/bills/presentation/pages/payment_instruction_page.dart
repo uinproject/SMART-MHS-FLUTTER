@@ -3,11 +3,16 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../models/metode_pembayaran_response.dart';
+import '../../data/models/payment_method_response.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+/// Mirrors the legacy `DetailMetodePembayaran` business logic:
+/// - Card 1: Tagihan / Biaya Admin / Total Bayar (= tagihan + biaya adm)
+/// - Card 2: logo + "{nama_metode} ({Verifikasi Otomatis})", Nomor Pembayaran
+///   with copy-to-clipboard, and the method `deskripsi`
+/// - Card 3: Petunjuk Pembayaran (tata_cara HTML rendered in a WebView)
 class PaymentInstructionPage extends StatefulWidget {
-  final MetodePembayaranData method;
+  final PaymentMethodItem method;
   final int totalAmount;
   const PaymentInstructionPage({
     super.key,
@@ -26,7 +31,7 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
   void initState() {
     super.initState();
     _controller = WebViewController()
-      ..setJavaScriptMode(GestureDetector.allow() == null ? JavaScriptMode.unrestricted : JavaScriptMode.disabled)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.transparent)
       ..loadHtmlString(_wrapHtml(widget.method.tataCara));
   }
@@ -44,7 +49,7 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
           line-height: 1.6;
           color: #334155;
           margin: 0;
-          padding: 0;
+          padding: 16px;
         }
         b, strong { color: #003D82; }
       </style>
@@ -56,11 +61,20 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
     """;
   }
 
+  void _copyPaymentNumber(String value) {
+    Clipboard.setData(ClipboardData(text: value));
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.paymentNumberCopied)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
-    final totalPay = widget.totalAmount + (int.tryParse(widget.method.biayaAdm) ?? 0);
+    final totalPay = widget.totalAmount + widget.method.biayaAdm;
 
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
@@ -69,9 +83,8 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        pinned: true,
         toolbarHeight: 70,
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
@@ -88,98 +101,190 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
           decoration: const BoxDecoration(gradient: mainGradient),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Header Summary
-            Container(
-              padding: const EdgeInsets.all(24),
-              color: const Color(0xFFF8FAFC),
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      Image.network(
-                        widget.method.linkLogo,
-                        width: 60,
-                        height: 40,
-                        fit: BoxFit.contain,
-                        errorBuilder: (context, error, stackTrace) => const Icon(Icons.account_balance_rounded),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(widget.method.namaMetode, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                            const Text('Verifikasi Otomatis', style: TextStyle(color: Colors.green, fontSize: 12, fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(height: 32),
-                  _buildSummaryRow('No. Pembayaran / VA', widget.method.norek, isPrimary: true, canCopy: true),
-                  _buildSummaryRow('Total Tagihan', currencyFormat.format(widget.totalAmount)),
-                  _buildSummaryRow('Biaya Admin', currencyFormat.format(int.tryParse(widget.method.biayaAdm) ?? 0)),
-                  const Divider(height: 32),
-                  _buildSummaryRow('Total Bayar', currencyFormat.format(totalPay), isTotal: true),
-                ],
-              ),
-            ),
-            
-            // Instructions
-            Padding(
-              padding: const EdgeInsets.all(24),
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Tata Cara Pembayaran', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    height: 500, // Fixed height or dynamic based on content
-                    child: WebViewWidget(controller: _controller),
+                  // Card 1 — amount summary (legacy "layouttotal")
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    padding: const EdgeInsets.all(24),
+                    decoration: _cardDecoration(),
+                    child: Column(
+                      children: [
+                        _buildSummaryRow(l10n.billLabel, currencyFormat.format(widget.totalAmount)),
+                        _buildSummaryRow(l10n.adminFee, currencyFormat.format(widget.method.biayaAdm)),
+                        const Divider(height: 24),
+                        _buildSummaryRow(l10n.totalPay, currencyFormat.format(totalPay), isTotal: true),
+                      ],
+                    ),
+                  ),
+
+                  // Card 2 — bank / payment channel (legacy "layoutbank")
+                  Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                    padding: const EdgeInsets.all(24),
+                    decoration: _cardDecoration(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: AppColors.iconBackground),
+                              ),
+                              child: Image.network(
+                                widget.method.linkLogo,
+                                fit: BoxFit.contain,
+                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.account_balance_rounded),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Text(
+                                '${widget.method.namaMetode} (${l10n.automaticVerification})',
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Divider(height: 28),
+                        Text(
+                          l10n.paymentNumber,
+                          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.method.norek,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.primary,
+                                ),
+                              ),
+                            ),
+                            InkWell(
+                              onTap: () => _copyPaymentNumber(widget.method.norek),
+                              borderRadius: BorderRadius.circular(20),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: AppColors.secondary.withValues(alpha: 0.1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(Icons.copy_rounded, size: 14, color: AppColors.secondary),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      l10n.copy,
+                                      style: const TextStyle(color: AppColors.secondary, fontSize: 12, fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        if (widget.method.deskripsi.isNotEmpty) ...[
+                          const SizedBox(height: 12),
+                          Text(
+                            widget.method.deskripsi,
+                            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+
+                  // Card 3 — payment instructions (legacy WebView with tata_cara HTML)
+                  Container(
+                    width: double.infinity,
+                    height: 340,
+                    margin: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+                    padding: const EdgeInsets.all(24),
+                    decoration: _cardDecoration(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.primary),
+                            const SizedBox(width: 8),
+                            Text(
+                              l10n.paymentInstructions,
+                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: WebViewWidget(controller: _controller),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isPrimary = false, bool isTotal = false, bool canCopy = false}) {
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.04),
+          blurRadius: 15,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyle(color: AppColors.textSecondary, fontSize: isTotal ? 14 : 13)),
-          Row(
-            children: [
-              Text(
-                value,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: isTotal ? 18 : (isPrimary ? 16 : 14),
-                  color: isTotal || isPrimary ? AppColors.primary : AppColors.textPrimary,
-                ),
-              ),
-              if (canCopy) ...[
-                const SizedBox(width: 8),
-                InkWell(
-                  onTap: () {
-                    Clipboard.setData(ClipboardData(text: value));
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Nomor pembayaran berhasil disalin')),
-                    );
-                  },
-                  child: const Icon(Icons.copy_rounded, size: 18, color: AppColors.primary),
-                ),
-              ],
-            ],
+          Text(
+            label,
+            style: TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: isTotal ? 14 : 13,
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
+            ),
+          ),
+          Text(
+            value,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: isTotal ? 18 : 14,
+              color: isTotal ? AppColors.primary : AppColors.textPrimary,
+            ),
           ),
         ],
       ),

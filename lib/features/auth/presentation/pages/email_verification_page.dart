@@ -152,7 +152,12 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       alignment: Alignment.centerLeft,
                       child: IconButton(
                         icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => const MainPage()),
+                          );
+                        },
                       ),
                     ),
                     const SizedBox(height: 10),

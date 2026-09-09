@@ -309,4 +309,156 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get scheduleTitle => 'Jadwal Kuliah';
+
+  @override
+  String get chooseLanguage => 'Pilih Bahasa';
+
+  @override
+  String get indonesian => 'Indonesia';
+
+  @override
+  String get english => 'Inggris';
+
+  @override
+  String get arabic => 'Arab';
+
+  @override
+  String get paymentHistory => 'Riwayat Pembayaran';
+
+  @override
+  String get tuitionFee => 'Biaya Kuliah';
+
+  @override
+  String get paymentInstructions => 'Petunjuk Pembayaran';
+
+  @override
+  String get receipt => 'Kuitansi';
+
+  @override
+  String get copySuccess => 'Berhasil disalin';
+
+  @override
+  String get proceed => 'Lanjutkan';
+
+  @override
+  String get billLabel => 'Tagihan';
+
+  @override
+  String get totalBills => 'Total Tagihan';
+
+  @override
+  String get noActiveBills => 'Tidak ada tagihan yang harus dibayar';
+
+  @override
+  String get billStatusUnpaid => 'BELUM LUNAS';
+
+  @override
+  String get billStatusPaid => 'LUNAS';
+
+  @override
+  String get noPaymentHistoryFound => 'Riwayat Pembayaran Tidak Ditemukan';
+
+  @override
+  String get paymentMethod => 'Metode Pembayaran';
+
+  @override
+  String get noPaymentMethods => 'Tidak ada metode pembayaran tersedia';
+
+  @override
+  String get paymentNumber => 'Nomor Pembayaran';
+
+  @override
+  String get copy => 'Salin';
+
+  @override
+  String get adminFee => 'Biaya Admin';
+
+  @override
+  String get totalPay => 'Total Bayar';
+
+  @override
+  String get automaticVerification => 'Verifikasi Otomatis';
+
+  @override
+  String get paymentNumberCopied => 'Nomor pembayaran berhasil disalin';
+
+  @override
+  String get via => 'Melalui';
+
+  @override
+  String get downloadReceipt => 'Unduh Kuitansi';
+
+  @override
+  String get downloadingReceipt =>
+      'Mengunduh kuitansi... Periksa di folder Download';
+
+  @override
+  String get cantOpenReceipt => 'Tidak dapat membuka kuitansi';
+
+  @override
+  String get checkConnection =>
+      'Periksa koneksimu, Tidak dapat terhubung ke jaringan';
+
+  @override
+  String historyItemDetail(String name, String semester) {
+    return '$name (Semester $semester)';
+  }
+
+  @override
+  String get offersTitle => 'Penawaran MK';
+
+  @override
+  String get inputOfferTitle => 'Input Penawaran Mata Kuliah';
+
+  @override
+  String get offerHistoryTitle => 'Riwayat Input PMK';
+
+  @override
+  String get semesterPackage => 'Paket Semester';
+
+  @override
+  String get sksQuota => 'Jatah SKS';
+
+  @override
+  String get offerStartLabel => 'Tanggal mulai input PMK';
+
+  @override
+  String get offerEndLabel => 'Tanggal akhir input PMK';
+
+  @override
+  String get information => 'Informasi';
+
+  @override
+  String get noOfferings => 'Tidak ada penawaran mata kuliah yang tersedia';
+
+  @override
+  String get noOfferHistory => 'Riwayat input penawaran tidak ditemukan';
+
+  @override
+  String selectedCoursesCount(int count, int sks) {
+    return '$count Mata Kuliah ($sks SKS)';
+  }
+
+  @override
+  String sksLimitExceeded(int sks) {
+    return 'Tidak dapat input PMK melebihi $sks sks';
+  }
+
+  @override
+  String khsYear(String year) {
+    return 'KHS TA: $year';
+  }
+
+  @override
+  String get save => 'Simpan';
+
+  @override
+  String get okButton => 'Ok';
+
+  @override
+  String get evalRequiredMessage =>
+      'Untuk melanjutkan silahkan lengkapi penilaian evaluasi dosen pada seluruh semester yang telah dilalui';
+
+  @override
+  String get completeLecturerEval => 'Isi Penilaian Dosen';
 }

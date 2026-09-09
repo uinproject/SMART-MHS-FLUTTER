@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../main.dart';
 import '../../../../core/theme/app_colors.dart';
 
@@ -7,6 +8,8 @@ class LanguageSelectorDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
       child: Padding(
@@ -23,16 +26,16 @@ class LanguageSelectorDialog extends StatelessWidget {
               child: const Icon(Icons.language_rounded, color: AppColors.primary, size: 32),
             ),
             const SizedBox(height: 20),
-            const Text(
-              'Pilih Bahasa',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            Text(
+              l10n.chooseLanguage,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 24),
-            _buildLanguageItem(context, 'Indonesia', 'id', '🇮🇩'),
+            _buildLanguageItem(context, l10n.indonesian, 'id', '🇮🇩'),
             const SizedBox(height: 8),
-            _buildLanguageItem(context, 'English', 'en', '🇺🇸'),
+            _buildLanguageItem(context, l10n.english, 'en', '🇺🇸'),
             const SizedBox(height: 8),
-            _buildLanguageItem(context, 'العربية', 'ar', '🇸🇦'),
+            _buildLanguageItem(context, l10n.arabic, 'ar', '🇸🇦'),
             const SizedBox(height: 24),
           ],
         ),

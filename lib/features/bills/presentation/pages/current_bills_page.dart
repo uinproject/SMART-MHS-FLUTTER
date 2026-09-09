@@ -4,9 +4,25 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
-import '../models/tuition_bill_response.dart';
+import '../../data/models/tuition_bill_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../widgets/error_state_widget.dart';
 import 'select_payment_method_page.dart';
+import 'payment_history_page.dart';
+
+/// Mirrors the legacy `TagihanFragment` business logic:
+/// - loads bills on init (Future.microtask so context is ready)
+/// - groups bills per semester
+/// - total + "Lanjutkan" button only when there are bills
+/// - payment history is reachable from the app bar (replaces legacy tabs)
+/// - pull-to-refresh (legacy SwipeRefreshLayout)
+/// Mirrors the legacy `TagihanFragment` business logic:
+/// - loads bills on init (Future.microtask so context is ready)
+/// - groups bills per semester
+/// - total + "Lanjutkan" button only when there are bills
+/// - payment history is reachable from the app bar (replaces legacy tabs)
+/// - pull-to-refresh (legacy SwipeRefreshLayout)
+enum _BillsLoadState { loading, success, noData, serverError, noInternet }
 
 class CurrentBillsPage extends StatefulWidget {
   const CurrentBillsPage({super.key});
@@ -18,9 +34,9 @@ class CurrentBillsPage extends StatefulWidget {
 class _CurrentBillsPageState extends State<CurrentBillsPage> {
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
-  
+
   TuitionBillResponse? _bills;
-  bool _isLoading = true;
+  _BillsLoadState _state = _BillsLoadState.loading;
 
   @override
   void initState() {
@@ -30,28 +46,40 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
 
   Future<void> _loadBills() async {
     if (!mounted) return;
-    setState(() => _isLoading = true);
-    try {
-      final user = _sessionManager.getUser();
-      if (user != null) {
-        final result = await _apiService.getTuitionBills(
-          nim: user.nim ?? '',
-          kdjen: user.kodeJen ?? '',
-          kdpst: user.kodePst ?? '',
-          language: Localizations.localeOf(context).languageCode,
-        );
-        if (mounted) {
-          setState(() {
-            _bills = result;
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
+    setState(() => _state = _BillsLoadState.loading);
+    final user = _sessionManager.getUser();
+    if (user == null) {
+      if (mounted) setState(() => _state = _BillsLoadState.noInternet);
+      return;
     }
+
+    // NIM is filtered to digits-only inside the service (same as legacy).
+    final result = await _apiService.getTuitionBills(
+      nim: user.nim ?? '',
+      kdjen: user.kodeJen ?? '',
+      kdpst: user.kodePst ?? '',
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _bills = result;
+      if (result.success && result.data != null && result.data!.isNotEmpty) {
+        _state = _BillsLoadState.success;
+      } else if (result.success) {
+        // legacy: success == true && data == null -> "Tidak ada tagihan yang harus dibayar"
+        _state = _BillsLoadState.noData;
+      } else if (result.message != null) {
+        // legacy: success == false && message != null -> show server message
+        _state = _BillsLoadState.serverError;
+      } else {
+        // legacy: onFailure -> no internet animation
+        _state = _BillsLoadState.noInternet;
+      }
+    });
   }
 
+  /// Same as legacy `PerhitunganKeuangan.totaltagihan()`: sum of every item.
+  /// Same as legacy `PerhitunganKeuangan.totaltagihan()`: sum of every item.
   int _calculateTotal() {
     if (_bills?.data == null) return 0;
     int total = 0;
@@ -61,6 +89,22 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
       }
     }
     return total;
+  }
+
+  void _openPaymentHistory() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const PaymentHistoryPage()),
+    );
+  }
+
+  void _openSelectPaymentMethod() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SelectPaymentMethodPage(totalAmount: _calculateTotal()),
+      ),
+    );
   }
 
   @override
@@ -74,6 +118,8 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
       colors: [Color(0xFF003D82), Color(0xFF0056B3)],
     );
 
+    final bool hasBills = _state == _BillsLoadState.success;
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
@@ -84,55 +130,131 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
+        // Legacy title: text_biaya_kuliah
         title: Text(
-          l10n.bills,
+          l10n.tuitionFee,
           style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(gradient: mainGradient),
         ),
+        // Payment history entry point (replaces the legacy TabLayout),
+        // styled like the semester filter pill in schedule_page.dart.
+        actions: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: _openPaymentHistory,
+              borderRadius: BorderRadius.circular(30),
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withValues(alpha: 0.3), width: 1.5),
+                ),
+                child: const Icon(Icons.history_rounded, color: Colors.white, size: 18),
+              ),
+            ),
+          ),
+          const SizedBox(width: 20),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: _loadBills,
         color: AppColors.primary,
-        child: _isLoading
-            ? const Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30))
-            : _bills?.data == null || _bills!.data!.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-                    padding: const EdgeInsets.all(20),
-                    itemCount: _bills!.data!.length,
-                    itemBuilder: (context, index) {
-                      final semester = _bills!.data![index];
-                      return _buildSemesterGroup(semester, l10n);
-                    },
-                  ),
+        child: switch (_state) {
+          _BillsLoadState.loading => ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [
+                SizedBox(height: 300),
+                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+              ],
+            ),
+          _BillsLoadState.noData => ErrorStateWidget(
+              type: ErrorStateType.noData,
+              noDataMessage: l10n.noActiveBills,
+            ),
+          _BillsLoadState.serverError => ErrorStateWidget(
+              type: ErrorStateType.serverError,
+              serverMessage: _bills?.message,
+            ),
+          _BillsLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+          _BillsLoadState.success => ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: _bills!.data!.length,
+              itemBuilder: (context, index) {
+                final semester = _bills!.data![index];
+                return _buildSemesterGroup(semester, l10n, currencyFormat);
+              },
+            ),
+        },
       ),
-      bottomNavigationBar: _isLoading || _bills?.data == null || _bills!.data!.isEmpty 
-          ? null 
-          : _buildBottomBar(currencyFormat, l10n),
+      // Bottom summary + "Lanjutkan" only when there are bills to pay
+      // (legacy disables/hides the pay action when there is nothing to pay).
+      bottomNavigationBar: hasBills
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(l10n.totalBills,
+                                style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                currencyFormat.format(_calculateTotal()),
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      ElevatedButton(
+                        onPressed: _openSelectPaymentMethod,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primary,
+                          foregroundColor: Colors.white,
+                          // Override theme default minimumSize (double.infinity, 56):
+                          // infinite min width breaks layout inside a Row.
+                          minimumSize: const Size(0, 48),
+                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          elevation: 0,
+                        ),
+                        child: Text(l10n.proceed, style: const TextStyle(fontWeight: FontWeight.bold)),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          : null,
     );
   }
 
-  Widget _buildEmptyState() {
-    return ListView(
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        Center(
-          child: Column(
-            children: [
-              Icon(Icons.receipt_long_rounded, size: 80, color: AppColors.primary.withValues(alpha: 0.1)),
-              const SizedBox(height: 16),
-              const Text('Tidak ada tagihan aktif', style: TextStyle(color: AppColors.textSecondary)),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSemesterGroup(SemesterBill semester, AppLocalizations l10n) {
+  Widget _buildSemesterGroup(SemesterBill semester, AppLocalizations l10n, NumberFormat format) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -143,13 +265,13 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary, letterSpacing: 1),
           ),
         ),
-        ...semester.itemTagihan.map((item) => _buildBillCard(item, l10n)),
+        ...semester.itemTagihan.map((item) => _buildBillCard(item, l10n, format)),
         const SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _buildBillCard(BillItem item, AppLocalizations l10n) {
+  Widget _buildBillCard(BillItem item, AppLocalizations l10n, NumberFormat format) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
@@ -176,66 +298,17 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
                   style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                 ),
                 const SizedBox(height: 4),
-                const Text(
-                  'BELUM LUNAS',
-                  style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
+                Text(
+                  l10n.billStatusUnpaid,
+                  style: const TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 16),
           Text(
-            NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0).format(item.jumlah),
+            format.format(item.jumlah),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.primary),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBottomBar(NumberFormat format, AppLocalizations l10n) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -5)),
-        ],
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Total Tagihan', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                Text(
-                  format.format(_calculateTotal()),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 16),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => SelectPaymentMethodPage(
-                    totalAmount: _calculateTotal(),
-                  ),
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            ),
-            child: Text(l10n.proceed, style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
           ),
         ],
       ),

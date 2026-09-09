@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
-  
+
   PengumumanResponse? _pengumuman;
   bool _isLoading = true;
 
@@ -42,7 +42,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         final bool shouldRefresh = isRefresh || !_sessionManager.isJustLoggedIn;
         if (shouldRefresh) {
           final deviceId = await DeviceUtils.getDeviceId();
-          
+
           final updatedUser = await _apiService.refreshSession(
             nim: user.nim ?? '',
             deviceId: deviceId,
@@ -53,13 +53,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
           }
         }
         _sessionManager.isJustLoggedIn = false;
-        
+
         final pengumuman = await _apiService.getPengumuman(
           kodeJen: user.kodeJen,
           kodeFak: user.kodeFakultas,
           kodePst: user.kodePst,
         );
-        
+
         if (mounted) {
           setState(() {
             _pengumuman = pengumuman;
@@ -73,7 +73,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       if (mounted) {
         navigator.pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (route) => false,
+              (route) => false,
         );
       }
     } catch (e) {
@@ -81,25 +81,35 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     }
   }
 
+  // Satu sumber gradient yang dipakai di SliverAppBar & kotak rounded di
+  // bawahnya, supaya keduanya benar-benar identik dan tidak ada "sambungan"
+  // warna yang kelihatan, dalam kondisi apa pun (termasuk saat overscroll
+  // pull-to-refresh).
+  static const LinearGradient headerGradient = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [
+      Color(0xFF002B5C), // navy lebih dalam, kesan lebih premium
+      Color(0xFF003D82),
+      Color(0xFF0062CC),
+    ],
+    stops: [0.0, 0.55, 1.0],
+  );
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final user = _sessionManager.getUser();
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (user == null) {
       return const Scaffold(body: SizedBox.shrink());
     }
 
-    const mainGradient = LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
       body: RefreshIndicator(
+        color: const Color(0xFF003D82),
         onRefresh: () => _loadData(isRefresh: true),
         child: CustomScrollView(
           physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
@@ -107,33 +117,46 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             SliverAppBar(
               pinned: true,
               toolbarHeight: 70,
-              backgroundColor: const Color(0xFF003D82),
+              backgroundColor: const Color(0xFF002B5C),
               elevation: 0,
+              // Kunci hilangnya "pemisah" saat refresh indicator aktif:
+              // Material 3 default-nya menambahkan shadow + tint begitu
+              // konten dianggap "scrolled under" app bar (termasuk saat
+              // gesture pull-to-refresh). Matikan semuanya di sini.
+              scrolledUnderElevation: 0,
+              surfaceTintColor: Colors.transparent,
+              shadowColor: Colors.transparent,
               automaticallyImplyLeading: false,
               titleSpacing: 20,
               title: HomeHeader(user: user),
               centerTitle: false,
               flexibleSpace: Container(
-                decoration: const BoxDecoration(gradient: mainGradient),
+                decoration: const BoxDecoration(gradient: headerGradient),
+                child: Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Positioned(
+                      right: -20,
+                      top: -30,
+                      child: _glowCircle(90, 0.08),
+                    ),
+                    Positioned(
+                      left: -30,
+                      bottom: -40,
+                      child: _glowCircle(70, 0.06),
+                    ),
+                  ],
+                ),
               ),
             ),
+
             SliverToBoxAdapter(
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      gradient: mainGradient,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(40),
-                        bottomRight: Radius.circular(40),
-                      ),
-                    ),
-                  ),
+
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+                    padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                     child: HomeHeader.buildAcademicCard(user, l10n),
                   ),
                 ],
@@ -164,6 +187,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             const SliverPadding(padding: EdgeInsets.only(bottom: 40)),
           ],
         ),
+      ),
+    );
+  }
+
+  // Aksen lingkaran halus untuk kesan header lebih modern/premium.
+  Widget _glowCircle(double size, double opacity) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white.withValues(alpha: opacity),
       ),
     );
   }

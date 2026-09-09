@@ -3,13 +3,17 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:path_provider/path_provider.dart';
 import '../utils/app_constants.dart';
 import '../security/bni_encryption.dart';
 import '../../features/auth/data/models/api_responses.dart';
 import '../../features/auth/data/models/login_data.dart';
 import '../../features/home/data/models/pengumuman_response.dart';
 import '../../features/home/data/models/jadwal_response.dart';
-import '../../features/bills/data/models/tagihan_response.dart';
+import '../../features/bills/data/models/tuition_bill_response.dart';
+import '../../features/bills/data/models/payment_history_response.dart';
+import '../../features/bills/data/models/payment_method_response.dart';
+import '../../features/offers/data/models/penawaran_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -388,31 +392,275 @@ class ApiService {
     }
   }
 
-  Future<TagihanResponse?> getTagihanmhs({
+  /// digits-only NIM, same as legacy: `nim?.filter { it.isDigit() }`
+  static String nimDigits(String nim) => nim.replaceAll(RegExp(r'\D'), '');
+
+  /// POST {legacy}/tagihanmhs — plain params (no encryption), NO language field (same as legacy).
+  /// Non-200 -> success=false + message "error {code}" (same as legacy).
+  /// Connection failure -> success=false + message=null (UI shows no-internet state, same as legacy).
+  Future<TuitionBillResponse> getTuitionBills({
     required String nim,
-    String language = 'in',
+    required String kdjen,
+    required String kdpst,
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'language': language,
+        'unim': nimDigits(nim),
+        'kdjen': kdjen,
+        'kdpst': kdpst,
       };
 
       final response = await _dio.post(
-        'Keuanganservices/tagihanmhsv2',
+        '${AppConstants.baseUrlLegacy}tagihanmhs',
         data: data,
         options: Options(contentType: Headers.formUrlEncodedContentType),
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String 
-            ? jsonDecode(response.data) 
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
             : response.data;
-        return TagihanResponse.fromJson(responseData);
+        return TuitionBillResponse.fromJson(responseData);
       }
-      return null;
+      return TuitionBillResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        data: const [],
+      );
     } catch (e) {
-      rethrow;
+      return TuitionBillResponse(success: false, message: null, data: const []);
     }
+  }
+
+  /// POST {legacy}/rekappembayaran — plain params (no encryption), NO language field (same as legacy).
+  Future<PaymentHistoryResponse> getPaymentHistory({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+  }) async {
+    try {
+      final data = {
+        'unim': nimDigits(nim),
+        'kdjen': kdjen,
+        'kdpst': kdpst,
+      };
+
+      final response = await _dio.post(
+        '${AppConstants.baseUrlLegacy}rekappembayaran',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return PaymentHistoryResponse.fromJson(responseData);
+      }
+      return PaymentHistoryResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        data: const [],
+      );
+    } catch (e) {
+      return PaymentHistoryResponse(success: false, message: null, data: const []);
+    }
+  }
+
+  /// POST {legacy}/tatacarapembayaran — plain params, WITH language field (same as legacy).
+  Future<PaymentMethodResponse> getPaymentMethods({
+    required String nim,
+    String language = 'in',
+  }) async {
+    try {
+      final data = {
+        'unim': nimDigits(nim),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        '${AppConstants.baseUrlLegacy}tatacarapembayaran',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return PaymentMethodResponse.fromJson(responseData);
+      }
+      return PaymentMethodResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        data: const [],
+      );
+    } catch (e) {
+      return PaymentMethodResponse(success: false, message: null, data: const []);
+    }
+  }
+
+  /// GET {APIV2}/Penawaranmkservices/list_penawaran_mk — BNI-hashed query
+  /// params (unim, kode_pst, kode_jen) + plain `language`; plain JSON response.
+  /// NIM is hashed AS-IS (no digits-only filtering, same as legacy PMK).
+  /// Non-200 -> success=false + "error {code}" (same as legacy).
+  /// Connection failure -> success=false + message=null (no-internet state).
+  Future<PenawaranListResponse> getPenawaranList({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Penawaranmkservices/list_penawaran_mk',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return PenawaranListResponse.fromJson(responseData);
+      }
+      return PenawaranListResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return PenawaranListResponse(success: false, message: null);
+    }
+  }
+
+  /// GET {APIV2}/Penawaranmkservices/riwayat_penawaran_mk — BNI-hashed query
+  /// params (unim, kode_pst, kode_jen, semester) + plain `language`.
+  Future<PenawaranRiwayatResponse> getPenawaranRiwayat({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    required int semester,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Penawaranmkservices/riwayat_penawaran_mk',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'semester': BniEncryption.hashData(semester.toString(), AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return PenawaranRiwayatResponse.fromJson(responseData);
+      }
+      return PenawaranRiwayatResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return PenawaranRiwayatResponse(success: false, message: null);
+    }
+  }
+
+  /// POST {APIV2}/Penawaranmkservices/input_penawaran_mata_kuliah —
+  /// form-urlencoded with BNI-hashed fields (unim, kode_pst, kode_jen,
+  /// data_input_penawaran_mk = hash of the JSON array
+  /// `[{"kode_mk":"...","sks_mk":n}]`) + plain `language`.
+  /// Legacy always surfaces a failure message, so connection errors map to
+  /// "error ..." instead of null.
+  Future<PenawaranPostResponse> submitPenawaran({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    required String dataJson,
+    String language = 'id',
+  }) async {
+    try {
+      final data = {
+        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'data_input_penawaran_mk': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        'Penawaranmkservices/input_penawaran_mata_kuliah',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return PenawaranPostResponse.fromJson(responseData);
+      }
+      return PenawaranPostResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return PenawaranPostResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+      );
+    }
+  }
+
+  /// Download a receipt (kuitansi) PDF from the exact same URL as the legacy app
+  /// (`link_kuitansi` with `\/` unescaped). Saves as
+  /// `kuitansi_{nim}_semester{semester}.pdf`. On Android tries the public
+  /// Download folder first (same as legacy DownloadManager), falls back to the
+  /// app documents directory (also used on iOS). Returns the saved file path.
+  Future<String> downloadReceipt({
+    required String url,
+    required String fileName,
+    void Function(int received, int total)? onReceiveProgress,
+  }) async {
+    final cleanUrl = url.replaceAll('\\/', '/');
+    String? savedPath;
+
+    if (Platform.isAndroid) {
+      final publicDownloadDir = Directory('/storage/emulated/0/Download');
+      if (await publicDownloadDir.exists()) {
+        final target = '${publicDownloadDir.path}/$fileName';
+        try {
+          await _dio.download(
+            cleanUrl,
+            target,
+            options: Options(headers: const {'Authorization': AppConstants.authHeader}),
+            onReceiveProgress: onReceiveProgress,
+          );
+          savedPath = target;
+        } catch (_) {
+          savedPath = null; // scoped storage / permission denied -> fallback below
+        }
+      }
+    }
+
+    if (savedPath == null) {
+      final appDir = await getApplicationDocumentsDirectory();
+      final target = '${appDir.path}/$fileName';
+      await _dio.download(
+        cleanUrl,
+        target,
+        onReceiveProgress: onReceiveProgress,
+      );
+      savedPath = target;
+    }
+
+    return savedPath;
   }
 }

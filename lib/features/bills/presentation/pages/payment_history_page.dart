@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
-import '../models/payment_history_response.dart';
+import '../../data/models/payment_history_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:url_launcher/url_launcher.dart';
+import '../widgets/error_state_widget.dart';
+
+/// Mirrors the legacy `RekapPembayaranFragment` business logic:
+/// - loads payment history on init (Future.microtask so context is ready)
+/// - fixed "Riwayat Pembayaran Tidak Ditemukan" message on failure (same as legacy)
+/// - downloads the kuitansi PDF from the exact same URL as the legacy app,
+///   then opens it (legacy used Android DownloadManager)
+/// - pull-to-refresh (legacy SwipeRefreshLayout)
+enum _HistoryLoadState { loading, success, noData, noInternet }
 
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({super.key});
@@ -18,9 +27,9 @@ class PaymentHistoryPage extends StatefulWidget {
 class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
-  
+
   PaymentHistoryResponse? _history;
-  bool _isLoading = true;
+  _HistoryLoadState _state = _HistoryLoadState.loading;
 
   @override
   void initState() {
@@ -30,36 +39,64 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
   Future<void> _loadHistory() async {
     if (!mounted) return;
-    setState(() => _isLoading = true);
-    try {
-      final user = _sessionManager.getUser();
-      if (user != null) {
-        final result = await _apiService.getPaymentHistory(
-          nim: user.nim ?? '',
-          kdjen: user.kodeJen ?? '',
-          kdpst: user.kodePst ?? '',
-          language: Localizations.localeOf(context).languageCode,
-        );
-        if (mounted) {
-          setState(() {
-            _history = result;
-            _isLoading = false;
-          });
-        }
-      }
-    } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
+    setState(() => _state = _HistoryLoadState.loading);
+    final user = _sessionManager.getUser();
+    if (user == null) {
+      if (mounted) setState(() => _state = _HistoryLoadState.noInternet);
+      return;
     }
+
+    // NIM is filtered to digits-only inside the service (same as legacy).
+    final result = await _apiService.getPaymentHistory(
+      nim: user.nim ?? '',
+      kdjen: user.kodeJen ?? '',
+      kdpst: user.kodePst ?? '',
+    );
+
+    if (!mounted) return;
+    setState(() {
+      _history = result;
+      if (result.success && result.data != null && result.data!.isNotEmpty) {
+        _state = _HistoryLoadState.success;
+      } else if (result.message != null) {
+        // Legacy shows the FIXED string here (not the raw server message).
+        _state = _HistoryLoadState.noData;
+      } else {
+        // legacy: onFailure -> no internet animation
+        _state = _HistoryLoadState.noInternet;
+      }
+    });
   }
 
-  Future<void> _downloadReceipt(String url) async {
-    final cleanUrl = url.replaceAll('\\', '');
-    if (await canLaunchUrl(Uri.parse(cleanUrl))) {
-      await launchUrl(Uri.parse(cleanUrl), mode: LaunchMode.externalApplication);
-    } else {
-      if (mounted) {
+  /// Downloads the kuitansi PDF (same URL handling as legacy: `\/` -> `/`)
+  /// and opens it. File name matches legacy:
+  /// `kuitansi_{nim}_semester{semester}.pdf`.
+  Future<void> _downloadReceipt(HistoryItem item) async {
+    final l10n = AppLocalizations.of(context)!;
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(l10n.downloadingReceipt), duration: const Duration(seconds: 2)),
+    );
+
+    try {
+      final user = _sessionManager.getUser();
+      final fileName = 'kuitansi_${user?.nim ?? ''}_semester${item.semester}.pdf';
+      final savedPath = await _apiService.downloadReceipt(
+        url: item.linkKuitansi,
+        fileName: fileName,
+      );
+      final result = await OpenFilex.open(savedPath);
+      if (result.type != ResultType.done && mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Tidak dapat membuka link kuitansi')),
+          SnackBar(content: Text(l10n.cantOpenReceipt)),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(l10n.cantOpenReceipt)),
         );
       }
     }
@@ -98,40 +135,39 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
       body: RefreshIndicator(
         onRefresh: _loadHistory,
         color: AppColors.primary,
-        child: _isLoading
-            ? const Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30))
-            : _history?.data == null || _history!.data!.isEmpty
-                ? _buildEmptyState()
-                : ListView.builder(
-                    padding: const EdgeInsets.all(20),
-                    itemCount: _history!.data!.length,
-                    itemBuilder: (context, index) {
-                      final item = _history!.data![index];
-                      return _buildHistoryCard(item, l10n, currencyFormat);
-                    },
-                  ),
+        child: switch (_state) {
+          _HistoryLoadState.loading => ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [
+                SizedBox(height: 300),
+                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+              ],
+            ),
+          _HistoryLoadState.noData => ErrorStateWidget(
+              type: ErrorStateType.noData,
+              noDataMessage: l10n.noPaymentHistoryFound,
+              noDataIcon: Icons.history_rounded,
+            ),
+          _HistoryLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+          _HistoryLoadState.success => ListView.builder(
+              padding: const EdgeInsets.all(20),
+              itemCount: _history!.data!.length,
+              itemBuilder: (context, index) {
+                final item = _history!.data![index];
+                return _buildHistoryCard(item, l10n, currencyFormat);
+              },
+            ),
+        },
       ),
     );
   }
 
-  Widget _buildEmptyState() {
-    return ListView(
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        Center(
-          child: Column(
-            children: [
-              Icon(Icons.history_rounded, size: 80, color: AppColors.primary.withValues(alpha: 0.1)),
-              const SizedBox(height: 16),
-              const Text('Belum ada riwayat pembayaran', style: TextStyle(color: AppColors.textSecondary)),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   Widget _buildHistoryCard(HistoryItem item, AppLocalizations l10n, NumberFormat format) {
+    // Legacy: "{namatagihan} (Semester {semester})" only when semester is present.
+    final title = item.semester.isEmpty
+        ? item.namatagihan
+        : l10n.historyItemDetail(item.namatagihan, item.semester);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(20),
@@ -158,9 +194,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                   color: Colors.green.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Text(
-                  'LUNAS',
-                  style: TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
+                child: Text(
+                  l10n.billStatusPaid,
+                  style: const TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
                 ),
               ),
               Text(
@@ -171,12 +207,13 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
           ),
           const SizedBox(height: 12),
           Text(
-            item.namatagihan,
+            title,
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 4),
+          // Legacy shows "Melalui : {melalui}"
           Text(
-            'Semester ${item.semester} • Melalui ${item.melalui}',
+            '${l10n.via} : ${item.melalui}',
             style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
           ),
           const SizedBox(height: 12),
@@ -189,9 +226,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
               ),
               if (item.linkKuitansi.isNotEmpty)
                 TextButton.icon(
-                  onPressed: () => _downloadReceipt(item.linkKuitansi),
+                  onPressed: () => _downloadReceipt(item),
                   icon: const Icon(Icons.download_rounded, size: 16),
-                  label: Text(l10n.receipt, style: const TextStyle(fontWeight: FontWeight.bold)),
+                  label: Text(l10n.downloadReceipt, style: const TextStyle(fontWeight: FontWeight.bold)),
                   style: TextButton.styleFrom(foregroundColor: AppColors.primary),
                 ),
             ],

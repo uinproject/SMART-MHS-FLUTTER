@@ -119,5 +119,74 @@
   "lecturer": "Lecturer",
   "today": "Today",
   "noSchedule": "No class schedule",
-  "scheduleTitle": "Class Schedule"
+  "scheduleTitle": "Class Schedule",
+  "chooseLanguage": "Choose Language",
+  "indonesian": "Indonesian",
+  "english": "English",
+  "arabic": "Arabic",
+  "paymentHistory": "Payment History",
+  "tuitionFee": "Tuition Fee",
+  "paymentInstructions": "Payment Instructions",
+  "receipt": "Receipt",
+  "copySuccess": "Copied successfully",
+  "proceed": "Proceed",
+  "billLabel": "Bill",
+  "totalBills": "Total Bills",
+  "noActiveBills": "There are no bills to pay",
+  "billStatusUnpaid": "UNPAID",
+  "billStatusPaid": "PAID",
+  "noPaymentHistoryFound": "Payment History Not Found",
+  "paymentMethod": "Payment Method",
+  "noPaymentMethods": "No payment methods available",
+  "paymentNumber": "Payment Number",
+  "copy": "Copy",
+  "adminFee": "Admin fee",
+  "totalPay": "Total Payment",
+  "automaticVerification": "Automatic Verification",
+  "paymentNumberCopied": "Payment number successfully copied",
+  "via": "Via",
+  "downloadReceipt": "Download Receipt",
+  "downloadingReceipt": "Downloading receipt... Check the Download folder",
+  "cantOpenReceipt": "Cannot open receipt",
+  "checkConnection": "Check your connection, Unable connect to network",
+  "historyItemDetail": "{name} (Semester {semester})",
+  "@historyItemDetail": {
+    "placeholders": {
+      "name": { "type": "String" },
+      "semester": { "type": "String" }
+    }
+  },
+  "offersTitle": "Course Offers",
+  "inputOfferTitle": "Enter Course Offers",
+  "offerHistoryTitle": "Course Offers Entry History",
+  "semesterPackage": "Semester Package",
+  "sksQuota": "Credits Quota",
+  "offerStartLabel": "Start date input course offer",
+  "offerEndLabel": "End date input course offer",
+  "information": "Information",
+  "noOfferings": "No course offerings available",
+  "noOfferHistory": "Offer input history not found",
+  "selectedCoursesCount": "{count} Courses ({sks} Credits)",
+  "@selectedCoursesCount": {
+    "placeholders": {
+      "count": { "type": "int" },
+      "sks": { "type": "int" }
+    }
+  },
+  "sksLimitExceeded": "Cannot enter Course Offers exceeding {sks} credits",
+  "@sksLimitExceeded": {
+    "placeholders": {
+      "sks": { "type": "int" }
+    }
+  },
+  "khsYear": "Academic Year: {year}",
+  "@khsYear": {
+    "placeholders": {
+      "year": { "type": "String" }
+    }
+  },
+  "save": "Save",
+  "okButton": "Ok",
+  "evalRequiredMessage": "To continue, please complete the lecturer evaluation assessment for all semesters that have passed",
+  "completeLecturerEval": "Complete lecturer evaluation"
 }

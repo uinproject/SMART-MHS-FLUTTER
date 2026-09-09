@@ -675,6 +675,288 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Jadwal Kuliah'**
   String get scheduleTitle;
+
+  /// No description provided for @chooseLanguage.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih Bahasa'**
+  String get chooseLanguage;
+
+  /// No description provided for @indonesian.
+  ///
+  /// In id, this message translates to:
+  /// **'Indonesia'**
+  String get indonesian;
+
+  /// No description provided for @english.
+  ///
+  /// In id, this message translates to:
+  /// **'Inggris'**
+  String get english;
+
+  /// No description provided for @arabic.
+  ///
+  /// In id, this message translates to:
+  /// **'Arab'**
+  String get arabic;
+
+  /// No description provided for @paymentHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat Pembayaran'**
+  String get paymentHistory;
+
+  /// No description provided for @tuitionFee.
+  ///
+  /// In id, this message translates to:
+  /// **'Biaya Kuliah'**
+  String get tuitionFee;
+
+  /// No description provided for @paymentInstructions.
+  ///
+  /// In id, this message translates to:
+  /// **'Petunjuk Pembayaran'**
+  String get paymentInstructions;
+
+  /// No description provided for @receipt.
+  ///
+  /// In id, this message translates to:
+  /// **'Kuitansi'**
+  String get receipt;
+
+  /// No description provided for @copySuccess.
+  ///
+  /// In id, this message translates to:
+  /// **'Berhasil disalin'**
+  String get copySuccess;
+
+  /// No description provided for @proceed.
+  ///
+  /// In id, this message translates to:
+  /// **'Lanjutkan'**
+  String get proceed;
+
+  /// No description provided for @billLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Tagihan'**
+  String get billLabel;
+
+  /// No description provided for @totalBills.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Tagihan'**
+  String get totalBills;
+
+  /// No description provided for @noActiveBills.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada tagihan yang harus dibayar'**
+  String get noActiveBills;
+
+  /// No description provided for @billStatusUnpaid.
+  ///
+  /// In id, this message translates to:
+  /// **'BELUM LUNAS'**
+  String get billStatusUnpaid;
+
+  /// No description provided for @billStatusPaid.
+  ///
+  /// In id, this message translates to:
+  /// **'LUNAS'**
+  String get billStatusPaid;
+
+  /// No description provided for @noPaymentHistoryFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat Pembayaran Tidak Ditemukan'**
+  String get noPaymentHistoryFound;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Metode Pembayaran'**
+  String get paymentMethod;
+
+  /// No description provided for @noPaymentMethods.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada metode pembayaran tersedia'**
+  String get noPaymentMethods;
+
+  /// No description provided for @paymentNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Nomor Pembayaran'**
+  String get paymentNumber;
+
+  /// No description provided for @copy.
+  ///
+  /// In id, this message translates to:
+  /// **'Salin'**
+  String get copy;
+
+  /// No description provided for @adminFee.
+  ///
+  /// In id, this message translates to:
+  /// **'Biaya Admin'**
+  String get adminFee;
+
+  /// No description provided for @totalPay.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Bayar'**
+  String get totalPay;
+
+  /// No description provided for @automaticVerification.
+  ///
+  /// In id, this message translates to:
+  /// **'Verifikasi Otomatis'**
+  String get automaticVerification;
+
+  /// No description provided for @paymentNumberCopied.
+  ///
+  /// In id, this message translates to:
+  /// **'Nomor pembayaran berhasil disalin'**
+  String get paymentNumberCopied;
+
+  /// No description provided for @via.
+  ///
+  /// In id, this message translates to:
+  /// **'Melalui'**
+  String get via;
+
+  /// No description provided for @downloadReceipt.
+  ///
+  /// In id, this message translates to:
+  /// **'Unduh Kuitansi'**
+  String get downloadReceipt;
+
+  /// No description provided for @downloadingReceipt.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengunduh kuitansi... Periksa di folder Download'**
+  String get downloadingReceipt;
+
+  /// No description provided for @cantOpenReceipt.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dapat membuka kuitansi'**
+  String get cantOpenReceipt;
+
+  /// No description provided for @checkConnection.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa koneksimu, Tidak dapat terhubung ke jaringan'**
+  String get checkConnection;
+
+  /// No description provided for @historyItemDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'{name} (Semester {semester})'**
+  String historyItemDetail(String name, String semester);
+
+  /// No description provided for @offersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Penawaran MK'**
+  String get offersTitle;
+
+  /// No description provided for @inputOfferTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Input Penawaran Mata Kuliah'**
+  String get inputOfferTitle;
+
+  /// No description provided for @offerHistoryTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat Input PMK'**
+  String get offerHistoryTitle;
+
+  /// No description provided for @semesterPackage.
+  ///
+  /// In id, this message translates to:
+  /// **'Paket Semester'**
+  String get semesterPackage;
+
+  /// No description provided for @sksQuota.
+  ///
+  /// In id, this message translates to:
+  /// **'Jatah SKS'**
+  String get sksQuota;
+
+  /// No description provided for @offerStartLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal mulai input PMK'**
+  String get offerStartLabel;
+
+  /// No description provided for @offerEndLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal akhir input PMK'**
+  String get offerEndLabel;
+
+  /// No description provided for @information.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi'**
+  String get information;
+
+  /// No description provided for @noOfferings.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada penawaran mata kuliah yang tersedia'**
+  String get noOfferings;
+
+  /// No description provided for @noOfferHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat input penawaran tidak ditemukan'**
+  String get noOfferHistory;
+
+  /// No description provided for @selectedCoursesCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} Mata Kuliah ({sks} SKS)'**
+  String selectedCoursesCount(int count, int sks);
+
+  /// No description provided for @sksLimitExceeded.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dapat input PMK melebihi {sks} sks'**
+  String sksLimitExceeded(int sks);
+
+  /// No description provided for @khsYear.
+  ///
+  /// In id, this message translates to:
+  /// **'KHS TA: {year}'**
+  String khsYear(String year);
+
+  /// No description provided for @save.
+  ///
+  /// In id, this message translates to:
+  /// **'Simpan'**
+  String get save;
+
+  /// No description provided for @okButton.
+  ///
+  /// In id, this message translates to:
+  /// **'Ok'**
+  String get okButton;
+
+  /// No description provided for @evalRequiredMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Untuk melanjutkan silahkan lengkapi penilaian evaluasi dosen pada seluruh semester yang telah dilalui'**
+  String get evalRequiredMessage;
+
+  /// No description provided for @completeLecturerEval.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi Penilaian Dosen'**
+  String get completeLecturerEval;
 }
 
 class _AppLocalizationsDelegate

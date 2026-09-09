@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../schedule/presentation/pages/schedule_page.dart';
-import '../../../bills/presentation/pages/tagihan_page.dart';
+import '../../../bills/presentation/pages/current_bills_page.dart';
+import '../../../offers/presentation/pages/sub_menu_offers_page.dart';
 
 class MainMenuGrid extends StatefulWidget {
   const MainMenuGrid({super.key});
@@ -12,25 +13,23 @@ class MainMenuGrid extends StatefulWidget {
 }
 
 class _MainMenuGridState extends State<MainMenuGrid> {
-  bool _showAll = false;
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    
-    final List<Map<String, dynamic>> allMenus = [
-      {'icon': Icons.calendar_today, 'label': l10n.schedule},
-      {'icon': Icons.receipt_long, 'label': l10n.bills},
-      {'icon': Icons.qr_code_scanner, 'label': l10n.presence},
-      {'icon': Icons.history, 'label': l10n.attendance},
-      {'icon': Icons.rate_review, 'label': l10n.edom},
-      {'icon': Icons.insights, 'label': l10n.ipHistory},
-      {'icon': Icons.local_offer, 'label': l10n.offers},
-      {'icon': Icons.description, 'label': l10n.krs},
-      {'icon': Icons.school, 'label': l10n.khs},
-    ];
 
-    final visibleMenus = _showAll ? allMenus : allMenus.take(8).toList();
+    // Payment History is intentionally NOT a separate menu entry anymore:
+    // it is now reachable from the Bills page app bar (same as user request,
+    // replacing the legacy tab layout). Keep exactly 8 items (no show-all).
+    final List<Map<String, dynamic>> allMenus = [
+      {'icon': Icons.calendar_today_rounded, 'label': l10n.schedule},
+      {'icon': Icons.receipt_long_rounded, 'label': l10n.bills},
+      {'icon': Icons.qr_code_scanner_rounded, 'label': l10n.presence},
+      {'icon': Icons.rate_review_rounded, 'label': l10n.edom},
+      {'icon': Icons.insights_rounded, 'label': l10n.ipHistory},
+      {'icon': Icons.local_offer_rounded, 'label': l10n.offers},
+      {'icon': Icons.description_rounded, 'label': l10n.krs},
+      {'icon': Icons.school_rounded, 'label': l10n.khs},
+    ];
 
     return Column(
       children: [
@@ -47,17 +46,6 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                   color: AppColors.textPrimary,
                 ),
               ),
-              InkWell(
-                onTap: () => setState(() => _showAll = !_showAll),
-                child: Text(
-                  _showAll ? l10n.cancel : l10n.showAll,
-                  style: const TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
             ],
           ),
         ),
@@ -71,9 +59,9 @@ class _MainMenuGridState extends State<MainMenuGrid> {
             mainAxisSpacing: 8,
             childAspectRatio: 0.82,
           ),
-          itemCount: visibleMenus.length,
+          itemCount: allMenus.length,
           itemBuilder: (context, index) {
-            final menu = visibleMenus[index];
+            final menu = allMenus[index];
             return _buildMenuItem(
               icon: menu['icon'],
               label: menu['label'],
@@ -86,7 +74,12 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                 } else if (menu['label'] == l10n.bills) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const TagihanPage()),
+                    MaterialPageRoute(builder: (context) => const CurrentBillsPage()),
+                  );
+                } else if (menu['label'] == l10n.offers) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SubMenuOffersPage()),
                   );
                 }
               },
