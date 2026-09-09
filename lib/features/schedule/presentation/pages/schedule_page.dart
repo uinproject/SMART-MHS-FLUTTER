@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
@@ -8,7 +9,8 @@ import '../../../home/data/models/jadwal_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:printing/printing.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_filex/open_filex.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -35,7 +37,6 @@ class _SchedulePageState extends State<SchedulePage> {
     if (user != null) {
       _selectedSemester = user.semester ?? 1;
       _originalSemester = _selectedSemester;
-      // Use microtask to ensure context is ready for Localization if needed
       Future.microtask(() => _loadJadwal());
     }
   }
@@ -90,12 +91,11 @@ class _SchedulePageState extends State<SchedulePage> {
       if (targetIndex != null && _dayKeys.containsKey(targetIndex)) {
         final context = _dayKeys[targetIndex]!.currentContext;
         if (context != null) {
-          // ensureVisible with margin
           Scrollable.ensureVisible(
             context,
             duration: const Duration(milliseconds: 500),
             curve: Curves.easeInOut,
-            alignment: 0.1, // This helps to keep some space at the top
+            alignment: 0.1,
           );
         }
       }
@@ -103,62 +103,186 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   Future<void> _generatePdf() async {
+    if (_jadwal?.data == null) return;
+
     final pdf = pw.Document();
     final user = _sessionManager.getUser();
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
+        margin: const pw.EdgeInsets.all(32),
         build: (pw.Context context) {
           return [
-            pw.Header(
-              level: 0,
-              child: pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
+            // Professional Header
+            pw.Container(
+              padding: const pw.EdgeInsets.only(bottom: 20),
+              decoration: const pw.BoxDecoration(
+                border: pw.Border(bottom: pw.BorderSide(color: PdfColor.fromInt(0xFF003D82), width: 2)),
+              ),
+              child: pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
-                  pw.Text('JADWAL KULIAH', style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold)),
-                  pw.SizedBox(height: 10),
-                  pw.Text('NIM: ${user?.nim ?? "-"}'),
-                  pw.Text('Nama: ${user?.nama ?? "-"}'),
-                  pw.Text('Semester: $_selectedSemester'),
-                  pw.Divider(),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text('JADWAL KULIAH', 
+                        style: pw.TextStyle(fontSize: 24, fontWeight: pw.FontWeight.bold, color: const PdfColor.fromInt(0xFF003D82))),
+                      pw.SizedBox(height: 4),
+                      pw.Text('SMART Mahasiswa UIN Salatiga', 
+                        style: pw.TextStyle(fontSize: 12, color: PdfColors.grey700)),
+                    ],
+                  ),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.end,
+                    children: [
+                      pw.Text('Dicetak pada:', style: const pw.TextStyle(fontSize: 10)),
+                      pw.Text(DateFormat('dd MMMM yyyy, HH:mm').format(DateTime.now()), 
+                        style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+                    ],
+                  ),
                 ],
               ),
             ),
-            if (_jadwal?.data != null)
-              ..._jadwal!.data!.map((day) {
-                return pw.Column(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    pw.Padding(
-                      padding: const pw.EdgeInsets.symmetric(vertical: 10),
-                      child: pw.Text(day.hari.toUpperCase(), style: pw.TextStyle(fontSize: 16, fontWeight: pw.FontWeight.bold)),
+            pw.SizedBox(height: 24),
+            
+            // Student Identity Info Card
+            pw.Container(
+              padding: const pw.EdgeInsets.all(16),
+              decoration: pw.BoxDecoration(
+                color: PdfColors.grey100,
+                borderRadius: const pw.BorderRadius.all(pw.Radius.circular(8)),
+              ),
+              child: pw.Row(
+                children: [
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        _pdfInfoRow('Nama', user?.nama ?? '-'),
+                        pw.SizedBox(height: 4),
+                        _pdfInfoRow('NIM', user?.nim ?? '-'),
+                      ],
                     ),
-                    ...day.itemMakul.map((mk) {
-                      return pw.Container(
-                        margin: const pw.EdgeInsets.only(bottom: 5),
-                        padding: const pw.EdgeInsets.all(5),
-                        decoration: pw.BoxDecoration(border: pw.Border.all(color: PdfColors.grey300)),
-                        child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  ),
+                  pw.Expanded(
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        _pdfInfoRow('Semester', _selectedSemester.toString()),
+                        pw.SizedBox(height: 4),
+                        _pdfInfoRow('Tahun', DateTime.now().year.toString()),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            pw.SizedBox(height: 32),
+
+            // Schedule Table
+            ..._jadwal!.data!.map((day) {
+              return pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Container(
+                    width: double.infinity,
+                    padding: const pw.EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    decoration: const pw.BoxDecoration(
+                      color: PdfColor.fromInt(0xFF003D82),
+                      borderRadius: pw.BorderRadius.vertical(top: pw.Radius.circular(8)),
+                    ),
+                    child: pw.Text(day.hari.toUpperCase(), 
+                      style: pw.TextStyle(color: PdfColors.white, fontWeight: pw.FontWeight.bold, fontSize: 14)),
+                  ),
+                  pw.Table(
+                    border: pw.TableBorder.all(color: PdfColors.grey300, width: 0.5),
+                    columnWidths: {
+                      0: const pw.FlexColumnWidth(3),
+                      1: const pw.FlexColumnWidth(1),
+                      2: const pw.FlexColumnWidth(1.5),
+                      3: const pw.FlexColumnWidth(2),
+                    },
+                    children: [
+                      // Header Row
+                      pw.TableRow(
+                        decoration: const pw.BoxDecoration(color: PdfColors.grey200),
+                        children: [
+                          _pdfTableCell('Mata Kuliah', isHeader: true),
+                          _pdfTableCell('SKS', isHeader: true),
+                          _pdfTableCell('Waktu/Ruang', isHeader: true),
+                          _pdfTableCell('Dosen', isHeader: true),
+                        ],
+                      ),
+                      // Data Rows
+                      ...day.itemMakul.map((mk) {
+                        final isNotScheduled = mk.waktu.toLowerCase().contains('tidak dijadwalkan') || 
+                                              mk.waktu.trim().isEmpty || 
+                                              mk.waktu == '-';
+                        return pw.TableRow(
                           children: [
-                            pw.Text(mk.makul, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                            pw.Text('Waktu: ${mk.waktu}'),
-                            pw.Text('Ruang: ${mk.ruang}'),
-                            pw.Text('Dosen: ${mk.dosen}'),
+                            _pdfTableCell(mk.makul),
+                            _pdfTableCell(mk.sks.toString()),
+                            _pdfTableCell(isNotScheduled ? '-' : '${mk.waktu}\n(${mk.ruang})'),
+                            _pdfTableCell(isNotScheduled ? '-' : mk.dosen),
                           ],
-                        ),
-                      );
-                    }),
-                  ],
-                );
-              }),
+                        );
+                      }),
+                    ],
+                  ),
+                  pw.SizedBox(height: 24),
+                ],
+              );
+            }),
           ];
         },
       ),
     );
 
-    await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => pdf.save());
+    try {
+      final output = await getApplicationDocumentsDirectory();
+      final file = File("${output.path}/Jadwal_Semester_$_selectedSemester.pdf");
+      
+      final bytes = await pdf.save();
+      await file.writeAsBytes(bytes, flush: true);
+      
+      if (mounted) {
+        final result = await OpenFilex.open(file.path);
+        if (result.type != ResultType.done) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Tidak dapat membuka PDF: ${result.message}')),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Gagal menyimpan PDF: $e')),
+        );
+      }
+    }
+  }
+
+  pw.Widget _pdfInfoRow(String label, String value) {
+    return pw.Row(
+      children: [
+        pw.SizedBox(width: 60, child: pw.Text('$label:', style: pw.TextStyle(fontSize: 10, color: PdfColors.grey700))),
+        pw.Text(value, style: pw.TextStyle(fontSize: 10, fontWeight: pw.FontWeight.bold)),
+      ],
+    );
+  }
+
+  pw.Widget _pdfTableCell(String text, {bool isHeader = false}) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.all(8),
+      child: pw.Text(
+        text,
+        style: pw.TextStyle(
+          fontSize: 9,
+          fontWeight: isHeader ? pw.FontWeight.bold : pw.FontWeight.normal,
+        ),
+      ),
+    );
   }
 
   void _showSemesterPicker() {
@@ -321,7 +445,7 @@ class _SchedulePageState extends State<SchedulePage> {
             )
           else if (_jadwal?.data == null || _jadwal!.data!.isEmpty)
             SliverFillRemaining(
-              child: Center(child: Text(l10n.noSchedule)),
+              child: _buildEmptyState(l10n),
             )
           else
             SliverPadding(
@@ -337,6 +461,64 @@ class _SchedulePageState extends State<SchedulePage> {
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Stack(
+            alignment: Alignment.center,
+            children: [
+              Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.03),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              Container(
+                width: 110,
+                height: 110,
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.05),
+                  shape: BoxShape.circle,
+                ),
+              ),
+              const Icon(
+                Icons.calendar_month_outlined,
+                size: 70,
+                color: AppColors.primary,
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+          Text(
+            l10n.noSchedule,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 48),
+            child: Text(
+              'Jadwal untuk semester ini belum tersedia atau masih dalam proses pemutakhiran.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary.withValues(alpha: 0.7),
+                height: 1.5,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -379,6 +561,10 @@ class _SchedulePageState extends State<SchedulePage> {
   }
 
   Widget _buildScheduleCard(MataKuliah mk, AppLocalizations l10n) {
+    final isNotScheduled = mk.waktu.toLowerCase().contains('tidak dijadwalkan') || 
+                          mk.waktu.trim().isEmpty || 
+                          mk.waktu == '-';
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(20),
@@ -419,12 +605,14 @@ class _SchedulePageState extends State<SchedulePage> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildInfoRow(Icons.access_time_rounded, mk.waktu),
-          const SizedBox(height: 8),
-          _buildInfoRow(Icons.location_on_outlined, '${l10n.room} ${mk.ruang}'),
-          const SizedBox(height: 8),
-          _buildInfoRow(Icons.person_outline_rounded, mk.dosen),
+          if (!isNotScheduled) ...[
+            const SizedBox(height: 16),
+            _buildInfoRow(Icons.access_time_rounded, mk.waktu),
+            const SizedBox(height: 8),
+            _buildInfoRow(Icons.location_on_outlined, '${l10n.room} ${mk.ruang}'),
+            const SizedBox(height: 8),
+            _buildInfoRow(Icons.person_outline_rounded, mk.dosen),
+          ],
         ],
       ),
     );
