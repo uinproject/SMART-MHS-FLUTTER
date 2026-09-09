@@ -561,6 +561,25 @@ class AppLocalizationsAr extends AppLocalizations {
   String get edomOpenDetail => 'تعبئة / تفاصيل التقييم';
 
   @override
+  String get edomSemestersSubtitle => 'اختر الفصل الدراسي لتعبئة تقييم المحاضر';
+
+  @override
+  String edomProgressSummary(int done, int total) {
+    return '$done من $total فصل دراسي مكتمل';
+  }
+
+  @override
+  String get edomSemestersEmpty => 'لا توجد فصول دراسية للتقييم';
+
+  @override
+  String edomCoursesProgressSummary(int done, int total) {
+    return '$done من $total مادة تم تقييمها';
+  }
+
+  @override
+  String get edomCoursesEmpty => 'لا توجد مواد للتقييم';
+
+  @override
   String get edomHistoryButton => 'السجل';
 
   @override

@@ -116,8 +116,9 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
       setState(() {
         items[index].kodeStatusEval = int.tryParse(result.statusEval) ?? 0;
         if (result.statusEval == '1') {
-          items[index].keteranganStatus =
-              AppLocalizations.of(context)!.edomStatusProgress;
+          items[index].keteranganStatus = AppLocalizations.of(
+            context,
+          )!.edomStatusProgress;
         }
       });
     }
@@ -134,12 +135,19 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.edomSemestersTitle,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -149,33 +157,198 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
       body: RefreshIndicator(
         onRefresh: _loadSemesters,
         color: AppColors.primary,
-        child: switch (_state) {
-          _EdomSemLoadState.loading => ListView(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          switchInCurve: Curves.easeOut,
+          switchOutCurve: Curves.easeIn,
+          child: switch (_state) {
+            _EdomSemLoadState.loading => ListView(
+              key: const ValueKey('edom-loading'),
               physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 300),
-                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.32),
+                const Center(
+                  child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+                ),
               ],
             ),
-          _EdomSemLoadState.serverError => ErrorStateWidget(
+            _EdomSemLoadState.serverError => ErrorStateWidget(
+              key: const ValueKey('edom-error'),
               type: ErrorStateType.serverError,
               serverMessage: _response?.message,
             ),
-          _EdomSemLoadState.success => ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-              itemCount: _response!.data!.dataTahun.length,
-              itemBuilder: (context, index) {
-                final item = _response!.data!.dataTahun[index];
-                return _buildSemesterCard(item, index, l10n);
-              },
-            ),
-        },
+            _EdomSemLoadState.success =>
+              _response?.data == null || _response!.data!.dataTahun.isEmpty
+                  ? _buildEmptyState(l10n)
+                  : ListView.builder(
+                      key: const ValueKey('edom-semesters'),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+                      itemCount: _response!.data!.dataTahun.length + 1,
+                      itemBuilder: (context, index) => index == 0
+                          ? _buildProgressHeader(
+                              l10n,
+                              _response!.data!.dataTahun,
+                            )
+                          : _buildSemesterCard(
+                              _response!.data!.dataTahun[index - 1],
+                              index - 1,
+                              l10n,
+                            ),
+                    ),
+          },
+        ),
       ),
     );
   }
 
-  Widget _buildSemesterCard(EdomItemSemester item, int index, AppLocalizations l10n) {
-    final (Color badgeColor, String badgeText) = switch (item.kodeStatusEval) {
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    return ListView(
+      key: const ValueKey('edom-empty'),
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.28),
+        const Icon(
+          Icons.event_note_rounded,
+          size: 72,
+          color: AppColors.iconBackground,
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              l10n.edomSemestersEmpty,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Kartu ringkasan progres evaluasi (header daftar semester).
+  Widget _buildProgressHeader(
+    AppLocalizations l10n,
+    List<EdomItemSemester> items,
+  ) {
+    final total = items.length;
+    final done = items.where((item) => item.kodeStatusEval == 2).length;
+    final progress = total == 0 ? 0.0 : (done / total).clamp(0.0, 1.0);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: mainGradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.task_alt_rounded,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.edomProgressSummary(done, total),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      l10n.edomSemestersSubtitle,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.15),
+                ),
+                child: Center(
+                  child: Text(
+                    '${(progress * 100).round()}%',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          TweenAnimationBuilder<double>(
+            key: ValueKey('edom-progress-$done-$total'),
+            tween: Tween<double>(begin: 0, end: progress),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: value,
+                minHeight: 8,
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSemesterCard(
+    EdomItemSemester item,
+    int index,
+    AppLocalizations l10n,
+  ) {
+    final (
+      Color statusColor,
+      String statusText,
+    ) = switch (item.kodeStatusEval) {
       2 => (AppColors.success, l10n.edomStatusDone),
       1 => (AppColors.secondary, l10n.edomStatusProgress),
       _ => (AppColors.danger, l10n.edomStatusNotFilled),
@@ -184,85 +357,150 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: AppColors.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Header berwarna (setara ilustrasi evalbg legacy)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-            decoration: const BoxDecoration(
-              gradient: mainGradient,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-            ),
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _openCourses(item, index),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '${l10n.semester} ${item.semester}',
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 52,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        gradient: mainGradient,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: const Icon(
+                        Icons.calendar_month_rounded,
+                        color: Colors.white,
+                        size: 26,
+                      ),
+                    ),
+                    const SizedBox(width: 14),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 2),
+                          Text(
+                            '${l10n.semester} ${item.semester}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            item.keteranganStatus,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              color: AppColors.textSecondary,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    _buildStatusPill(statusColor, statusText),
+                  ],
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  item.keteranganStatus,
-                  style: const TextStyle(fontSize: 12, color: Colors.white70),
-                ),
+                const SizedBox(height: 14),
+                _buildDetailButton(l10n),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: badgeColor,
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  child: Text(
-                    badgeText,
-                    style: const TextStyle(
-                      fontSize: 11,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                const Spacer(),
-                TextButton(
-                  onPressed: () => _openCourses(item, index),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                    minimumSize: const Size(0, 36),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  ),
-                  child: Text(
-                    l10n.edomOpenDetail,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                ),
-              ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusPill(Color color, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: color,
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDetailButton(AppLocalizations l10n) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    return Container(
+      height: 44,
+      decoration: BoxDecoration(
+        color: AppColors.primary.withValues(alpha: 0.08),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 14),
+          const Icon(
+            Icons.rate_review_rounded,
+            size: 18,
+            color: AppColors.primary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              l10n.edomOpenDetail,
+              textAlign: TextAlign.center,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primary,
+              ),
+            ),
+          ),
+          Transform.flip(
+            flipX: isRtl,
+            child: const Icon(
+              Icons.arrow_forward_rounded,
+              size: 18,
+              color: AppColors.primary,
+            ),
+          ),
+          const SizedBox(width: 14),
         ],
       ),
     );

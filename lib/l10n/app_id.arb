@@ -225,6 +225,23 @@
   "edomStatusProgress": "Proses Pengisian",
   "edomStatusNotFilled": "Belum Mengisi",
   "edomOpenDetail": "Isi / Detail Evaluasi",
+  "edomSemestersSubtitle": "Pilih semester untuk mengisi evaluasi dosen",
+  "edomProgressSummary": "{done} dari {total} semester selesai",
+  "@edomProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomSemestersEmpty": "Tidak ada semester evaluasi yang tersedia",
+  "edomCoursesProgressSummary": "{done} dari {total} mata kuliah dievaluasi",
+  "@edomCoursesProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomCoursesEmpty": "Tidak ada mata kuliah evaluasi yang tersedia",
   "edomHistoryButton": "Riwayat",
   "edomFillButton": "Isi Penilaian",
   "edomFillAllQuestionsError": "Silahkan lengkapi jawaban pada indikator {indicator} nomor {number}",

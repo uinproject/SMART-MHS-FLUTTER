@@ -225,6 +225,23 @@
   "edomStatusProgress": "قيد التعبئة",
   "edomStatusNotFilled": "لم يُملأ",
   "edomOpenDetail": "تعبئة / تفاصيل التقييم",
+  "edomSemestersSubtitle": "اختر الفصل الدراسي لتعبئة تقييم المحاضر",
+  "edomProgressSummary": "{done} من {total} فصل دراسي مكتمل",
+  "@edomProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomSemestersEmpty": "لا توجد فصول دراسية للتقييم",
+  "edomCoursesProgressSummary": "{done} من {total} مادة تم تقييمها",
+  "@edomCoursesProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomCoursesEmpty": "لا توجد مواد للتقييم",
   "edomHistoryButton": "السجل",
   "edomFillButton": "تعبئة التقييم",
   "edomFillAllQuestionsError": "يرجى إكمال الإجابة على المؤشر {indicator} رقم {number}",

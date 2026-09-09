@@ -225,6 +225,23 @@
   "edomStatusProgress": "Filling Process",
   "edomStatusNotFilled": "Not Completed",
   "edomOpenDetail": "Form filling / Evaluation Details",
+  "edomSemestersSubtitle": "Select a semester to fill in the lecturer evaluation",
+  "edomProgressSummary": "{done} of {total} semesters completed",
+  "@edomProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomSemestersEmpty": "No evaluation semesters available",
+  "edomCoursesProgressSummary": "{done} of {total} courses evaluated",
+  "@edomCoursesProgressSummary": {
+    "placeholders": {
+      "done": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  },
+  "edomCoursesEmpty": "No evaluation courses available",
   "edomHistoryButton": "History",
   "edomFillButton": "Rating",
   "edomFillAllQuestionsError": "Please complete the answers in indicator {indicator} number {number}",

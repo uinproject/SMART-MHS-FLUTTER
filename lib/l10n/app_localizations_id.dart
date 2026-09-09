@@ -563,6 +563,26 @@ class AppLocalizationsId extends AppLocalizations {
   String get edomOpenDetail => 'Isi / Detail Evaluasi';
 
   @override
+  String get edomSemestersSubtitle =>
+      'Pilih semester untuk mengisi evaluasi dosen';
+
+  @override
+  String edomProgressSummary(int done, int total) {
+    return '$done dari $total semester selesai';
+  }
+
+  @override
+  String get edomSemestersEmpty => 'Tidak ada semester evaluasi yang tersedia';
+
+  @override
+  String edomCoursesProgressSummary(int done, int total) {
+    return '$done dari $total mata kuliah dievaluasi';
+  }
+
+  @override
+  String get edomCoursesEmpty => 'Tidak ada mata kuliah evaluasi yang tersedia';
+
+  @override
   String get edomHistoryButton => 'Riwayat';
 
   @override

@@ -94,8 +94,9 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
     setState(() {
       _response = result;
       _statusApiEval = result.success;
-      _state =
-          result.success && result.data != null ? _EdomMakulLoadState.success : _EdomMakulLoadState.serverError;
+      _state = result.success && result.data != null
+          ? _EdomMakulLoadState.success
+          : _EdomMakulLoadState.serverError;
     });
   }
 
@@ -113,7 +114,10 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
   void _onWillPop() {
     Navigator.pop(
       context,
-      EdomCoursesResult(statusApi: _statusApiEval, statusEval: _computedStatusEval),
+      EdomCoursesResult(
+        statusApi: _statusApiEval,
+        statusEval: _computedStatusEval,
+      ),
     );
   }
 
@@ -158,12 +162,19 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
           backgroundColor: const Color(0xFF003D82),
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
             onPressed: _onWillPop,
           ),
           title: Text(
             l10n.edomCoursesTitle,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: false,
           flexibleSpace: Container(
@@ -173,33 +184,195 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
         body: RefreshIndicator(
           onRefresh: _loadCourses,
           color: AppColors.primary,
-          child: switch (_state) {
-            _EdomMakulLoadState.loading => ListView(
+          child: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: switch (_state) {
+              _EdomMakulLoadState.loading => ListView(
+                key: const ValueKey('edom-courses-loading'),
                 physics: const AlwaysScrollableScrollPhysics(),
-                children: const [
-                  SizedBox(height: 300),
-                  Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+                children: [
+                  SizedBox(height: MediaQuery.of(context).size.height * 0.32),
+                  const Center(
+                    child: SpinKitThreeBounce(
+                      color: AppColors.primary,
+                      size: 30,
+                    ),
+                  ),
                 ],
               ),
-            _EdomMakulLoadState.serverError => ErrorStateWidget(
+              _EdomMakulLoadState.serverError => ErrorStateWidget(
+                key: const ValueKey('edom-courses-error'),
                 type: ErrorStateType.serverError,
                 serverMessage: _response?.message,
               ),
-            _EdomMakulLoadState.success => ListView.builder(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
-                itemCount: _response!.data!.length,
-                itemBuilder: (context, index) {
-                  final makul = _response!.data![index];
-                  return _buildMakulCard(makul, index, l10n);
-                },
-              ),
-          },
+              _EdomMakulLoadState.success =>
+                _response?.data == null || _response!.data!.isEmpty
+                    ? _buildEmptyState(l10n)
+                    : ListView.builder(
+                        key: const ValueKey('edom-courses'),
+                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 32),
+                        itemCount: _response!.data!.length + 1,
+                        itemBuilder: (context, index) => index == 0
+                            ? _buildProgressHeader(l10n, _response!.data!)
+                            : _buildMakulCard(
+                                _response!.data![index - 1],
+                                index - 1,
+                                l10n,
+                              ),
+                      ),
+            },
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMakulCard(EdomMakulEval makul, int index, AppLocalizations l10n) {
+  Widget _buildEmptyState(AppLocalizations l10n) {
+    return ListView(
+      key: const ValueKey('edom-courses-empty'),
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.28),
+        const Icon(
+          Icons.menu_book_rounded,
+          size: 72,
+          color: AppColors.iconBackground,
+        ),
+        const SizedBox(height: 16),
+        Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Text(
+              l10n.edomCoursesEmpty,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Kartu ringkasan progres evaluasi mata kuliah (header daftar).
+  Widget _buildProgressHeader(
+    AppLocalizations l10n,
+    List<EdomMakulEval> items,
+  ) {
+    final total = items.length;
+    final done = items.where((m) => m.statusEval == '2').length;
+    final progress = total == 0 ? 0.0 : (done / total).clamp(0.0, 1.0);
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        gradient: mainGradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.25),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.menu_book_rounded,
+                  color: Colors.white,
+                  size: 26,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.edomCoursesProgressSummary(done, total),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '${l10n.semester} ${widget.item.semester}',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white.withValues(alpha: 0.8),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Container(
+                width: 52,
+                height: 52,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white.withValues(alpha: 0.15),
+                ),
+                child: Center(
+                  child: Text(
+                    '${(progress * 100).round()}%',
+                    style: const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 18),
+          TweenAnimationBuilder<double>(
+            key: ValueKey('edom-courses-progress-$done-$total'),
+            tween: Tween<double>(begin: 0, end: progress),
+            duration: const Duration(milliseconds: 600),
+            curve: Curves.easeOutCubic,
+            builder: (context, value, _) => ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: LinearProgressIndicator(
+                value: value,
+                minHeight: 8,
+                backgroundColor: Colors.white.withValues(alpha: 0.2),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMakulCard(
+    EdomMakulEval makul,
+    int index,
+    AppLocalizations l10n,
+  ) {
     // Mirror Kotlin MakulEvalAdapter status colors exactly:
     // statuseval == "2" → green  (circle_object_success_transparan)
     // statuseval == "1" → blue   (circle_object_info_transparan)
@@ -214,146 +387,274 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: AppColors.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Foto dosen with fallback to user_default asset (mirrors Glide .error(R.drawable.user_default))
-              _buildDosenAvatar(makul.urlfotodoseneval),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      makul.namamkeval,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textPrimary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      makul.doseneval,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
-                    ),
-                    const SizedBox(height: 6),
-                    // Badge status transparan (teks berwarna)
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: statusColor.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Text(
-                        statusText,
-                        style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          color: statusColor,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Foto dosen with fallback to user_default asset (mirrors Glide .error(R.drawable.user_default))
+                  _buildDosenAvatar(makul.urlfotodoseneval),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          makul.namamkeval,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                            height: 1.3,
+                          ),
                         ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.person_rounded,
+                              size: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                makul.doseneval,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 12.5,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        _buildStatusPill(statusColor, statusText),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              // Rating bar (non-interactive) — mirrors Kotlin ratingbar.rating = makul.rating
+              // Uses ClipRect for accurate fractional-star rendering
+              Row(
+                children: [
+                  _buildStarRating(makul.rating),
+                  if (makul.rating > 0) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      makul.rating.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFFD97706),
                       ),
                     ),
                   ],
+                ],
+              ),
+              // Komentar — hanya bila tidak kosong (legacy VISIBLE/GONE)
+              if (makul.komentar.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.background,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.format_quote_rounded,
+                        size: 16,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          makul.komentar,
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontStyle: FontStyle.italic,
+                            color: AppColors.textPrimary,
+                            height: 1.4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
+              ],
+              const Divider(
+                height: 28,
+                thickness: 1,
+                color: AppColors.background,
+              ),
+              // Riwayat: hanya aktif bila sudah selesai; Isi Penilaian: bila belum.
+              _buildActionButtons(
+                l10n,
+                isDone,
+                onHistory: () => _openForm(makul, null),
+                onFill: () => _openForm(makul, index),
               ),
             ],
           ),
-          const SizedBox(height: 10),
-          // Rating bar (non-interactive) — mirrors Kotlin ratingbar.rating = makul.rating
-          // Uses ClipRect for accurate fractional-star rendering
-          _buildStarRating(makul.rating),
-          // Komentar — hanya bila tidak kosong (legacy VISIBLE/GONE)
-          if (makul.komentar.isNotEmpty) ...[
-            const SizedBox(height: 10),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.background,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Text(
-                makul.komentar,
-                style: const TextStyle(fontSize: 12, color: AppColors.textPrimary, height: 1.4),
-              ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatusPill(Color color, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 7,
+            height: 7,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+          ),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 10.5,
+              fontWeight: FontWeight.bold,
+              color: color,
             ),
-          ],
-          const SizedBox(height: 14),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              // Riwayat: hanya aktif bila sudah selesai
-              TextButton(
-                onPressed: isDone ? () => _openForm(makul, null) : null,
-                style: TextButton.styleFrom(
-                  minimumSize: const Size(0, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-                child: Text(l10n.edomHistoryButton),
-              ),
-              const SizedBox(width: 8),
-              // Isi Penilaian: hanya aktif bila BELUM selesai
-              ElevatedButton(
-                onPressed: isDone ? null : () => _openForm(makul, index),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  disabledBackgroundColor: AppColors.iconBackground,
-                  disabledForegroundColor: AppColors.textSecondary,
-                  minimumSize: const Size(0, 40),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  elevation: 0,
-                ),
-                child: Text(l10n.edomFillButton, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
-              ),
-            ],
           ),
         ],
       ),
     );
   }
 
-  /// Foto dosen dengan fallback gambar user_default (setara Glide .error(R.drawable.user_default))
+  Widget _buildActionButtons(
+    AppLocalizations l10n,
+    bool isDone, {
+    required VoidCallback onHistory,
+    required VoidCallback onFill,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: isDone ? onHistory : null,
+            style: OutlinedButton.styleFrom(
+              minimumSize: const Size(0, 44),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              side: BorderSide(
+                width: 1.3,
+                color: isDone ? AppColors.primary : AppColors.iconBackground,
+              ),
+              foregroundColor: AppColors.primary,
+              disabledForegroundColor: AppColors.textSecondary.withValues(
+                alpha: 0.45,
+              ),
+            ),
+            icon: const Icon(Icons.history_rounded, size: 17),
+            label: Text(
+              l10n.edomHistoryButton,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: ElevatedButton.icon(
+            onPressed: isDone ? null : onFill,
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(0, 44),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              backgroundColor: AppColors.primary,
+              foregroundColor: Colors.white,
+              disabledBackgroundColor: AppColors.iconBackground,
+              disabledForegroundColor: AppColors.textSecondary.withValues(
+                alpha: 0.55,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              elevation: 0,
+            ),
+            icon: const Icon(Icons.rate_review_rounded, size: 17),
+            label: Text(
+              l10n.edomFillButton,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 12.5,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Foto dosen dengan ring gradient & fallback gambar user_default
+  /// (setara Glide .error(R.drawable.user_default))
   Widget _buildDosenAvatar(String url) {
-    if (url.isEmpty) {
-      return CircleAvatar(
-        radius: 28,
+    return Container(
+      padding: const EdgeInsets.all(2.5),
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: mainGradient,
+      ),
+      child: CircleAvatar(
+        radius: 27,
         backgroundColor: AppColors.iconBackground,
+        foregroundImage: url.isEmpty ? null : NetworkImage(url),
+        onForegroundImageError: url.isEmpty ? null : (_, __) {},
         backgroundImage: const AssetImage('assets/images/user_default.png'),
-      );
-    }
-    return CircleAvatar(
-      radius: 28,
-      backgroundColor: AppColors.iconBackground,
-      foregroundImage: NetworkImage(url),
-      onForegroundImageError: (_, __) {},
-      backgroundImage: const AssetImage('assets/images/user_default.png'),
+      ),
     );
   }
 
   /// Rating bar non-interaktif 5 bintang dengan clip akurat untuk partial-star
   Widget _buildStarRating(double rating) {
     const int total = 5;
-    const double size = 22;
+    const double size = 20;
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: List.generate(total, (i) {
@@ -363,10 +664,18 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
           height: size,
           child: Stack(
             children: [
-              const Icon(Icons.star_rounded, color: AppColors.iconBackground, size: size),
+              const Icon(
+                Icons.star_rounded,
+                color: AppColors.iconBackground,
+                size: size,
+              ),
               ClipRect(
                 clipper: _FractionalWidthClipper(fill),
-                child: const Icon(Icons.star_rounded, color: Colors.amber, size: size),
+                child: const Icon(
+                  Icons.star_rounded,
+                  color: Colors.amber,
+                  size: size,
+                ),
               ),
             ],
           ),
@@ -382,9 +691,9 @@ class _FractionalWidthClipper extends CustomClipper<Rect> {
   const _FractionalWidthClipper(this.fraction);
 
   @override
-  Rect getClip(Size size) => Rect.fromLTWH(0, 0, size.width * fraction, size.height);
+  Rect getClip(Size size) =>
+      Rect.fromLTWH(0, 0, size.width * fraction, size.height);
 
   @override
   bool shouldReclip(_FractionalWidthClipper old) => old.fraction != fraction;
 }
-

@@ -124,7 +124,6 @@ class _EdomFormPageState extends State<EdomFormPage> {
   int get _activeSoalCount => _indikators[_activeIndikator].itemsoal.length;
   int get _maxIndikator => _indikators.length - 1;
 
-
   void _selectIndikator(int index) {
     setState(() => _activeIndikator = index);
     _pageController!.jumpToPage(0);
@@ -133,7 +132,10 @@ class _EdomFormPageState extends State<EdomFormPage> {
   void _next() {
     final page = _pageController!.page?.round() ?? 0;
     if (page < _activeSoalCount - 1) {
-      _pageController!.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController!.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
     } else if (_activeIndikator < _maxIndikator) {
       setState(() => _activeIndikator++);
       _pageController!.jumpToPage(0);
@@ -147,7 +149,10 @@ class _EdomFormPageState extends State<EdomFormPage> {
   void _previous() {
     final page = _pageController!.page?.round() ?? 0;
     if (page > 0) {
-      _pageController!.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController!.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.ease,
+      );
     } else if (_activeIndikator > 0) {
       setState(() => _activeIndikator--);
       // Jump to the LAST question of the previous indicator (legacy prev_data).
@@ -181,10 +186,7 @@ class _EdomFormPageState extends State<EdomFormPage> {
     );
 
     if (!result.validate) {
-      _showMessageDialog(
-        result.errorMessage,
-        isError: true,
-      );
+      _showMessageDialog(result.errorMessage, isError: true);
       return;
     }
     _showKomentarDialog(l10n, result.payload);
@@ -199,7 +201,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
       barrierDismissible: false,
       builder: (dialogContext) => StatefulBuilder(
         builder: (dialogContext, setDialogState) => Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -208,12 +212,20 @@ class _EdomFormPageState extends State<EdomFormPage> {
               children: [
                 Text(
                   l10n.edomImpressionTitle,
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 12),
                 Text(
                   l10n.edomImpressionInstruction,
-                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                    height: 1.4,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 TextField(
@@ -223,11 +235,15 @@ class _EdomFormPageState extends State<EdomFormPage> {
                   decoration: InputDecoration(
                     hintText: l10n.edomImpressionTitle,
                     errorText: errorText,
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(14)),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
                     contentPadding: const EdgeInsets.all(14),
                   ),
                   onChanged: (_) {
-                    if (errorText != null) setDialogState(() => errorText = null);
+                    if (errorText != null) {
+                      setDialogState(() => errorText = null);
+                    }
                   },
                 ),
                 const SizedBox(height: 16),
@@ -238,7 +254,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
                       final saran = controller.text.trim();
                       // Legacy CustomValidation.seterrorvalidation_on_saran: min 8 chars.
                       if (saran.length < 8) {
-                        setDialogState(() => errorText = l10n.edomImpressionMinError);
+                        setDialogState(
+                          () => errorText = l10n.edomImpressionMinError,
+                        );
                         return;
                       }
                       _saranSaved = saran; // legacy keeps the draft
@@ -278,7 +296,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
       builder: (dialogContext) => PopScope(
         canPop: false,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -288,7 +308,10 @@ class _EdomFormPageState extends State<EdomFormPage> {
                 const SizedBox(height: 16),
                 Text(
                   l10n.edomSaving,
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -297,7 +320,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
       ),
     );
 
-    final result = await _apiService.submitEdomEvaluation(dataJson: jsonEncode(data.toJson()));
+    final result = await _apiService.submitEdomEvaluation(
+      dataJson: jsonEncode(data.toJson()),
+    );
 
     if (!mounted) return;
     Navigator.of(context, rootNavigator: true).pop(); // close loading dialog
@@ -308,7 +333,10 @@ class _EdomFormPageState extends State<EdomFormPage> {
         isSuccess: true,
         onOk: () => Navigator.pop(
           context,
-          EdomFormResult(rating: result.rating ?? 0.0, komentar: result.komentar),
+          EdomFormResult(
+            rating: result.rating ?? 0.0,
+            komentar: result.komentar,
+          ),
         ),
       );
     } else {
@@ -340,7 +368,8 @@ class _EdomFormPageState extends State<EdomFormPage> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: (isSuccess ? AppColors.success : AppColors.danger).withValues(alpha: 0.15),
+                  color: (isSuccess ? AppColors.success : AppColors.danger)
+                      .withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -353,7 +382,11 @@ class _EdomFormPageState extends State<EdomFormPage> {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -380,20 +413,75 @@ class _EdomFormPageState extends State<EdomFormPage> {
     final l10n = AppLocalizations.of(context)!;
     final bool? leave = await showDialog<bool>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        title: Text(l10n.edomExitConfirmTitle, style: const TextStyle(fontSize: 16)),
-        content: Text(l10n.edomExitConfirmMessage, style: const TextStyle(fontSize: 13)),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: Text(l10n.cancel, style: const TextStyle(color: AppColors.textSecondary)),
+      builder: (dialogContext) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.danger.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.cancel_rounded,
+                  color: AppColors.danger,
+                  size: 32,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                l10n.edomExitConfirmTitle,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                l10n.edomExitConfirmMessage,
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+              const SizedBox(height: 32),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(dialogContext, false),
+                      style: OutlinedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(l10n.cancel),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(dialogContext, true),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColors.danger,
+                        foregroundColor: Colors.white,
+                        minimumSize: const Size.fromHeight(50),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: Text(l10n.ok),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: Text(l10n.ok, style: const TextStyle(color: AppColors.primary)),
-          ),
-        ],
+        ),
       ),
     );
     return leave ?? false;
@@ -418,14 +506,23 @@ class _EdomFormPageState extends State<EdomFormPage> {
           backgroundColor: const Color(0xFF003D82),
           elevation: 0,
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
             onPressed: () async {
-              if (await _confirmExit() && context.mounted) Navigator.pop(context);
+              if (await _confirmExit() && context.mounted) {
+                Navigator.pop(context);
+              }
             },
           ),
           title: Text(
             _viewOnly ? l10n.edomHistoryButton : l10n.edomFillButton,
-            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           centerTitle: false,
           flexibleSpace: Container(
@@ -433,29 +530,34 @@ class _EdomFormPageState extends State<EdomFormPage> {
           ),
         ),
         body: switch (_state) {
-          _EdomFormLoadState.loading => const Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
+          _EdomFormLoadState.loading => const Center(
+            child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+          ),
           _EdomFormLoadState.serverError => ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: [
-                ErrorStateWidget(type: ErrorStateType.serverError, serverMessage: null),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: ElevatedButton(
-                    onPressed: _loadQuestions,
-                    child: Text(l10n.tryAgain),
-                  ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              ErrorStateWidget(
+                type: ErrorStateType.serverError,
+                serverMessage: null,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: ElevatedButton(
+                  onPressed: _loadQuestions,
+                  child: Text(l10n.tryAgain),
                 ),
-              ],
-            ),
+              ),
+            ],
+          ),
           _EdomFormLoadState.success => Column(
-              children: [
-                _buildHeader(l10n),
-                _buildIndikatorChips(),
-                Expanded(child: _buildQuestionPager()),
-                _buildProgressBar(),
-                _buildNavButtons(l10n),
-              ],
-            ),
+            children: [
+              _buildHeader(l10n),
+              _buildIndikatorChips(),
+              Expanded(child: _buildQuestionPager()),
+              _buildProgressBar(),
+              _buildNavButtons(l10n),
+            ],
+          ),
         },
       ),
     );
@@ -468,16 +570,28 @@ class _EdomFormPageState extends State<EdomFormPage> {
       decoration: const BoxDecoration(gradient: mainGradient),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Colors.white24,
-            foregroundImage: widget.makul.urlfotodoseneval.isEmpty
-                ? null
-                : NetworkImage(widget.makul.urlfotodoseneval) as ImageProvider,
-            onForegroundImageError: (_, __) {},
-            child: widget.makul.urlfotodoseneval.isEmpty
-                ? const Icon(Icons.person_rounded, color: Colors.white70, size: 24)
-                : null,
+          // Foto dosen dengan fallback user_default — sama seperti edom_courses_page
+          // (setara Glide .error(R.drawable.user_default)); ring putih frosted
+          // agar terlihat di atas header gradient.
+          Container(
+            padding: const EdgeInsets.all(2.5),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white.withValues(alpha: 0.3),
+            ),
+            child: CircleAvatar(
+              radius: 21.5,
+              backgroundColor: AppColors.iconBackground,
+              foregroundImage: widget.makul.urlfotodoseneval.isEmpty
+                  ? null
+                  : NetworkImage(widget.makul.urlfotodoseneval),
+              onForegroundImageError: widget.makul.urlfotodoseneval.isEmpty
+                  ? null
+                  : (_, __) {},
+              backgroundImage: const AssetImage(
+                'assets/images/user_default.png',
+              ),
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -488,7 +602,11 @@ class _EdomFormPageState extends State<EdomFormPage> {
                   widget.makul.namamkeval,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
@@ -556,7 +674,12 @@ class _EdomFormPageState extends State<EdomFormPage> {
             children: [
               Text(
                 '${page + 1}. ${soal.pertanyaan}',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary, height: 1.4),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                  height: 1.4,
+                ),
               ),
               if (soal.urlimage != null && soal.urlimage!.isNotEmpty) ...[
                 const SizedBox(height: 12),
@@ -569,7 +692,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
                 ),
               ],
               const SizedBox(height: 16),
-              ...soal.itemjawaban.map((jawaban) => _buildAnswerOption(soal, jawaban)),
+              ...soal.itemjawaban.map(
+                (jawaban) => _buildAnswerOption(soal, jawaban),
+              ),
             ],
           ),
         );
@@ -583,7 +708,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        color: selected ? AppColors.primary.withValues(alpha: 0.06) : Colors.white,
+        color: selected
+            ? AppColors.primary.withValues(alpha: 0.06)
+            : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: selected ? AppColors.primary : AppColors.iconBackground,
@@ -601,24 +728,33 @@ class _EdomFormPageState extends State<EdomFormPage> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
-          onTap: _viewOnly ? null : () {
-            _answerQuestion(soal, jawaban);
-          },
+          onTap: _viewOnly
+              ? null
+              : () {
+                  _answerQuestion(soal, jawaban);
+                },
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
                 Icon(
-                  selected ? Icons.check_circle_rounded : Icons.panorama_fish_eye_rounded,
+                  selected
+                      ? Icons.check_circle_rounded
+                      : Icons.panorama_fish_eye_rounded,
                   color: selected ? AppColors.primary : AppColors.textSecondary,
                   size: 22,
                 ),
                 const SizedBox(width: 12),
                 if (jawaban.indexpilihan.isNotEmpty) ...[
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 2,
+                    ),
                     decoration: BoxDecoration(
-                      color: selected ? AppColors.primary : AppColors.iconBackground,
+                      color: selected
+                          ? AppColors.primary
+                          : AppColors.iconBackground,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Text(
@@ -626,7 +762,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.bold,
-                        color: selected ? Colors.white : AppColors.textSecondary,
+                        color: selected
+                            ? Colors.white
+                            : AppColors.textSecondary,
                       ),
                     ),
                   ),
@@ -637,8 +775,12 @@ class _EdomFormPageState extends State<EdomFormPage> {
                     jawaban.pilihan,
                     style: TextStyle(
                       fontSize: 13,
-                      color: selected ? AppColors.textPrimary : AppColors.textSecondary,
-                      fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
+                      color: selected
+                          ? AppColors.textPrimary
+                          : AppColors.textSecondary,
+                      fontWeight: selected
+                          ? FontWeight.w600
+                          : FontWeight.normal,
                     ),
                   ),
                 ),
@@ -651,7 +793,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
   }
 
   Widget _buildProgressBar() {
-    final page = _pageController?.hasClients == true ? _pageController!.page?.round() ?? 0 : 0;
+    final page = _pageController?.hasClients == true
+        ? _pageController!.page?.round() ?? 0
+        : 0;
     final current = _startIndexes[_activeIndikator] + page + 1;
 
     return Padding(
@@ -663,7 +807,11 @@ class _EdomFormPageState extends State<EdomFormPage> {
             children: [
               Text(
                 '$current / $_totalSoal',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textSecondary,
+                ),
               ),
             ],
           ),
@@ -682,8 +830,11 @@ class _EdomFormPageState extends State<EdomFormPage> {
   }
 
   Widget _buildNavButtons(AppLocalizations l10n) {
-    final page = _pageController?.hasClients == true ? _pageController!.page?.round() ?? 0 : 0;
-    final bool atVeryEnd = _activeIndikator == _maxIndikator && page == _activeSoalCount - 1;
+    final page = _pageController?.hasClients == true
+        ? _pageController!.page?.round() ?? 0
+        : 0;
+    final bool atVeryEnd =
+        _activeIndikator == _maxIndikator && page == _activeSoalCount - 1;
     final bool showSave = atVeryEnd && !_viewOnly;
 
     // Legacy: in view-only mode the Next button is disabled at the very end.
@@ -699,9 +850,15 @@ class _EdomFormPageState extends State<EdomFormPage> {
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(0, 48),
                 side: const BorderSide(color: AppColors.primary),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
               ),
-              child: const Icon(Icons.arrow_back_rounded, color: AppColors.primary, size: 20),
+              child: const Icon(
+                Icons.arrow_back_rounded,
+                color: AppColors.primary,
+                size: 20,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -715,7 +872,9 @@ class _EdomFormPageState extends State<EdomFormPage> {
                 disabledBackgroundColor: AppColors.iconBackground,
                 disabledForegroundColor: AppColors.textSecondary,
                 minimumSize: const Size(0, 48),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
                 elevation: 0,
               ),
               child: Row(
@@ -723,10 +882,15 @@ class _EdomFormPageState extends State<EdomFormPage> {
                 children: [
                   Text(
                     showSave ? l10n.save : '',
-                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13,
+                    ),
                   ),
                   Icon(
-                    showSave ? Icons.check_rounded : Icons.arrow_forward_rounded,
+                    showSave
+                        ? Icons.check_rounded
+                        : Icons.arrow_forward_rounded,
                     size: 20,
                   ),
                 ],

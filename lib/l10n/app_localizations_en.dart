@@ -561,6 +561,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edomOpenDetail => 'Form filling / Evaluation Details';
 
   @override
+  String get edomSemestersSubtitle =>
+      'Select a semester to fill in the lecturer evaluation';
+
+  @override
+  String edomProgressSummary(int done, int total) {
+    return '$done of $total semesters completed';
+  }
+
+  @override
+  String get edomSemestersEmpty => 'No evaluation semesters available';
+
+  @override
+  String edomCoursesProgressSummary(int done, int total) {
+    return '$done of $total courses evaluated';
+  }
+
+  @override
+  String get edomCoursesEmpty => 'No evaluation courses available';
+
+  @override
   String get edomHistoryButton => 'History';
 
   @override

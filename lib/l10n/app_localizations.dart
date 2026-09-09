@@ -1144,6 +1144,36 @@ abstract class AppLocalizations {
   /// **'Isi / Detail Evaluasi'**
   String get edomOpenDetail;
 
+  /// No description provided for @edomSemestersSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih semester untuk mengisi evaluasi dosen'**
+  String get edomSemestersSubtitle;
+
+  /// No description provided for @edomProgressSummary.
+  ///
+  /// In id, this message translates to:
+  /// **'{done} dari {total} semester selesai'**
+  String edomProgressSummary(int done, int total);
+
+  /// No description provided for @edomSemestersEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada semester evaluasi yang tersedia'**
+  String get edomSemestersEmpty;
+
+  /// No description provided for @edomCoursesProgressSummary.
+  ///
+  /// In id, this message translates to:
+  /// **'{done} dari {total} mata kuliah dievaluasi'**
+  String edomCoursesProgressSummary(int done, int total);
+
+  /// No description provided for @edomCoursesEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada mata kuliah evaluasi yang tersedia'**
+  String get edomCoursesEmpty;
+
   /// No description provided for @edomHistoryButton.
   ///
   /// In id, this message translates to:
