@@ -14,6 +14,12 @@ import '../../features/bills/data/models/tuition_bill_response.dart';
 import '../../features/bills/data/models/payment_history_response.dart';
 import '../../features/bills/data/models/payment_method_response.dart';
 import '../../features/offers/data/models/penawaran_response.dart';
+import '../../features/krs/data/models/krs_response.dart';
+import '../../features/krs/data/models/krs_list_response.dart';
+import '../../features/edom/data/models/edom_semester_response.dart';
+import '../../features/edom/data/models/edom_makul_response.dart';
+import '../../features/edom/data/models/edom_soal_response.dart';
+import '../../features/edom/data/models/edom_post_models.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -615,6 +621,270 @@ class ApiService {
       return PenawaranPostResponse(
         success: false,
         message: 'error ${e is DioException ? e.message : e}',
+      );
+    }
+  }
+
+  /// GET {APIV2}/krsservices/krs — BNI-hashed query params
+  /// (`unim`, **`kdpst`**, **`kdjen`** — NOTE the short names, unlike the
+  /// list/input endpoints) + plain `language`; plain JSON response.
+  /// NIM is hashed AS-IS (legacy KRS does not digits-filter the NIM).
+  /// Non-200 -> success=false + "error {code}"; connection failure ->
+  /// success=false + message=null (no-internet state).
+  Future<KrsResponse> getKrs({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'krsservices/krs',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kdpst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kdjen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return KrsResponse.fromJson(responseData);
+      }
+      return KrsResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return KrsResponse(success: false, message: null);
+    }
+  }
+
+  /// GET {APIV2}/krsservices/list_krs_mk — BNI-hashed query params
+  /// (`unim`, **`kode_pst`**, **`kode_jen`** — long names, unlike the
+  /// krs endpoint) + plain `language`; plain JSON response.
+  Future<KrsListResponse> getKrsList({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'krsservices/list_krs_mk',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return KrsListResponse.fromJson(responseData);
+      }
+      return KrsListResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return KrsListResponse(success: false, message: null);
+    }
+  }
+
+  /// POST {APIV2}/krsservices/input_krs_mata_kuliah — form-urlencoded with
+  /// BNI-hashed fields (unim, kode_pst, kode_jen,
+  /// `data_input_krs_mk` = hash of the JSON array from `KrsInputItem.toJson`)
+  /// + plain `language`. Legacy always surfaces a failure message on POST,
+  /// so connection errors map to "error ..." instead of null.
+  Future<KrsPostResponse> submitKrs({
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+    required String dataJson,
+    String language = 'id',
+  }) async {
+    try {
+      final data = {
+        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'data_input_krs_mk': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        'krsservices/input_krs_mata_kuliah',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return KrsPostResponse.fromJson(responseData);
+      }
+      return KrsPostResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        tglInput: 'xxx',
+      );
+    } catch (e) {
+      return KrsPostResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+        tglInput: 'xxx',
+      );
+    }
+  }
+
+  // ---- EDOM (Edomservices/*) ----
+  // ⚠️ Error mapping DIFFERS from other modules: the legacy EDOM activities
+  // build `message = "error ${t.message}"` on connection failure (never
+  // null), so the no-internet state never occurs — every failure surfaces
+  // as a server-error message.
+
+  /// GET {APIV2}/Edomservices/list_semester_evaluasi — BNI-hashed `unim`
+  /// (NIM as-is, no digits filtering) + plain `language`.
+  Future<EdomSemestersResponse> getEdomSemesters({
+    required String nim,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Edomservices/list_semester_evaluasi',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return EdomSemestersResponse.fromJson(responseData);
+      }
+      return EdomSemestersResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return EdomSemestersResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+      );
+    }
+  }
+
+  /// GET {APIV2}/Edomservices/list_makul_evaluasi — BNI-hashed `unim` +
+  /// `thsms` + plain `language`.
+  Future<EdomCoursesResponse> getEdomCourses({
+    required String nim,
+    required String thsms,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Edomservices/list_makul_evaluasi',
+        queryParameters: {
+          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'thsms': BniEncryption.hashData(thsms, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return EdomCoursesResponse.fromJson(responseData);
+      }
+      return EdomCoursesResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return EdomCoursesResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+      );
+    }
+  }
+
+  /// GET {APIV2}/Edomservices/list_soal_evaluasi — BNI-hashed `ideval` +
+  /// plain `language`.
+  Future<EdomQuestionsResponse> getEdomQuestions({
+    required String ideval,
+    String language = 'id',
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Edomservices/list_soal_evaluasi',
+        queryParameters: {
+          'ideval': BniEncryption.hashData(ideval, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'language': language,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return EdomQuestionsResponse.fromJson(responseData);
+      }
+      return EdomQuestionsResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return EdomQuestionsResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+      );
+    }
+  }
+
+  /// POST {APIV2}/Edomservices/simpan_eval_dosen — ⚠️ JSON body (NOT
+  /// form-urlencoded like other modules): `{"data": BNI-hash of the
+  /// EdomPostData JSON}`. Legacy surfaces a fixed message when the body is
+  /// null/unparseable ("Periksa koneksimu..."), so connection errors map to
+  /// an "error ..." message (never success-by-default).
+  Future<EdomPostResponse> submitEdomEvaluation({
+    required String dataJson,
+  }) async {
+    try {
+      final response = await _dio.post(
+        'Edomservices/simpan_eval_dosen',
+        data: {
+          'data': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+        },
+        options: Options(contentType: Headers.jsonContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return EdomPostResponse.fromJson(responseData);
+      }
+      return EdomPostResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        komentar: '',
+      );
+    } catch (e) {
+      return EdomPostResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
+        komentar: '',
       );
     }
   }

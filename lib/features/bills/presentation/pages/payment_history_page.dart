@@ -5,6 +5,7 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
+import '../../../../core/utils/app_notifications.dart';
 import '../../data/models/payment_history_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../widgets/error_state_widget.dart';
@@ -73,9 +74,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   /// `kuitansi_{nim}_semester{semester}.pdf`.
   Future<void> _downloadReceipt(HistoryItem item) async {
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.downloadingReceipt), duration: const Duration(seconds: 2)),
+    AppNotifications.show(
+      context,
+      l10n.downloadingReceipt,
+      type: AppNotificationType.info,
+      duration: const Duration(seconds: 2),
     );
 
     try {
@@ -87,16 +90,18 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
       );
       final result = await OpenFilex.open(savedPath);
       if (result.type != ResultType.done && mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cantOpenReceipt)),
+        AppNotifications.show(
+          context,
+          l10n.cantOpenReceipt,
+          type: AppNotificationType.error,
         );
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.cantOpenReceipt)),
+        AppNotifications.show(
+          context,
+          l10n.cantOpenReceipt,
+          type: AppNotificationType.error,
         );
       }
     }

@@ -4,6 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../schedule/presentation/pages/schedule_page.dart';
 import '../../../bills/presentation/pages/current_bills_page.dart';
 import '../../../offers/presentation/pages/sub_menu_offers_page.dart';
+import '../../../krs/presentation/pages/sub_menu_krs_page.dart';
+import '../../../edom/presentation/pages/edom_semesters_page.dart';
 
 class MainMenuGrid extends StatefulWidget {
   const MainMenuGrid({super.key});
@@ -13,23 +15,32 @@ class MainMenuGrid extends StatefulWidget {
 }
 
 class _MainMenuGridState extends State<MainMenuGrid> {
+  /// Collapsed grid shows 2 rows x 4 columns; "Lihat Lebih" reveals the rest.
+  static const int _collapsedItemCount = 8;
+  bool _showAll = false;
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
     // Payment History is intentionally NOT a separate menu entry anymore:
     // it is now reachable from the Bills page app bar (same as user request,
-    // replacing the legacy tab layout). Keep exactly 8 items (no show-all).
+    // replacing the legacy tab layout).
     final List<Map<String, dynamic>> allMenus = [
       {'icon': Icons.calendar_today_rounded, 'label': l10n.schedule},
       {'icon': Icons.receipt_long_rounded, 'label': l10n.bills},
       {'icon': Icons.qr_code_scanner_rounded, 'label': l10n.presence},
+      {'icon': Icons.check_circle_outline_rounded, 'label': l10n.attendance},
       {'icon': Icons.rate_review_rounded, 'label': l10n.edom},
-      {'icon': Icons.insights_rounded, 'label': l10n.ipHistory},
+      {'icon': Icons.insights_rounded, 'label': l10n.academicHistory},
       {'icon': Icons.local_offer_rounded, 'label': l10n.offers},
       {'icon': Icons.description_rounded, 'label': l10n.krs},
       {'icon': Icons.school_rounded, 'label': l10n.khs},
     ];
+
+    final visibleMenus =
+        _showAll ? allMenus : allMenus.take(_collapsedItemCount).toList();
+    final bool hasMore = allMenus.length > _collapsedItemCount;
 
     return Column(
       children: [
@@ -59,9 +70,9 @@ class _MainMenuGridState extends State<MainMenuGrid> {
             mainAxisSpacing: 8,
             childAspectRatio: 0.82,
           ),
-          itemCount: allMenus.length,
+          itemCount: visibleMenus.length,
           itemBuilder: (context, index) {
-            final menu = allMenus[index];
+            final menu = visibleMenus[index];
             return _buildMenuItem(
               icon: menu['icon'],
               label: menu['label'],
@@ -81,11 +92,47 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                     context,
                     MaterialPageRoute(builder: (context) => const SubMenuOffersPage()),
                   );
+                } else if (menu['label'] == l10n.krs) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SubMenuKrsPage()),
+                  );
+                } else if (menu['label'] == l10n.edom) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const EdomSemestersPage()),
+                  );
                 }
               },
             );
           },
         ),
+        // "Lihat Lebih" / "Tutup" toggle (only when there are hidden items)
+        if (hasMore)
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: TextButton.icon(
+              onPressed: () => setState(() => _showAll = !_showAll),
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                minimumSize: const Size(0, 32),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              icon: Icon(
+                _showAll ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                color: AppColors.primary,
+                size: 22,
+              ),
+              label: Text(
+                _showAll ? l10n.showLess : l10n.showMore,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

@@ -5,6 +5,7 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
+import '../../../../core/utils/app_notifications.dart';
 import '../../data/models/penawaran_response.dart';
 import '../../../bills/presentation/widgets/error_state_widget.dart';
 
@@ -134,13 +135,11 @@ class _InputOffersPageState extends State<InputOffersPage> {
 
   void _showOverQuotaSnackbar() {
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(l10n.sksLimitExceeded(_jatahSks)),
-        backgroundColor: AppColors.danger,
-        behavior: SnackBarBehavior.floating,
-      ));
+    AppNotifications.show(
+      context,
+      l10n.sksLimitExceeded(_jatahSks),
+      type: AppNotificationType.error,
+    );
   }
 
   /// Blocking dialog (legacy: Lottie star + `text_show_dialog_eval`).

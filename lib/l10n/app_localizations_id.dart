@@ -138,6 +138,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get showMore => 'Lihat Lebih';
 
   @override
+  String get showLess => 'Tutup';
+
+  @override
   String get mainMenu => 'Menu Utama';
 
   @override
@@ -241,7 +244,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get edom => 'EDOM';
 
   @override
-  String get ipHistory => 'Riwayat IP';
+  String get academicHistory => 'Riwayat IP';
 
   @override
   String get offers => 'Penawaran';
@@ -461,4 +464,139 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get completeLecturerEval => 'Isi Penilaian Dosen';
+
+  @override
+  String get krsSubmenuTitle => 'Sub Menu KRS';
+
+  @override
+  String get viewKrsTitle => 'Kartu Rencana Studi';
+
+  @override
+  String get inputKrsTitle => 'Input KRS';
+
+  @override
+  String get krsSemesterLabel => 'KRS Semester';
+
+  @override
+  String get approvedSksLabel => 'Jumlah SKS disetujui';
+
+  @override
+  String get krsNote =>
+      'Untuk melihat KRS semester sebelumnya silahkan akses menu KHS';
+
+  @override
+  String get krsInputStartLabel => 'Tanggal mulai pengisian KRS';
+
+  @override
+  String get krsInputEndLabel => 'Tanggal akhir pengisian KRS';
+
+  @override
+  String get krsInputWarning =>
+      'KRS yang sudah di setujui oleh dosen wali tidak dapat diubah kembali!';
+
+  @override
+  String scheduleConflict(String course) {
+    return 'Gagal, terjadi benturan jadwal dengan mata kuliah $course';
+  }
+
+  @override
+  String get notScheduled => 'Tidak Dijadwalkan';
+
+  @override
+  String get classLabel => 'Kelas';
+
+  @override
+  String get quotaLabel => 'Kuota';
+
+  @override
+  String get remainingLabel => 'Sisa';
+
+  @override
+  String get approvedBadge => 'Disetujui';
+
+  @override
+  String get courseCode => 'Kode MK';
+
+  @override
+  String get krsTotalLabel => 'Jumlah KRS Mata Kuliah';
+
+  @override
+  String get noKrsData => 'Tidak ada data KRS yang tersedia';
+
+  @override
+  String get noKrsOfferings =>
+      'Tidak ada mata kuliah yang tersedia untuk input KRS';
+
+  @override
+  String get subscriptionRequiredMessage =>
+      'Fitur ini memerlukan langganan. Silakan berlangganan untuk dapat menggunakan fitur ini sepenuhnya';
+
+  @override
+  String get sessionExpired =>
+      'Sesi Anda telah berakhir, silakan login kembali';
+
+  @override
+  String get preparingPdf => 'Menyiapkan dokumen PDF...';
+
+  @override
+  String get cantOpenPdf => 'Tidak dapat membuka PDF';
+
+  @override
+  String get failedSavePdf => 'Gagal menyimpan PDF';
+
+  @override
+  String get edomSemestersTitle => 'Semester Evaluasi';
+
+  @override
+  String get edomCoursesTitle => 'Mata Kuliah Evaluasi';
+
+  @override
+  String get edomStatusDone => 'Selesai';
+
+  @override
+  String get edomStatusProgress => 'Proses Pengisian';
+
+  @override
+  String get edomStatusNotFilled => 'Belum Mengisi';
+
+  @override
+  String get edomOpenDetail => 'Isi / Detail Evaluasi';
+
+  @override
+  String get edomHistoryButton => 'Riwayat';
+
+  @override
+  String get edomFillButton => 'Isi Penilaian';
+
+  @override
+  String edomFillAllQuestionsError(String indicator, int number) {
+    return 'Silahkan lengkapi jawaban pada indikator $indicator nomor $number';
+  }
+
+  @override
+  String get edomImpressionTitle => 'Kesan Pesan';
+
+  @override
+  String get edomImpressionInstruction =>
+      'Tuliskan komentar,kesan pesan atau saran minimal 8 karakter. Nama anda tidak akan ditampilkan di dashboard dosen';
+
+  @override
+  String get edomImpressionMinError => 'Kesan Pesan minimal 8 karakter';
+
+  @override
+  String get edomSaving => 'Menyimpan jawaban anda';
+
+  @override
+  String get edomExitConfirmTitle => 'Apakah anda yakin?';
+
+  @override
+  String get edomExitConfirmMessage =>
+      'Jika anda keluar sekarang jawaban tidak akan disimpan';
+
+  @override
+  String get errorResponseApi =>
+      'Periksa koneksimu, Tidak dapat terhubung ke server';
+
+  @override
+  String get tryAgain => 'Coba Lagi';
 }

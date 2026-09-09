@@ -5,6 +5,7 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
+import '../../../../core/utils/app_notifications.dart';
 import '../../../home/data/models/jadwal_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pdf/pdf.dart';
@@ -247,17 +248,23 @@ class _SchedulePageState extends State<SchedulePage> {
       await file.writeAsBytes(bytes, flush: true);
       
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         final result = await OpenFilex.open(file.path);
         if (result.type != ResultType.done) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Tidak dapat membuka PDF: ${result.message}')),
+          AppNotifications.show(
+            context,
+            '${l10n.cantOpenPdf}: ${result.message}',
+            type: AppNotificationType.error,
           );
         }
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Gagal menyimpan PDF: $e')),
+        final l10n = AppLocalizations.of(context)!;
+        AppNotifications.show(
+          context,
+          '${l10n.failedSavePdf}: $e',
+          type: AppNotificationType.error,
         );
       }
     }
@@ -392,8 +399,11 @@ class _SchedulePageState extends State<SchedulePage> {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Menyiapkan dokumen PDF...'), duration: Duration(seconds: 1)),
+                    AppNotifications.show(
+                      context,
+                      AppLocalizations.of(context)!.preparingPdf,
+                      type: AppNotificationType.info,
+                      duration: const Duration(seconds: 1),
                     );
                     _generatePdf();
                   },

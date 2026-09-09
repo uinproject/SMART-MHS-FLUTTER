@@ -352,6 +352,12 @@ abstract class AppLocalizations {
   /// **'Lihat Lebih'**
   String get showMore;
 
+  /// No description provided for @showLess.
+  ///
+  /// In id, this message translates to:
+  /// **'Tutup'**
+  String get showLess;
+
   /// No description provided for @mainMenu.
   ///
   /// In id, this message translates to:
@@ -556,11 +562,11 @@ abstract class AppLocalizations {
   /// **'EDOM'**
   String get edom;
 
-  /// No description provided for @ipHistory.
+  /// No description provided for @academicHistory.
   ///
   /// In id, this message translates to:
   /// **'Riwayat IP'**
-  String get ipHistory;
+  String get academicHistory;
 
   /// No description provided for @offers.
   ///
@@ -957,6 +963,252 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Isi Penilaian Dosen'**
   String get completeLecturerEval;
+
+  /// No description provided for @krsSubmenuTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Sub Menu KRS'**
+  String get krsSubmenuTitle;
+
+  /// No description provided for @viewKrsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kartu Rencana Studi'**
+  String get viewKrsTitle;
+
+  /// No description provided for @inputKrsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Input KRS'**
+  String get inputKrsTitle;
+
+  /// No description provided for @krsSemesterLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'KRS Semester'**
+  String get krsSemesterLabel;
+
+  /// No description provided for @approvedSksLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah SKS disetujui'**
+  String get approvedSksLabel;
+
+  /// No description provided for @krsNote.
+  ///
+  /// In id, this message translates to:
+  /// **'Untuk melihat KRS semester sebelumnya silahkan akses menu KHS'**
+  String get krsNote;
+
+  /// No description provided for @krsInputStartLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal mulai pengisian KRS'**
+  String get krsInputStartLabel;
+
+  /// No description provided for @krsInputEndLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanggal akhir pengisian KRS'**
+  String get krsInputEndLabel;
+
+  /// No description provided for @krsInputWarning.
+  ///
+  /// In id, this message translates to:
+  /// **'KRS yang sudah di setujui oleh dosen wali tidak dapat diubah kembali!'**
+  String get krsInputWarning;
+
+  /// No description provided for @scheduleConflict.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal, terjadi benturan jadwal dengan mata kuliah {course}'**
+  String scheduleConflict(String course);
+
+  /// No description provided for @notScheduled.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak Dijadwalkan'**
+  String get notScheduled;
+
+  /// No description provided for @classLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Kelas'**
+  String get classLabel;
+
+  /// No description provided for @quotaLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Kuota'**
+  String get quotaLabel;
+
+  /// No description provided for @remainingLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Sisa'**
+  String get remainingLabel;
+
+  /// No description provided for @approvedBadge.
+  ///
+  /// In id, this message translates to:
+  /// **'Disetujui'**
+  String get approvedBadge;
+
+  /// No description provided for @courseCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode MK'**
+  String get courseCode;
+
+  /// No description provided for @krsTotalLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Jumlah KRS Mata Kuliah'**
+  String get krsTotalLabel;
+
+  /// No description provided for @noKrsData.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada data KRS yang tersedia'**
+  String get noKrsData;
+
+  /// No description provided for @noKrsOfferings.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada mata kuliah yang tersedia untuk input KRS'**
+  String get noKrsOfferings;
+
+  /// No description provided for @subscriptionRequiredMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Fitur ini memerlukan langganan. Silakan berlangganan untuk dapat menggunakan fitur ini sepenuhnya'**
+  String get subscriptionRequiredMessage;
+
+  /// No description provided for @sessionExpired.
+  ///
+  /// In id, this message translates to:
+  /// **'Sesi Anda telah berakhir, silakan login kembali'**
+  String get sessionExpired;
+
+  /// No description provided for @preparingPdf.
+  ///
+  /// In id, this message translates to:
+  /// **'Menyiapkan dokumen PDF...'**
+  String get preparingPdf;
+
+  /// No description provided for @cantOpenPdf.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dapat membuka PDF'**
+  String get cantOpenPdf;
+
+  /// No description provided for @failedSavePdf.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal menyimpan PDF'**
+  String get failedSavePdf;
+
+  /// No description provided for @edomSemestersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Semester Evaluasi'**
+  String get edomSemestersTitle;
+
+  /// No description provided for @edomCoursesTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Mata Kuliah Evaluasi'**
+  String get edomCoursesTitle;
+
+  /// No description provided for @edomStatusDone.
+  ///
+  /// In id, this message translates to:
+  /// **'Selesai'**
+  String get edomStatusDone;
+
+  /// No description provided for @edomStatusProgress.
+  ///
+  /// In id, this message translates to:
+  /// **'Proses Pengisian'**
+  String get edomStatusProgress;
+
+  /// No description provided for @edomStatusNotFilled.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum Mengisi'**
+  String get edomStatusNotFilled;
+
+  /// No description provided for @edomOpenDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi / Detail Evaluasi'**
+  String get edomOpenDetail;
+
+  /// No description provided for @edomHistoryButton.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat'**
+  String get edomHistoryButton;
+
+  /// No description provided for @edomFillButton.
+  ///
+  /// In id, this message translates to:
+  /// **'Isi Penilaian'**
+  String get edomFillButton;
+
+  /// No description provided for @edomFillAllQuestionsError.
+  ///
+  /// In id, this message translates to:
+  /// **'Silahkan lengkapi jawaban pada indikator {indicator} nomor {number}'**
+  String edomFillAllQuestionsError(String indicator, int number);
+
+  /// No description provided for @edomImpressionTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesan Pesan'**
+  String get edomImpressionTitle;
+
+  /// No description provided for @edomImpressionInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Tuliskan komentar,kesan pesan atau saran minimal 8 karakter. Nama anda tidak akan ditampilkan di dashboard dosen'**
+  String get edomImpressionInstruction;
+
+  /// No description provided for @edomImpressionMinError.
+  ///
+  /// In id, this message translates to:
+  /// **'Kesan Pesan minimal 8 karakter'**
+  String get edomImpressionMinError;
+
+  /// No description provided for @edomSaving.
+  ///
+  /// In id, this message translates to:
+  /// **'Menyimpan jawaban anda'**
+  String get edomSaving;
+
+  /// No description provided for @edomExitConfirmTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Apakah anda yakin?'**
+  String get edomExitConfirmTitle;
+
+  /// No description provided for @edomExitConfirmMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika anda keluar sekarang jawaban tidak akan disimpan'**
+  String get edomExitConfirmMessage;
+
+  /// No description provided for @errorResponseApi.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa koneksimu, Tidak dapat terhubung ke server'**
+  String get errorResponseApi;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In id, this message translates to:
+  /// **'Coba Lagi'**
+  String get tryAgain;
 }
 
 class _AppLocalizationsDelegate

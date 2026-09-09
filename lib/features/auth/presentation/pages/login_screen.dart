@@ -5,13 +5,18 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/device_utils.dart';
+import '../../../../core/utils/app_notifications.dart';
 import 'email_verification_page.dart';
 import 'forgot_password_page.dart';
 import '../../../account/presentation/widgets/language_selector_dialog.dart';
 import '../../../home/presentation/pages/main_page.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  /// When true (e.g. after a force logout from home), a "session expired"
+  /// notification is shown once the login page is ready.
+  final bool sessionExpired;
+
+  const LoginScreen({super.key, this.sessionExpired = false});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -27,6 +32,22 @@ class _LoginScreenState extends State<LoginScreen> {
 
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
+
+  @override
+  void initState() {
+    super.initState();
+    // Future.microtask ensures the context/localizations are fully ready.
+    if (widget.sessionExpired) {
+      Future.microtask(() {
+        if (!mounted) return;
+        AppNotifications.show(
+          context,
+          AppLocalizations.of(context)!.sessionExpired,
+          type: AppNotificationType.warning,
+        );
+      });
+    }
+  }
 
   Future<void> _handleLogin({String resyncronDevice = 'ayang'}) async {
     if (!_formKey.currentState!.validate()) return;

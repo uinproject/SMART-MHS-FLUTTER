@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/app_notifications.dart';
 import '../../data/models/payment_method_response.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -64,9 +65,10 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
   void _copyPaymentNumber(String value) {
     Clipboard.setData(ClipboardData(text: value));
     final l10n = AppLocalizations.of(context)!;
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(l10n.paymentNumberCopied)),
+    AppNotifications.show(
+      context,
+      l10n.paymentNumberCopied,
+      type: AppNotificationType.success,
     );
   }
 

@@ -139,6 +139,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get showMore => 'عرض المزيد';
 
   @override
+  String get showLess => 'عرض أقل';
+
+  @override
   String get mainMenu => 'القائمة الرئيسية';
 
   @override
@@ -242,7 +245,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get edom => 'تقييم المحاضر';
 
   @override
-  String get ipHistory => 'سجل الدرجات';
+  String get academicHistory => 'سجل الدرجات';
 
   @override
   String get offers => 'العروض';
@@ -461,4 +464,135 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get completeLecturerEval => 'أكمل تقييم المحاضر';
+
+  @override
+  String get krsSubmenuTitle => 'القائمة الفرعية للخطة الدراسية';
+
+  @override
+  String get viewKrsTitle => 'الخطة الدراسية (KRS)';
+
+  @override
+  String get inputKrsTitle => 'إدخال الخطة الدراسية';
+
+  @override
+  String get krsSemesterLabel => 'خطة الفصل الدراسي';
+
+  @override
+  String get approvedSksLabel => 'إجمالي الساعات المعتمدة';
+
+  @override
+  String get krsNote =>
+      'لعرض خطة الفصل السابق، يرجى الدخول إلى قائمة نتائج الدراسة (KHS)';
+
+  @override
+  String get krsInputStartLabel => 'تاريخ بدء إدخال الخطة الدراسية';
+
+  @override
+  String get krsInputEndLabel => 'تاريخ انتهاء إدخال الخطة الدراسية';
+
+  @override
+  String get krsInputWarning =>
+      'لا يمكن تغيير الخطة الدراسية بعد موافقة المرشد الأكاديمي!';
+
+  @override
+  String scheduleConflict(String course) {
+    return 'فشل، يوجد تعارض في الجدول مع مادة $course';
+  }
+
+  @override
+  String get notScheduled => 'غير مجدول';
+
+  @override
+  String get classLabel => 'الشعبة';
+
+  @override
+  String get quotaLabel => 'السعة';
+
+  @override
+  String get remainingLabel => 'المتبقي';
+
+  @override
+  String get approvedBadge => 'معتمد';
+
+  @override
+  String get courseCode => 'رمز المادة';
+
+  @override
+  String get krsTotalLabel => 'إجمالي مواد الخطة';
+
+  @override
+  String get noKrsData => 'لا توجد بيانات خطة دراسية متاحة';
+
+  @override
+  String get noKrsOfferings => 'لا توجد مواد متاحة لإدخال الخطة الدراسية';
+
+  @override
+  String get subscriptionRequiredMessage =>
+      'تتطلب هذه الميزة اشتراكًا. يرجى الاشتراك لاستخدام هذه الميزة بالكامل';
+
+  @override
+  String get sessionExpired => 'انتهت جلستك، يرجى تسجيل الدخول مرة أخرى';
+
+  @override
+  String get preparingPdf => 'جارٍ تحضير مستند PDF...';
+
+  @override
+  String get cantOpenPdf => 'لا يمكن فتح ملف PDF';
+
+  @override
+  String get failedSavePdf => 'فشل حفظ ملف PDF';
+
+  @override
+  String get edomSemestersTitle => 'تقييم الفصول الدراسية';
+
+  @override
+  String get edomCoursesTitle => 'مواد التقييم';
+
+  @override
+  String get edomStatusDone => 'مكتمل';
+
+  @override
+  String get edomStatusProgress => 'قيد التعبئة';
+
+  @override
+  String get edomStatusNotFilled => 'لم يُملأ';
+
+  @override
+  String get edomOpenDetail => 'تعبئة / تفاصيل التقييم';
+
+  @override
+  String get edomHistoryButton => 'السجل';
+
+  @override
+  String get edomFillButton => 'تعبئة التقييم';
+
+  @override
+  String edomFillAllQuestionsError(String indicator, int number) {
+    return 'يرجى إكمال الإجابة على المؤشر $indicator رقم $number';
+  }
+
+  @override
+  String get edomImpressionTitle => 'الانطباع والرسالة';
+
+  @override
+  String get edomImpressionInstruction =>
+      'اكتب تعليقًا أو انطباعًا أو اقتراحًا بحد أدنى 8 أحرف. لن يظهر اسمك في لوحة المحاضر';
+
+  @override
+  String get edomImpressionMinError => 'الانطباع يجب أن يكون 8 أحرف على الأقل';
+
+  @override
+  String get edomSaving => 'جارٍ حفظ إجابتك';
+
+  @override
+  String get edomExitConfirmTitle => 'هل أنت متأكد؟';
+
+  @override
+  String get edomExitConfirmMessage => 'إذا خرجت الآن فلن يتم حفظ الإجابة';
+
+  @override
+  String get errorResponseApi => 'تحقق من اتصالك، تعذر الاتصال بالخادم';
+
+  @override
+  String get tryAgain => 'حاول مرة أخرى';
 }

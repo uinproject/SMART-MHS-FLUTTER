@@ -72,7 +72,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       await _sessionManager.clear();
       if (mounted) {
         navigator.pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const LoginScreen()),
+          // sessionExpired: true -> login page shows "session expired"
+          MaterialPageRoute(builder: (context) => const LoginScreen(sessionExpired: true)),
               (route) => false,
         );
       }

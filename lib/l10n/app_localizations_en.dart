@@ -138,6 +138,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get showMore => 'Show More';
 
   @override
+  String get showLess => 'Show Less';
+
+  @override
   String get mainMenu => 'Main Menu';
 
   @override
@@ -241,10 +244,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edom => 'EDOM';
 
   @override
-  String get ipHistory => 'IP History';
+  String get academicHistory => 'Academic History';
 
   @override
-  String get offers => 'Offers';
+  String get offers => 'Course Offers';
 
   @override
   String get krs => 'KRS';
@@ -461,4 +464,137 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get completeLecturerEval => 'Complete lecturer evaluation';
+
+  @override
+  String get krsSubmenuTitle => 'CSS Sub Menu';
+
+  @override
+  String get viewKrsTitle => 'Course Selection Sheet';
+
+  @override
+  String get inputKrsTitle => 'Entry CSS';
+
+  @override
+  String get krsSemesterLabel => 'CSS Semester';
+
+  @override
+  String get approvedSksLabel => 'Approved Credits';
+
+  @override
+  String get krsNote =>
+      'To view the previous semester CSS, please access the Study Result menu';
+
+  @override
+  String get krsInputStartLabel => 'Start date input CSS';
+
+  @override
+  String get krsInputEndLabel => 'End date input CSS';
+
+  @override
+  String get krsInputWarning =>
+      'CSS that has been approved by the guardian lecturer cannot be changed again!';
+
+  @override
+  String scheduleConflict(String course) {
+    return 'Failed, there was a schedule conflict with the $course courses';
+  }
+
+  @override
+  String get notScheduled => 'Not Scheduled';
+
+  @override
+  String get classLabel => 'Class';
+
+  @override
+  String get quotaLabel => 'Quota';
+
+  @override
+  String get remainingLabel => 'Remaining';
+
+  @override
+  String get approvedBadge => 'Approved';
+
+  @override
+  String get courseCode => 'Course Code';
+
+  @override
+  String get krsTotalLabel => 'Total KRS Courses';
+
+  @override
+  String get noKrsData => 'No CSS data available';
+
+  @override
+  String get noKrsOfferings => 'No courses available for CSS entry';
+
+  @override
+  String get subscriptionRequiredMessage =>
+      'This feature requires a subscription. Please subscribe to fully use this feature';
+
+  @override
+  String get sessionExpired => 'Your session has expired, please log in again';
+
+  @override
+  String get preparingPdf => 'Preparing PDF document...';
+
+  @override
+  String get cantOpenPdf => 'Cannot open the PDF';
+
+  @override
+  String get failedSavePdf => 'Failed to save the PDF';
+
+  @override
+  String get edomSemestersTitle => 'Semester Evaluation';
+
+  @override
+  String get edomCoursesTitle => 'Evaluation Course';
+
+  @override
+  String get edomStatusDone => 'Finish';
+
+  @override
+  String get edomStatusProgress => 'Filling Process';
+
+  @override
+  String get edomStatusNotFilled => 'Not Completed';
+
+  @override
+  String get edomOpenDetail => 'Form filling / Evaluation Details';
+
+  @override
+  String get edomHistoryButton => 'History';
+
+  @override
+  String get edomFillButton => 'Rating';
+
+  @override
+  String edomFillAllQuestionsError(String indicator, int number) {
+    return 'Please complete the answers in indicator $indicator number $number';
+  }
+
+  @override
+  String get edomImpressionTitle => 'Impression';
+
+  @override
+  String get edomImpressionInstruction =>
+      'Write comments, impressions, messages or suggestions of at least 8 characters. Your name will not be displayed on the lecturer dashboard';
+
+  @override
+  String get edomImpressionMinError => 'Impression of at least 8 characters';
+
+  @override
+  String get edomSaving => 'Save your answer';
+
+  @override
+  String get edomExitConfirmTitle => 'Are you sure?';
+
+  @override
+  String get edomExitConfirmMessage =>
+      'If you exit now the answer will not be saved';
+
+  @override
+  String get errorResponseApi =>
+      'Check your connection, Unable connect to server';
+
+  @override
+  String get tryAgain => 'Try Again';
 }

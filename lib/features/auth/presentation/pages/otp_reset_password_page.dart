@@ -5,6 +5,7 @@ import 'package:pinput/pinput.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
+import '../../../../core/utils/app_notifications.dart';
 import 'change_password_page.dart';
 
 class OtpResetPasswordPage extends StatefulWidget {
@@ -130,12 +131,10 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
         if (success) {
           _startTimer(countdown);
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(message),
-              backgroundColor: AppColors.success,
-              behavior: SnackBarBehavior.floating,
-            ),
+          AppNotifications.show(
+            context,
+            message,
+            type: AppNotificationType.success,
           );
         } else {
           setState(() => _errorMessage = message);
