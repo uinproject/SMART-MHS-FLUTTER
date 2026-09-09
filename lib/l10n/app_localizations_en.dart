@@ -311,6 +311,35 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noSchedule => 'No class schedule';
 
   @override
+  String get noScheduleSubtitle =>
+      'The schedule for this semester is not yet available or is still being updated';
+
+  @override
+  String get scheduleLoadFailed =>
+      'Failed to load the schedule. Swipe down to try again';
+
+  @override
+  String get pdfScheduleTitle => 'CLASS SCHEDULE';
+
+  @override
+  String get pdfPrintedAt => 'Printed on:';
+
+  @override
+  String get pdfName => 'Name';
+
+  @override
+  String get pdfYear => 'Year';
+
+  @override
+  String get pdfCourse => 'Course';
+
+  @override
+  String get pdfTimeRoom => 'Time/Room';
+
+  @override
+  String get pdfLecturer => 'Lecturer';
+
+  @override
   String get scheduleTitle => 'Class Schedule';
 
   @override

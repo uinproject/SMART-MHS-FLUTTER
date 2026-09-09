@@ -312,6 +312,35 @@ class AppLocalizationsAr extends AppLocalizations {
   String get noSchedule => 'لا يوجد جدول دراسي';
 
   @override
+  String get noScheduleSubtitle =>
+      'جدول هذا الفصل الدراسي غير متوفر بعد أو قيد التحديث';
+
+  @override
+  String get scheduleLoadFailed =>
+      'فشل تحميل الجدول. اسحب لأسفل للمحاولة مرة أخرى';
+
+  @override
+  String get pdfScheduleTitle => 'جدول المحاضرات';
+
+  @override
+  String get pdfPrintedAt => 'تاريخ الطباعة:';
+
+  @override
+  String get pdfName => 'الاسم';
+
+  @override
+  String get pdfYear => 'السنة';
+
+  @override
+  String get pdfCourse => 'المادة';
+
+  @override
+  String get pdfTimeRoom => 'الوقت/القاعة';
+
+  @override
+  String get pdfLecturer => 'المحاضر';
+
+  @override
   String get scheduleTitle => 'جدول المحاضرات';
 
   @override

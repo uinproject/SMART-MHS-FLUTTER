@@ -311,6 +311,35 @@ class AppLocalizationsId extends AppLocalizations {
   String get noSchedule => 'Tidak ada jadwal kuliah';
 
   @override
+  String get noScheduleSubtitle =>
+      'Jadwal untuk semester ini belum tersedia atau masih dalam proses pemutakhiran';
+
+  @override
+  String get scheduleLoadFailed =>
+      'Gagal memuat jadwal. Tarik ke bawah untuk mencoba lagi';
+
+  @override
+  String get pdfScheduleTitle => 'JADWAL KULIAH';
+
+  @override
+  String get pdfPrintedAt => 'Dicetak pada:';
+
+  @override
+  String get pdfName => 'Nama';
+
+  @override
+  String get pdfYear => 'Tahun';
+
+  @override
+  String get pdfCourse => 'Mata Kuliah';
+
+  @override
+  String get pdfTimeRoom => 'Waktu/Ruang';
+
+  @override
+  String get pdfLecturer => 'Dosen';
+
+  @override
   String get scheduleTitle => 'Jadwal Kuliah';
 
   @override

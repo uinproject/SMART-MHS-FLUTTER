@@ -427,7 +427,7 @@ class _EdomFormPageState extends State<EdomFormPage> {
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
-                  Icons.cancel_rounded,
+                  Icons.help_outline_rounded,
                   color: AppColors.danger,
                   size: 32,
                 ),

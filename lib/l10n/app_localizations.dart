@@ -676,6 +676,60 @@ abstract class AppLocalizations {
   /// **'Tidak ada jadwal kuliah'**
   String get noSchedule;
 
+  /// No description provided for @noScheduleSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal untuk semester ini belum tersedia atau masih dalam proses pemutakhiran'**
+  String get noScheduleSubtitle;
+
+  /// No description provided for @scheduleLoadFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal memuat jadwal. Tarik ke bawah untuk mencoba lagi'**
+  String get scheduleLoadFailed;
+
+  /// No description provided for @pdfScheduleTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'JADWAL KULIAH'**
+  String get pdfScheduleTitle;
+
+  /// No description provided for @pdfPrintedAt.
+  ///
+  /// In id, this message translates to:
+  /// **'Dicetak pada:'**
+  String get pdfPrintedAt;
+
+  /// No description provided for @pdfName.
+  ///
+  /// In id, this message translates to:
+  /// **'Nama'**
+  String get pdfName;
+
+  /// No description provided for @pdfYear.
+  ///
+  /// In id, this message translates to:
+  /// **'Tahun'**
+  String get pdfYear;
+
+  /// No description provided for @pdfCourse.
+  ///
+  /// In id, this message translates to:
+  /// **'Mata Kuliah'**
+  String get pdfCourse;
+
+  /// No description provided for @pdfTimeRoom.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu/Ruang'**
+  String get pdfTimeRoom;
+
+  /// No description provided for @pdfLecturer.
+  ///
+  /// In id, this message translates to:
+  /// **'Dosen'**
+  String get pdfLecturer;
+
   /// No description provided for @scheduleTitle.
   ///
   /// In id, this message translates to:
