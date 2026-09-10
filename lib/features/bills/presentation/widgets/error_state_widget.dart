@@ -44,8 +44,10 @@ class ErrorStateWidget extends StatelessWidget {
       case ErrorStateType.serverError:
         icon = Icons.error_outline_rounded;
         color = AppColors.danger;
+        // Fallback is the GENERAL localized API-failure message (never the
+        // "no data" text — an error must not look like an empty list).
         message = (serverMessage == null || serverMessage!.isEmpty)
-            ? l10n.noActiveBills
+            ? l10n.errorResponseApi
             : serverMessage!;
       case ErrorStateType.noInternet:
         icon = Icons.wifi_off_rounded;
@@ -64,7 +66,10 @@ class ErrorStateWidget extends StatelessWidget {
           child: Text(
             message,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+            style: const TextStyle(
+              color: AppColors.textSecondary,
+              fontSize: 14,
+            ),
           ),
         ),
       ],

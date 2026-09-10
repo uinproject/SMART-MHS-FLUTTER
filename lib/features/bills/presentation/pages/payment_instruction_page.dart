@@ -75,7 +75,11 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
     final totalPay = widget.totalAmount + widget.method.biayaAdm;
 
     const mainGradient = LinearGradient(
@@ -91,12 +95,19 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.paymentInstructions,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -110,18 +121,56 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Card 1 — amount summary (legacy "layouttotal")
+                  // Card 1 — amount summary (legacy "layouttotal") as a
+                  // gradient card with the total highlighted.
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    padding: const EdgeInsets.all(24),
-                    decoration: _cardDecoration(),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      gradient: mainGradient,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.25),
+                          blurRadius: 20,
+                          offset: const Offset(0, 10),
+                        ),
+                      ],
+                    ),
                     child: Column(
                       children: [
-                        _buildSummaryRow(l10n.billLabel, currencyFormat.format(widget.totalAmount)),
-                        _buildSummaryRow(l10n.adminFee, currencyFormat.format(widget.method.biayaAdm)),
-                        const Divider(height: 24),
-                        _buildSummaryRow(l10n.totalPay, currencyFormat.format(totalPay), isTotal: true),
+                        _buildGradientRow(
+                          l10n.billLabel,
+                          currencyFormat.format(widget.totalAmount),
+                        ),
+                        const SizedBox(height: 6),
+                        _buildGradientRow(
+                          l10n.adminFee,
+                          currencyFormat.format(widget.method.biayaAdm),
+                        ),
+                        const Divider(height: 20, color: Colors.white24),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              l10n.totalPay,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              currencyFormat.format(totalPay),
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -130,7 +179,7 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
                   Container(
                     width: double.infinity,
                     margin: const EdgeInsets.fromLTRB(20, 12, 20, 0),
-                    padding: const EdgeInsets.all(24),
+                    padding: const EdgeInsets.all(20),
                     decoration: _cardDecoration(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -138,32 +187,56 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
                         Row(
                           children: [
                             Container(
-                              width: 60,
-                              height: 40,
+                              width: 64,
+                              height: 44,
+                              padding: const EdgeInsets.all(5),
                               decoration: BoxDecoration(
                                 color: Colors.white,
                                 borderRadius: BorderRadius.circular(8),
-                                border: Border.all(color: AppColors.iconBackground),
+                                border: Border.all(
+                                  color: AppColors.iconBackground,
+                                ),
                               ),
                               child: Image.network(
                                 widget.method.linkLogo,
                                 fit: BoxFit.contain,
-                                errorBuilder: (context, error, stackTrace) => const Icon(Icons.account_balance_rounded),
+                                errorBuilder: (context, error, stackTrace) =>
+                                    const Icon(
+                                      Icons.account_balance_rounded,
+                                      color: AppColors.primary,
+                                      size: 22,
+                                    ),
                               ),
                             ),
-                            const SizedBox(width: 16),
+                            const SizedBox(width: 14),
                             Expanded(
-                              child: Text(
-                                '${widget.method.namaMetode} (${l10n.automaticVerification})',
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.method.namaMetode,
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 15,
+                                      color: AppColors.textPrimary,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 5),
+                                  _buildVerifiedPill(l10n),
+                                ],
                               ),
                             ),
                           ],
                         ),
-                        const Divider(height: 28),
+                        const Divider(height: 24),
                         Text(
                           l10n.paymentNumber,
-                          style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         const SizedBox(height: 6),
                         Row(
@@ -179,22 +252,36 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
                               ),
                             ),
                             InkWell(
-                              onTap: () => _copyPaymentNumber(widget.method.norek),
+                              onTap: () =>
+                                  _copyPaymentNumber(widget.method.norek),
                               borderRadius: BorderRadius.circular(20),
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 6,
+                                ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.secondary.withValues(alpha: 0.1),
+                                  color: AppColors.secondary.withValues(
+                                    alpha: 0.1,
+                                  ),
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(Icons.copy_rounded, size: 14, color: AppColors.secondary),
+                                    const Icon(
+                                      Icons.copy_rounded,
+                                      size: 14,
+                                      color: AppColors.secondary,
+                                    ),
                                     const SizedBox(width: 4),
                                     Text(
                                       l10n.copy,
-                                      style: const TextStyle(color: AppColors.secondary, fontSize: 12, fontWeight: FontWeight.bold),
+                                      style: const TextStyle(
+                                        color: AppColors.secondary,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -206,7 +293,10 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
                           const SizedBox(height: 12),
                           Text(
                             widget.method.deskripsi,
-                            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                            style: const TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ],
                       ],
@@ -225,11 +315,19 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.primary),
+                            const Icon(
+                              Icons.info_outline_rounded,
+                              size: 18,
+                              color: AppColors.primary,
+                            ),
                             const SizedBox(width: 8),
                             Text(
                               l10n.paymentInstructions,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                                color: AppColors.textPrimary,
+                              ),
                             ),
                           ],
                         ),
@@ -255,37 +353,64 @@ class _PaymentInstructionPageState extends State<PaymentInstructionPage> {
   BoxDecoration _cardDecoration() {
     return BoxDecoration(
       color: Colors.white,
-      borderRadius: BorderRadius.circular(24),
+      borderRadius: BorderRadius.circular(20),
       boxShadow: [
         BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
-          blurRadius: 15,
-          offset: const Offset(0, 8),
+          color: AppColors.primary.withValues(alpha: 0.06),
+          blurRadius: 16,
+          offset: const Offset(0, 6),
         ),
       ],
     );
   }
 
-  Widget _buildSummaryRow(String label, String value, {bool isTotal = false}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: AppColors.textSecondary,
-              fontSize: isTotal ? 14 : 13,
-              fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            ),
+  /// Row of the gradient summary card (label / amount in white).
+  Widget _buildGradientRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.8),
+            fontSize: 13,
           ),
+        ),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Green "Automatic Verification" pill under the method name.
+  Widget _buildVerifiedPill(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: AppColors.success.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(
+            Icons.verified_rounded,
+            size: 13,
+            color: AppColors.success,
+          ),
+          const SizedBox(width: 4),
           Text(
-            value,
-            style: TextStyle(
+            l10n.automaticVerification,
+            style: const TextStyle(
+              fontSize: 10,
               fontWeight: FontWeight.bold,
-              fontSize: isTotal ? 18 : 14,
-              color: isTotal ? AppColors.primary : AppColors.textPrimary,
+              color: AppColors.success,
             ),
           ),
         ],

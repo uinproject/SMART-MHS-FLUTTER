@@ -20,7 +20,8 @@ class SelectPaymentMethodPage extends StatefulWidget {
   const SelectPaymentMethodPage({super.key, required this.totalAmount});
 
   @override
-  State<SelectPaymentMethodPage> createState() => _SelectPaymentMethodPageState();
+  State<SelectPaymentMethodPage> createState() =>
+      _SelectPaymentMethodPageState();
 }
 
 class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
@@ -85,12 +86,19 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.paymentMethod,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -102,88 +110,138 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
         color: AppColors.primary,
         child: switch (_state) {
           _MethodLoadState.loading => ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 300),
-                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
-              ],
-            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 300),
+              Center(
+                child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+              ),
+            ],
+          ),
           _MethodLoadState.noData => ErrorStateWidget(
-              type: ErrorStateType.noData,
-              noDataMessage: l10n.noPaymentMethods,
-              noDataIcon: Icons.account_balance_rounded,
-            ),
+            type: ErrorStateType.noData,
+            noDataMessage: l10n.noPaymentMethods,
+            noDataIcon: Icons.account_balance_rounded,
+          ),
           _MethodLoadState.serverError => ErrorStateWidget(
-              type: ErrorStateType.serverError,
-              serverMessage: _methods?.message,
-              noDataMessage: l10n.noPaymentMethods,
-              noDataIcon: Icons.account_balance_rounded,
-            ),
-          _MethodLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+            type: ErrorStateType.serverError,
+            serverMessage: _methods?.message,
+            noDataMessage: l10n.noPaymentMethods,
+            noDataIcon: Icons.account_balance_rounded,
+          ),
+          _MethodLoadState.noInternet => const ErrorStateWidget(
+            type: ErrorStateType.noInternet,
+          ),
           _MethodLoadState.success => ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: _methods!.data!.length,
-              itemBuilder: (context, index) {
-                final item = _methods!.data![index];
-                return _buildMethodCard(item);
-              },
-            ),
+            padding: const EdgeInsets.all(20),
+            itemCount: _methods!.data!.length,
+            itemBuilder: (context, index) {
+              final item = _methods!.data![index];
+              return _buildMethodCard(item);
+            },
+          ),
         },
       ),
     );
   }
 
   Widget _buildMethodCard(PaymentMethodItem item) {
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.03),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: AppColors.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        leading: Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Colors.grey[50],
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Image.network(
-            item.linkLogo,
-            fit: BoxFit.contain,
-            errorBuilder: (context, error, stackTrace) => const Icon(Icons.account_balance_rounded, color: AppColors.primary),
-          ),
-        ),
-        title: Text(
-          item.namaMetode,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-        ),
-        subtitle: Text(
-          item.deskripsi,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 12),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios_rounded, size: 14, color: AppColors.textSecondary),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => PaymentInstructionPage(
-                method: item,
-                totalAmount: widget.totalAmount,
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => PaymentInstructionPage(
+                  method: item,
+                  totalAmount: widget.totalAmount,
+                ),
               ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Row(
+              children: [
+                Container(
+                  width: 60,
+                  height: 42,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: AppColors.iconBackground),
+                  ),
+                  child: Image.network(
+                    item.linkLogo,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(
+                      Icons.account_balance_rounded,
+                      color: AppColors.primary,
+                      size: 22,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        item.namaMetode,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      if (item.deskripsi.isNotEmpty) ...[
+                        const SizedBox(height: 3),
+                        Text(
+                          item.deskripsi,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Transform.flip(
+                  flipX: isRtl,
+                  child: const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
-          );
-        },
+          ),
+        ),
       ),
     );
   }

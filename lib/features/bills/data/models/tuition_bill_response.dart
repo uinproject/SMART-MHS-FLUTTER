@@ -3,11 +3,7 @@ class TuitionBillResponse {
   final String? message;
   final List<SemesterBill>? data;
 
-  TuitionBillResponse({
-    required this.success,
-    this.message,
-    this.data,
-  });
+  TuitionBillResponse({required this.success, this.message, this.data});
 
   factory TuitionBillResponse.fromJson(Map<String, dynamic> json) {
     return TuitionBillResponse(
@@ -15,7 +11,8 @@ class TuitionBillResponse {
       message: json['message'],
       data: json['data'] != null
           ? List<SemesterBill>.from(
-              json['data'].map((x) => SemesterBill.fromJson(x)))
+              json['data'].map((x) => SemesterBill.fromJson(x)),
+            )
           : null,
     );
   }
@@ -25,17 +22,15 @@ class SemesterBill {
   final int semester;
   final List<BillItem> itemTagihan;
 
-  SemesterBill({
-    required this.semester,
-    required this.itemTagihan,
-  });
+  SemesterBill({required this.semester, required this.itemTagihan});
 
   factory SemesterBill.fromJson(Map<String, dynamic> json) {
     return SemesterBill(
       semester: _toInt(json['semester']),
       itemTagihan: json['item_tagihan'] != null
           ? List<BillItem>.from(
-              json['item_tagihan'].map((x) => BillItem.fromJson(x)))
+              json['item_tagihan'].map((x) => BillItem.fromJson(x)),
+            )
           : [],
     );
   }
@@ -52,10 +47,7 @@ class BillItem {
   final String namatagihan;
   final int jumlah;
 
-  BillItem({
-    required this.namatagihan,
-    required this.jumlah,
-  });
+  BillItem({required this.namatagihan, required this.jumlah});
 
   factory BillItem.fromJson(Map<String, dynamic> json) {
     return BillItem(

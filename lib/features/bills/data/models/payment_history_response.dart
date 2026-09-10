@@ -3,11 +3,7 @@ class PaymentHistoryResponse {
   final String? message;
   final List<HistoryItem>? data;
 
-  PaymentHistoryResponse({
-    required this.success,
-    this.message,
-    this.data,
-  });
+  PaymentHistoryResponse({required this.success, this.message, this.data});
 
   factory PaymentHistoryResponse.fromJson(Map<String, dynamic> json) {
     return PaymentHistoryResponse(
@@ -15,7 +11,8 @@ class PaymentHistoryResponse {
       message: json['message'],
       data: json['data'] != null
           ? List<HistoryItem>.from(
-              json['data'].map((x) => HistoryItem.fromJson(x)))
+              json['data'].map((x) => HistoryItem.fromJson(x)),
+            )
           : null,
     );
   }

@@ -6,8 +6,13 @@ import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../data/models/tuition_bill_response.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import '../widgets/error_state_widget.dart';
 import 'select_payment_method_page.dart';
 import 'payment_history_page.dart';
+
+/// Load states — the uniform pattern shared with KRS/EDOM/schedule:
+/// success / noData / serverError (server message shown) / noInternet.
+enum _BillsLoadState { loading, success, noData, serverError, noInternet }
 
 class CurrentBillsPage extends StatefulWidget {
   const CurrentBillsPage({super.key});
@@ -17,12 +22,17 @@ class CurrentBillsPage extends StatefulWidget {
 }
 
 class _CurrentBillsPageState extends State<CurrentBillsPage> {
+  static const LinearGradient mainGradient = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Color(0xFF003D82), Color(0xFF0056B3)],
+  );
+
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
-  
+
   TuitionBillResponse? _bills;
-  bool _isLoading = true;
-  String? _errorMessage;
+  _BillsLoadState _state = _BillsLoadState.loading;
 
   @override
   void initState() {
@@ -32,46 +42,36 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
 
   Future<void> _loadBills() async {
     if (!mounted) return;
-    setState(() {
-      _isLoading = true;
-      _errorMessage = null;
-    });
+    setState(() => _state = _BillsLoadState.loading);
 
     final user = _sessionManager.getUser();
     if (user == null) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = "Sesi berakhir. Silakan login kembali.";
-        });
-      }
+      if (mounted) setState(() => _state = _BillsLoadState.serverError);
       return;
     }
 
-    try {
-      final result = await _apiService.getTuitionBills(
-        nim: user.nim ?? '',
-        kdjen: user.kodeJen ?? '',
-        kdpst: user.kodePst ?? '',
-      );
+    final result = await _apiService.getTuitionBills(
+      nim: user.nim ?? '',
+      kdjen: user.kodeJen ?? '',
+      kdpst: user.kodePst ?? '',
+    );
 
-      if (!mounted) return;
-
-      setState(() {
-        _bills = result;
-        _isLoading = false;
-        if (!result.success) {
-          _errorMessage = result.message ?? "Terjadi kesalahan pada server.";
-        }
-      });
-    } catch (e) {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-          _errorMessage = "Gagal memuat data. Periksa koneksi Anda.";
-        });
+    if (!mounted) return;
+    setState(() {
+      _bills = result;
+      if (result.success && result.data != null) {
+        _state = result.data!.isEmpty
+            ? _BillsLoadState.noData
+            : _BillsLoadState.success;
+      } else if (result.message != null && result.message!.isNotEmpty) {
+        // The server (or service) explained the failure — show it verbatim
+        // ("Error 500" for HTTP failures, "error …" otherwise).
+        _state = _BillsLoadState.serverError;
+      } else {
+        // No message — connection-level failure.
+        _state = _BillsLoadState.noInternet;
       }
-    }
+    });
   }
 
   int _calculateTotal() {
@@ -88,15 +88,14 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
-
-    const mainGradient = LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Color(0xFF003D82), Color(0xFF0056B3)],
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
     );
 
-    final bool hasBills = _bills?.data != null && _bills!.data!.isNotEmpty;
+    final bool hasBills =
+        _state == _BillsLoadState.success && _bills!.data!.isNotEmpty;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -105,116 +104,213 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.tuitionFee,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        flexibleSpace: Container(decoration: const BoxDecoration(gradient: mainGradient)),
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(gradient: mainGradient),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.history_rounded, color: Colors.white),
-            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const PaymentHistoryPage())),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const PaymentHistoryPage(),
+              ),
+            ),
           ),
           const SizedBox(width: 10),
         ],
       ),
+      // Swipe-to-refresh retries a failed load (error/empty states stay
+      // scrollable so the gesture always works).
       body: RefreshIndicator(
         onRefresh: _loadBills,
-        child: _isLoading 
-          ? const Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30))
-          : _errorMessage != null 
-            ? _buildErrorState(_errorMessage!)
-            : !hasBills
-              ? _buildEmptyState(l10n)
-              : ListView.builder(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: _bills!.data!.length,
-                  itemBuilder: (context, index) {
-                    final semester = _bills!.data![index];
-                    return _buildSemesterGroup(semester, l10n, currencyFormat);
-                  },
-                ),
-      ),
-      bottomNavigationBar: (!_isLoading && hasBills) ? _buildBottomBar(l10n, currencyFormat) : null,
-    );
-  }
-
-  Widget _buildEmptyState(AppLocalizations l10n) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        const Icon(Icons.receipt_long_rounded, size: 80, color: Colors.black12),
-        const SizedBox(height: 16),
-        Center(child: Text(l10n.noActiveBills, style: const TextStyle(color: AppColors.textSecondary))),
-      ],
-    );
-  }
-
-  Widget _buildErrorState(String message) {
-    return ListView(
-      physics: const AlwaysScrollableScrollPhysics(),
-      children: [
-        SizedBox(height: MediaQuery.of(context).size.height * 0.2),
-        const Icon(Icons.error_outline_rounded, size: 80, color: AppColors.danger),
-        const SizedBox(height: 16),
-        Center(child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 40),
-          child: Text(message, textAlign: TextAlign.center, style: const TextStyle(color: AppColors.textSecondary)),
-        )),
-        const SizedBox(height: 24),
-        Center(
-          child: ElevatedButton(
-            onPressed: _loadBills,
-            child: const Text("Coba Lagi"),
+        color: AppColors.primary,
+        child: switch (_state) {
+          _BillsLoadState.loading => ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: [
+              SizedBox(height: MediaQuery.of(context).size.height * 0.32),
+              const Center(
+                child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+              ),
+            ],
           ),
-        ),
-      ],
+          _BillsLoadState.noData => ErrorStateWidget(
+            type: ErrorStateType.noData,
+            noDataMessage: l10n.noActiveBills,
+          ),
+          _BillsLoadState.serverError => ErrorStateWidget(
+            type: ErrorStateType.serverError,
+            // Session gone -> localized "session expired" fallback.
+            serverMessage: _bills?.message ?? l10n.sessionExpired,
+          ),
+          _BillsLoadState.noInternet => const ErrorStateWidget(
+            type: ErrorStateType.noInternet,
+          ),
+          _BillsLoadState.success => ListView.builder(
+            padding: const EdgeInsets.all(20),
+            itemCount: _bills!.data!.length,
+            itemBuilder: (context, index) {
+              final semester = _bills!.data![index];
+              return _buildSemesterGroup(semester, l10n, currencyFormat);
+            },
+          ),
+        },
+      ),
+      bottomNavigationBar: hasBills
+          ? _buildBottomBar(l10n, currencyFormat)
+          : null,
     );
   }
 
-  Widget _buildSemesterGroup(SemesterBill semester, AppLocalizations l10n, NumberFormat format) {
+  Widget _buildSemesterGroup(
+    SemesterBill semester,
+    AppLocalizations l10n,
+    NumberFormat format,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 8, bottom: 12),
-          child: Text('${l10n.semester} ${semester.semester}'.toUpperCase(), 
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary)),
+          child: Text(
+            '${l10n.semester} ${semester.semester}'.toUpperCase(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: AppColors.primary,
+              letterSpacing: 0.5,
+            ),
+          ),
         ),
-        ...semester.itemTagihan.map((item) => _buildBillCard(item, format)),
+        ...semester.itemTagihan.map(
+          (item) => _buildBillCard(item, l10n, format),
+        ),
         const SizedBox(height: 16),
       ],
     );
   }
 
-  Widget _buildBillCard(BillItem item, NumberFormat format) {
+  Widget _buildBillCard(
+    BillItem item,
+    AppLocalizations l10n,
+    NumberFormat format,
+  ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      child: Material(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, 4))],
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Container(
+                width: 48,
+                height: 48,
+                decoration: BoxDecoration(
+                  gradient: mainGradient,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: const Icon(
+                  Icons.receipt_long_rounded,
+                  color: Colors.white,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 14),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.namatagihan,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                        height: 1.3,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    _buildUnpaidPill(l10n),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 10),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  format.format(item.jumlah),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUnpaidPill(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppColors.secondary.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(item.namatagihan, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
-                const SizedBox(height: 4),
-                const Text('BELUM LUNAS', style: TextStyle(color: Colors.orange, fontSize: 10, fontWeight: FontWeight.bold)),
-              ],
+          Container(
+            width: 7,
+            height: 7,
+            decoration: const BoxDecoration(
+              color: AppColors.secondary,
+              shape: BoxShape.circle,
             ),
           ),
-          const SizedBox(width: 12),
-          Text(format.format(item.jumlah), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w900, color: AppColors.primary)),
+          const SizedBox(width: 6),
+          Text(
+            l10n.billStatusUnpaid,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.secondary,
+              letterSpacing: 0.5,
+            ),
+          ),
         ],
       ),
     );
@@ -222,10 +318,21 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
 
   Widget _buildBottomBar(AppLocalizations l10n, NumberFormat format) {
     return Container(
-      padding: EdgeInsets.fromLTRB(24, 16, 24, 16 + MediaQuery.of(context).padding.bottom),
-      decoration: const BoxDecoration(
+      padding: EdgeInsets.fromLTRB(
+        20,
+        14,
+        20,
+        14 + MediaQuery.of(context).padding.bottom,
+      ),
+      decoration: BoxDecoration(
         color: Colors.white,
-        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10, offset: Offset(0, -5))],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, -6),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -234,32 +341,55 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Total Tagihan', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                Text(
+                  l10n.totalBills,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: AppColors.textSecondary,
+                  ),
+                ),
+                const SizedBox(height: 2),
                 FittedBox(
                   fit: BoxFit.scaleDown,
-                  child: Text(format.format(_calculateTotal()), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  child: Text(
+                    format.format(_calculateTotal()),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.primary,
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
           const SizedBox(width: 16),
+          // Local minimumSize override — the global theme forces an infinite
+          // min width which breaks buttons placed directly inside a Row.
           ElevatedButton(
             onPressed: () {
               Navigator.push(
-                context, 
+                context,
                 MaterialPageRoute(
-                  builder: (context) => SelectPaymentMethodPage(totalAmount: _calculateTotal())
-                )
+                  builder: (context) =>
+                      SelectPaymentMethodPage(totalAmount: _calculateTotal()),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              minimumSize: const Size(0, 48),
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(14),
+              ),
               elevation: 0,
             ),
-            child: Text(l10n.proceed, style: const TextStyle(fontWeight: FontWeight.bold)),
+            child: Text(
+              l10n.proceed,
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+            ),
           ),
         ],
       ),

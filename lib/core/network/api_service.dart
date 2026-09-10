@@ -44,32 +44,37 @@ class ApiService {
   late Dio _dio;
 
   ApiService() {
-    _dio = Dio(BaseOptions(
-      baseUrl: AppConstants.baseUrl,
-      connectTimeout: const Duration(seconds: 15),
-      receiveTimeout: const Duration(seconds: 15),
-      headers: {
-        'Authorization': AppConstants.authHeader,
-        'SMART-API-KEY': AppConstants.apiKey,
-      },
-    ));
+    _dio = Dio(
+      BaseOptions(
+        baseUrl: AppConstants.baseUrl,
+        connectTimeout: const Duration(seconds: 15),
+        receiveTimeout: const Duration(seconds: 15),
+        headers: {
+          'Authorization': AppConstants.authHeader,
+          'SMART-API-KEY': AppConstants.apiKey,
+        },
+      ),
+    );
 
     // Bypass SSL certificate validation (Trust All) as in the legacy project
     _dio.httpClientAdapter = IOHttpClientAdapter(
       createHttpClient: () {
         final client = HttpClient();
-        client.badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => true;
         return client;
       },
     );
-    
-    _dio.interceptors.add(LogInterceptor(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-    ));
+
+    _dio.interceptors.add(
+      LogInterceptor(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+      ),
+    );
   }
 
   Future<LoginResult> login({
@@ -86,13 +91,41 @@ class ApiService {
       final versionApp = packageInfo.version;
 
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'upassword': BniEncryption.hashData(password, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'devicename': BniEncryption.hashData(deviceName, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'resyncrondevice': BniEncryption.hashData(resyncronDevice, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'upassword': BniEncryption.hashData(
+          password,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'deviceid': BniEncryption.hashData(
+          deviceId,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'devicename': BniEncryption.hashData(
+          deviceName,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'resyncrondevice': BniEncryption.hashData(
+          resyncronDevice,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'tokennotif': BniEncryption.hashData(
+          tokenNotif,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'versionapp': BniEncryption.hashData(
+          versionApp,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -101,14 +134,14 @@ class ApiService {
         data: data,
         options: Options(contentType: Headers.formUrlEncodedContentType),
       );
-      
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String 
-            ? jsonDecode(response.data) 
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
             : response.data;
-            
+
         final loginResp = LoginResponse.fromJson(responseData);
-        
+
         // Fix: Priority check for success: true
         if (loginResp.success) {
           final decryptedData = BniEncryption.parseData(
@@ -116,7 +149,7 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           );
-          
+
           if (decryptedData != null) {
             return LoginResult(
               success: true,
@@ -136,7 +169,10 @@ class ApiService {
           return LoginResult(success: false, message: loginResp.message);
         }
       }
-      return LoginResult(success: false, message: 'Server error: ${response.statusCode}');
+      return LoginResult(
+        success: false,
+        message: 'Server error: ${response.statusCode}',
+      );
     } catch (e) {
       return LoginResult(success: false, message: 'Connection error: $e');
     }
@@ -152,10 +188,26 @@ class ApiService {
       final versionApp = packageInfo.version;
 
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'deviceid': BniEncryption.hashData(deviceId, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'tokennotif': BniEncryption.hashData(tokenNotif, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'versionapp': BniEncryption.hashData(versionApp, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'deviceid': BniEncryption.hashData(
+          deviceId,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'tokennotif': BniEncryption.hashData(
+          tokenNotif,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'versionapp': BniEncryption.hashData(
+          versionApp,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
       };
 
       final response = await _dio.post(
@@ -163,24 +215,24 @@ class ApiService {
         data: data,
         options: Options(contentType: Headers.formUrlEncodedContentType),
       );
-      
+
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String 
-            ? jsonDecode(response.data) 
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
             : response.data;
 
         final refreshResp = RefreshSessionResponse.fromJson(responseData);
         if (refreshResp.forceLogout) {
           throw ForceLogoutException(refreshResp.message);
         }
-        
+
         if (refreshResp.success) {
           final decryptedData = BniEncryption.parseData(
             refreshResp.data,
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           );
-          
+
           if (decryptedData != null) {
             return LoginData.fromJson(jsonDecode(decryptedData));
           }
@@ -208,8 +260,8 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String 
-            ? jsonDecode(response.data) 
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
             : response.data;
         return PengumumanResponse.fromJson(responseData);
       }
@@ -227,9 +279,21 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cid, AppConstants.secretKey),
-        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cid, AppConstants.secretKey),
-        'uemail': BniEncryption.hashData(email, AppConstants.cid, AppConstants.secretKey),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
+        'kode_pst': BniEncryption.hashData(
+          kdpst,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
         'language': language,
       };
 
@@ -240,7 +304,9 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return response.data is String ? jsonDecode(response.data) : response.data;
+        return response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
       }
       return null;
     } catch (e) {
@@ -257,10 +323,26 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cid, AppConstants.secretKey),
-        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cid, AppConstants.secretKey),
-        'uemail': BniEncryption.hashData(email, AppConstants.cid, AppConstants.secretKey),
-        'otp': BniEncryption.hashData(otp, AppConstants.cid, AppConstants.secretKey),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
+        'kode_pst': BniEncryption.hashData(
+          kdpst,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
+        'otp': BniEncryption.hashData(
+          otp,
+          AppConstants.cid,
+          AppConstants.secretKey,
+        ),
         'language': language,
       };
 
@@ -271,7 +353,9 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return response.data is String ? jsonDecode(response.data) : response.data;
+        return response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
       }
       return null;
     } catch (e) {
@@ -286,8 +370,16 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'uemail': BniEncryption.hashData(email, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -298,7 +390,9 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return response.data is String ? jsonDecode(response.data) : response.data;
+        return response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
       }
       return null;
     } catch (e) {
@@ -314,9 +408,21 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'uemail': BniEncryption.hashData(email, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'otp': BniEncryption.hashData(otp, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'otp': BniEncryption.hashData(
+          otp,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -327,7 +433,9 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String ? jsonDecode(response.data) : response.data;
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
         return VerOTPResetPasswordResponse.fromJson(responseData);
       }
       return null;
@@ -346,9 +454,21 @@ class ApiService {
     try {
       final data = {
         'encnim': encNim,
-        'uemail': BniEncryption.hashData(email, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'otp': BniEncryption.hashData(otp, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'encnewpassword': BniEncryption.hashData(newPassword, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'otp': BniEncryption.hashData(
+          otp,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'encnewpassword': BniEncryption.hashData(
+          newPassword,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -359,7 +479,9 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String ? jsonDecode(response.data) : response.data;
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
         return ChangePasswordResponse.fromJson(responseData);
       }
       return null;
@@ -375,8 +497,16 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'selected_semester': BniEncryption.hashData(semester.toString(), AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'selected_semester': BniEncryption.hashData(
+          semester.toString(),
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -387,8 +517,8 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String 
-            ? jsonDecode(response.data) 
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
             : response.data;
         return JadwalResponse.fromJson(responseData);
       }
@@ -401,6 +531,28 @@ class ApiService {
   /// digits-only NIM, same as legacy: `nim?.filter { it.isDigit() }`
   static String nimDigits(String nim) => nim.replaceAll(RegExp(r'\D'), '');
 
+  /// Uniform failure description for the bills endpoints:
+  /// - network/timeout failure -> null (UI shows the localized no-internet state)
+  /// - HTTP error (4xx/5xx)    -> "Error {code}" (e.g. "Error 500")
+  /// - anything else           -> "error {cause}" (same shape as legacy EDOM)
+  static String? _describeFailure(Object e) {
+    if (e is DioException) {
+      switch (e.type) {
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.receiveTimeout:
+        case DioExceptionType.connectionError:
+          return null;
+        case DioExceptionType.badResponse:
+          final code = e.response?.statusCode;
+          return code == null ? 'error ${e.message}' : 'Error $code';
+        default:
+          return 'error ${e.message}';
+      }
+    }
+    return 'error $e';
+  }
+
   /// POST {legacy}/tagihanmhs — plain params (no encryption), NO language field (same as legacy).
   /// Non-200 -> success=false + message "error {code}" (same as legacy).
   /// Connection failure -> success=false + message=null (UI shows no-internet state, same as legacy).
@@ -410,11 +562,7 @@ class ApiService {
     required String kdpst,
   }) async {
     try {
-      final data = {
-        'unim': nimDigits(nim),
-        'kdjen': kdjen,
-        'kdpst': kdpst,
-      };
+      final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
 
       final response = await _dio.post(
         '${AppConstants.baseUrlLegacy}tagihanmhs',
@@ -434,7 +582,11 @@ class ApiService {
         data: const [],
       );
     } catch (e) {
-      return TuitionBillResponse(success: false, message: null, data: const []);
+      return TuitionBillResponse(
+        success: false,
+        message: _describeFailure(e),
+        data: const [],
+      );
     }
   }
 
@@ -445,11 +597,7 @@ class ApiService {
     required String kdpst,
   }) async {
     try {
-      final data = {
-        'unim': nimDigits(nim),
-        'kdjen': kdjen,
-        'kdpst': kdpst,
-      };
+      final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
 
       final response = await _dio.post(
         '${AppConstants.baseUrlLegacy}rekappembayaran',
@@ -469,7 +617,11 @@ class ApiService {
         data: const [],
       );
     } catch (e) {
-      return PaymentHistoryResponse(success: false, message: null, data: const []);
+      return PaymentHistoryResponse(
+        success: false,
+        message: _describeFailure(e),
+        data: const [],
+      );
     }
   }
 
@@ -479,10 +631,7 @@ class ApiService {
     String language = 'in',
   }) async {
     try {
-      final data = {
-        'unim': nimDigits(nim),
-        'language': language,
-      };
+      final data = {'unim': nimDigits(nim), 'language': language};
 
       final response = await _dio.post(
         '${AppConstants.baseUrlLegacy}tatacarapembayaran',
@@ -502,7 +651,11 @@ class ApiService {
         data: const [],
       );
     } catch (e) {
-      return PaymentMethodResponse(success: false, message: null, data: const []);
+      return PaymentMethodResponse(
+        success: false,
+        message: _describeFailure(e),
+        data: const [],
+      );
     }
   }
 
@@ -521,9 +674,21 @@ class ApiService {
       final response = await _dio.get(
         'Penawaranmkservices/list_penawaran_mk',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_pst': BniEncryption.hashData(
+            kdpst,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_jen': BniEncryption.hashData(
+            kdjen,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -556,10 +721,26 @@ class ApiService {
       final response = await _dio.get(
         'Penawaranmkservices/riwayat_penawaran_mk',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'semester': BniEncryption.hashData(semester.toString(), AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_pst': BniEncryption.hashData(
+            kdpst,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_jen': BniEncryption.hashData(
+            kdjen,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'semester': BniEncryption.hashData(
+            semester.toString(),
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -594,10 +775,26 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'data_input_penawaran_mk': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kode_pst': BniEncryption.hashData(
+          kdpst,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kode_jen': BniEncryption.hashData(
+          kdjen,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'data_input_penawaran_mk': BniEncryption.hashData(
+          dataJson,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -641,9 +838,21 @@ class ApiService {
       final response = await _dio.get(
         'krsservices/krs',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kdpst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kdjen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kdpst': BniEncryption.hashData(
+            kdpst,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kdjen': BniEncryption.hashData(
+            kdjen,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -676,9 +885,21 @@ class ApiService {
       final response = await _dio.get(
         'krsservices/list_krs_mk',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_pst': BniEncryption.hashData(
+            kdpst,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'kode_jen': BniEncryption.hashData(
+            kdjen,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -712,10 +933,26 @@ class ApiService {
   }) async {
     try {
       final data = {
-        'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'kode_pst': BniEncryption.hashData(kdpst, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'kode_jen': BniEncryption.hashData(kdjen, AppConstants.cidV2, AppConstants.secretKeyV2),
-        'data_input_krs_mk': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kode_pst': BniEncryption.hashData(
+          kdpst,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kode_jen': BniEncryption.hashData(
+          kdjen,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'data_input_krs_mk': BniEncryption.hashData(
+          dataJson,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
         'language': language,
       };
 
@@ -761,7 +998,11 @@ class ApiService {
       final response = await _dio.get(
         'Edomservices/list_semester_evaluasi',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -795,8 +1036,16 @@ class ApiService {
       final response = await _dio.get(
         'Edomservices/list_makul_evaluasi',
         queryParameters: {
-          'unim': BniEncryption.hashData(nim, AppConstants.cidV2, AppConstants.secretKeyV2),
-          'thsms': BniEncryption.hashData(thsms, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+          'thsms': BniEncryption.hashData(
+            thsms,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -829,7 +1078,11 @@ class ApiService {
       final response = await _dio.get(
         'Edomservices/list_soal_evaluasi',
         queryParameters: {
-          'ideval': BniEncryption.hashData(ideval, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'ideval': BniEncryption.hashData(
+            ideval,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
           'language': language,
         },
       );
@@ -864,7 +1117,11 @@ class ApiService {
       final response = await _dio.post(
         'Edomservices/simpan_eval_dosen',
         data: {
-          'data': BniEncryption.hashData(dataJson, AppConstants.cidV2, AppConstants.secretKeyV2),
+          'data': BniEncryption.hashData(
+            dataJson,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
         },
         options: Options(contentType: Headers.jsonContentType),
       );
@@ -910,12 +1167,15 @@ class ApiService {
           await _dio.download(
             cleanUrl,
             target,
-            options: Options(headers: const {'Authorization': AppConstants.authHeader}),
+            options: Options(
+              headers: const {'Authorization': AppConstants.authHeader},
+            ),
             onReceiveProgress: onReceiveProgress,
           );
           savedPath = target;
         } catch (_) {
-          savedPath = null; // scoped storage / permission denied -> fallback below
+          savedPath =
+              null; // scoped storage / permission denied -> fallback below
         }
       }
     }

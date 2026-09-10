@@ -12,11 +12,11 @@ import '../widgets/error_state_widget.dart';
 
 /// Mirrors the legacy `RekapPembayaranFragment` business logic:
 /// - loads payment history on init (Future.microtask so context is ready)
-/// - fixed "Riwayat Pembayaran Tidak Ditemukan" message on failure (same as legacy)
 /// - downloads the kuitansi PDF from the exact same URL as the legacy app,
 ///   then opens it (legacy used Android DownloadManager)
-/// - pull-to-refresh (legacy SwipeRefreshLayout)
-enum _HistoryLoadState { loading, success, noData, noInternet }
+/// - pull-to-refresh (legacy SwipeRefreshLayout); a failed load with a
+///   server message shows it (uniform API-error handling)
+enum _HistoryLoadState { loading, success, noData, serverError, noInternet }
 
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({super.key});
@@ -59,11 +59,14 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
       _history = result;
       if (result.success && result.data != null && result.data!.isNotEmpty) {
         _state = _HistoryLoadState.success;
-      } else if (result.message != null) {
-        // Legacy shows the FIXED string here (not the raw server message).
+      } else if (result.success) {
         _state = _HistoryLoadState.noData;
+      } else if (result.message != null && result.message!.isNotEmpty) {
+        // Uniform error handling: the server (or service) explained the
+        // failure — show it verbatim ("Error 500" / "error …").
+        _state = _HistoryLoadState.serverError;
       } else {
-        // legacy: onFailure -> no internet animation
+        // No message — connection-level failure.
         _state = _HistoryLoadState.noInternet;
       }
     });
@@ -83,7 +86,8 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
     try {
       final user = _sessionManager.getUser();
-      final fileName = 'kuitansi_${user?.nim ?? ''}_semester${item.semester}.pdf';
+      final fileName =
+          'kuitansi_${user?.nim ?? ''}_semester${item.semester}.pdf';
       final savedPath = await _apiService.downloadReceipt(
         url: item.linkKuitansi,
         fileName: fileName,
@@ -110,7 +114,11 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final currencyFormat = NumberFormat.currency(locale: 'id_ID', symbol: 'Rp', decimalDigits: 0);
+    final currencyFormat = NumberFormat.currency(
+      locale: 'id_ID',
+      symbol: 'Rp',
+      decimalDigits: 0,
+    );
 
     const mainGradient = LinearGradient(
       begin: Alignment.topRight,
@@ -125,12 +133,19 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.paymentHistory,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -142,32 +157,44 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         color: AppColors.primary,
         child: switch (_state) {
           _HistoryLoadState.loading => ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 300),
-                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
-              ],
-            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 300),
+              Center(
+                child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+              ),
+            ],
+          ),
           _HistoryLoadState.noData => ErrorStateWidget(
-              type: ErrorStateType.noData,
-              noDataMessage: l10n.noPaymentHistoryFound,
-              noDataIcon: Icons.history_rounded,
-            ),
-          _HistoryLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+            type: ErrorStateType.noData,
+            noDataMessage: l10n.noPaymentHistoryFound,
+            noDataIcon: Icons.history_rounded,
+          ),
+          _HistoryLoadState.serverError => ErrorStateWidget(
+            type: ErrorStateType.serverError,
+            serverMessage: _history?.message,
+          ),
+          _HistoryLoadState.noInternet => const ErrorStateWidget(
+            type: ErrorStateType.noInternet,
+          ),
           _HistoryLoadState.success => ListView.builder(
-              padding: const EdgeInsets.all(20),
-              itemCount: _history!.data!.length,
-              itemBuilder: (context, index) {
-                final item = _history!.data![index];
-                return _buildHistoryCard(item, l10n, currencyFormat);
-              },
-            ),
+            padding: const EdgeInsets.all(20),
+            itemCount: _history!.data!.length,
+            itemBuilder: (context, index) {
+              final item = _history!.data![index];
+              return _buildHistoryCard(item, l10n, currencyFormat);
+            },
+          ),
         },
       ),
     );
   }
 
-  Widget _buildHistoryCard(HistoryItem item, AppLocalizations l10n, NumberFormat format) {
+  Widget _buildHistoryCard(
+    HistoryItem item,
+    AppLocalizations l10n,
+    NumberFormat format,
+  ) {
     // Legacy: "{namatagihan} (Semester {semester})" only when semester is present.
     final title = item.semester.isEmpty
         ? item.namatagihan
@@ -175,70 +202,192 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.04),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
+            color: AppColors.primary.withValues(alpha: 0.06),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Material(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        clipBehavior: Clip.antiAlias,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [Color(0xFF00BFA5), Color(0xFF00897B)],
+                      ),
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                    child: const Icon(
+                      Icons.check_circle_rounded,
+                      color: Colors.white,
+                      size: 24,
+                    ),
+                  ),
+                  const SizedBox(width: 14),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.textPrimary,
+                            height: 1.3,
+                          ),
+                        ),
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            const Icon(
+                              Icons.payments_rounded,
+                              size: 14,
+                              color: AppColors.textSecondary,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                '${l10n.via}: ${item.melalui}',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 12.5,
+                                  color: AppColors.textSecondary,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  _buildPaidPill(l10n),
+                ],
+              ),
+              const SizedBox(height: 14),
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          item.tanggalbayar,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 11.5,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            format.format(item.jumlah),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.primary,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (item.linkKuitansi.isNotEmpty)
+                    _buildDownloadButton(l10n, item),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPaidPill(AppLocalizations l10n) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: AppColors.success.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  l10n.billStatusPaid,
-                  style: const TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Text(
-                item.tanggalbayar,
-                style: const TextStyle(color: AppColors.textSecondary, fontSize: 12),
-              ),
-            ],
+          Container(
+            width: 7,
+            height: 7,
+            decoration: const BoxDecoration(
+              color: AppColors.success,
+              shape: BoxShape.circle,
+            ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(width: 6),
           Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-          ),
-          const SizedBox(height: 4),
-          // Legacy shows "Melalui : {melalui}"
-          Text(
-            '${l10n.via} : ${item.melalui}',
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                format.format(item.jumlah),
-                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: AppColors.primary),
-              ),
-              if (item.linkKuitansi.isNotEmpty)
-                TextButton.icon(
-                  onPressed: () => _downloadReceipt(item),
-                  icon: const Icon(Icons.download_rounded, size: 16),
-                  label: Text(l10n.downloadReceipt, style: const TextStyle(fontWeight: FontWeight.bold)),
-                  style: TextButton.styleFrom(foregroundColor: AppColors.primary),
-                ),
-            ],
+            l10n.billStatusPaid,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
+              color: AppColors.success,
+              letterSpacing: 0.5,
+            ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildDownloadButton(AppLocalizations l10n, HistoryItem item) {
+    return Material(
+      color: AppColors.primary.withValues(alpha: 0.08),
+      borderRadius: BorderRadius.circular(10),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => _downloadReceipt(item),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.download_rounded,
+                size: 16,
+                color: AppColors.primary,
+              ),
+              const SizedBox(width: 6),
+              Text(
+                l10n.downloadReceipt,
+                style: const TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

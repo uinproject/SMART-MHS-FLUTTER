@@ -3,11 +3,7 @@ class PaymentMethodResponse {
   final String? message;
   final List<PaymentMethodItem>? data;
 
-  PaymentMethodResponse({
-    required this.success,
-    this.message,
-    this.data,
-  });
+  PaymentMethodResponse({required this.success, this.message, this.data});
 
   factory PaymentMethodResponse.fromJson(Map<String, dynamic> json) {
     return PaymentMethodResponse(
@@ -15,7 +11,8 @@ class PaymentMethodResponse {
       message: json['message'],
       data: json['data'] != null
           ? List<PaymentMethodItem>.from(
-              json['data'].map((x) => PaymentMethodItem.fromJson(x)))
+              json['data'].map((x) => PaymentMethodItem.fromJson(x)),
+            )
           : null,
     );
   }
