@@ -83,7 +83,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         kdpst: user.kodePst ?? '',
         email: widget.email,
         otp: _otpController.text,
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {
@@ -121,7 +121,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         nim: user.nim ?? '',
         kdpst: user.kodePst ?? '',
         email: widget.email,
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {

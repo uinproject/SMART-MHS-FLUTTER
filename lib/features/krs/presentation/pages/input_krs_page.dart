@@ -7,6 +7,8 @@ import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/subscription_gate.dart';
 import '../../../../core/utils/app_notifications.dart';
+import '../../../../core/widgets/action_required_dialog.dart';
+import '../../../edom/presentation/pages/edom_semesters_page.dart';
 import '../../data/models/krs_list_response.dart';
 import '../../data/models/krs_input_item.dart';
 import '../../data/krs_conflict_checker.dart';
@@ -61,7 +63,6 @@ class _InputKrsPageState extends State<InputKrsPage> {
 
   Future<void> _loadKrsMk() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
     setState(() {
       _state = _KrsMkLoadState.loading;
       _selected.clear(); // legacy resets the static selection on load/refresh
@@ -78,14 +79,16 @@ class _InputKrsPageState extends State<InputKrsPage> {
       nim: user.nim ?? '',
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
-      language: language,
+
     );
 
     if (!mounted) return;
     setState(() {
       _list = result;
       if (result.success && result.data != null) {
-        _state = result.data!.isEmpty ? _KrsMkLoadState.noData : _KrsMkLoadState.success;
+        _state = result.data!.isEmpty
+            ? _KrsMkLoadState.noData
+            : _KrsMkLoadState.success;
       } else if (result.message != null) {
         _state = _KrsMkLoadState.serverError;
       } else {
@@ -93,9 +96,34 @@ class _InputKrsPageState extends State<InputKrsPage> {
       }
     });
 
+    // EDOM gate (same flow as KHS / course offers): the student must
+    // complete the lecturer evaluation before entering KRS.
+    if (!result.cekEval) {
+      _showEvalRequiredDialog();
+    }
+
     if (_state == _KrsMkLoadState.success) {
       _autoCheckFromServer();
     }
+  }
+
+  /// Blocking dialog directing the student to complete EDOM first
+  /// (general action-required dialog, same flow as the KHS page —
+  /// the action replaces this page with the EDOM flow).
+  void _showEvalRequiredDialog() {
+    final l10n = AppLocalizations.of(context)!;
+    showActionRequiredDialog(
+      context: context,
+      message: l10n.evalRequiredMessage,
+      actionLabel: l10n.completeLecturerEval,
+      onAction: () {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const EdomSemestersPage()),
+        );
+      },
+    );
   }
 
   /// Legacy adapter auto-check: for every course, the schedule with
@@ -114,13 +142,12 @@ class _InputKrsPageState extends State<InputKrsPage> {
   }
 
   /// All picked schedules (for the conflict check + counters).
-  Iterable<KrsJadwal> get _pickedJadwal => _selected.entries
-      .map((e) => _makul[e.key].itemJadwal[e.value]);
+  Iterable<KrsJadwal> get _pickedJadwal =>
+      _selected.entries.map((e) => _makul[e.key].itemJadwal[e.value]);
 
   int get _selectedMakulCount => _selected.length;
 
-  int get _selectedTotalSks =>
-      _pickedJadwal.fold(0, (a, j) => a + j.sksMk);
+  int get _selectedTotalSks => _pickedJadwal.fold(0, (a, j) => a + j.sksMk);
 
   /// Payload excluding isacc=="Y" rows (legacy create_data_post()).
   List<KrsInputItem> _postPayload() => _pickedJadwal
@@ -141,11 +168,13 @@ class _InputKrsPageState extends State<InputKrsPage> {
       final conflict = findScheduleConflict(
         selected: _selected.entries
             .where((e) => e.key != makulIndex)
-            .map((e) => KrsSelectedSchedule(
-                  jadwalHari: _makul[e.key].itemJadwal[e.value].jadwalHari,
-                  jadwalJam: _makul[e.key].itemJadwal[e.value].jadwalJam,
-                  namaMakul: _makul[e.key].itemJadwal[e.value].makul,
-                )),
+            .map(
+              (e) => KrsSelectedSchedule(
+                jadwalHari: _makul[e.key].itemJadwal[e.value].jadwalHari,
+                jadwalJam: _makul[e.key].itemJadwal[e.value].jadwalJam,
+                namaMakul: _makul[e.key].itemJadwal[e.value].makul,
+              ),
+            ),
         targetHari: jadwal.jadwalHari,
         targetJam: jadwal.jadwalJam,
         targetNamaMakul: jadwal.makul,
@@ -165,7 +194,8 @@ class _InputKrsPageState extends State<InputKrsPage> {
       if (isCurrentlyPicked) {
         _selected.remove(makulIndex); // uncheck
       } else {
-        _selected[makulIndex] = jadwalIndex; // radio: replaces other class of same course
+        _selected[makulIndex] =
+            jadwalIndex; // radio: replaces other class of same course
       }
     });
   }
@@ -178,7 +208,9 @@ class _InputKrsPageState extends State<InputKrsPage> {
       builder: (dialogContext) => PopScope(
         canPop: false,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -188,7 +220,10 @@ class _InputKrsPageState extends State<InputKrsPage> {
                 const SizedBox(height: 16),
                 Text(
                   l10n.pleaseWait,
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -218,7 +253,8 @@ class _InputKrsPageState extends State<InputKrsPage> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: (success ? AppColors.success : AppColors.danger).withValues(alpha: 0.15),
+                  color: (success ? AppColors.success : AppColors.danger)
+                      .withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -231,7 +267,11 @@ class _InputKrsPageState extends State<InputKrsPage> {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -256,7 +296,6 @@ class _InputKrsPageState extends State<InputKrsPage> {
     final payload = _postPayload();
     if (user == null || payload.isEmpty) return;
 
-    final language = Localizations.localeOf(context).languageCode;
     // Same payload shape as legacy Gson().toJson(create_data_post()).
     final dataJson = jsonEncode(payload.map((e) => e.toJson()).toList());
 
@@ -267,7 +306,7 @@ class _InputKrsPageState extends State<InputKrsPage> {
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
       dataJson: dataJson,
-      language: language,
+
     );
 
     if (!mounted) return;
@@ -319,12 +358,19 @@ class _InputKrsPageState extends State<InputKrsPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.inputKrsTitle,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -336,37 +382,39 @@ class _InputKrsPageState extends State<InputKrsPage> {
         color: AppColors.primary,
         child: switch (_state) {
           _KrsMkLoadState.loading => ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 300),
-                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
-              ],
-            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 300),
+              Center(
+                child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+              ),
+            ],
+          ),
           _KrsMkLoadState.noData => ErrorStateWidget(
-              type: ErrorStateType.noData,
-              noDataMessage: l10n.noKrsOfferings,
-              noDataIcon: Icons.post_add_rounded,
-            ),
+            type: ErrorStateType.noData,
+            noDataMessage: l10n.noKrsOfferings,
+            noDataIcon: Icons.post_add_rounded,
+          ),
           _KrsMkLoadState.serverError => ErrorStateWidget(
-              type: ErrorStateType.serverError,
-              serverMessage: _list?.message,
-            ),
-          _KrsMkLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+            type: ErrorStateType.serverError,
+            serverMessage: _list?.message,
+          ),
+          _KrsMkLoadState.noInternet => const ErrorStateWidget(
+            type: ErrorStateType.noInternet,
+          ),
           _KrsMkLoadState.success => ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 140),
-              itemCount: _makul.length + 1, // index 0 = info card
-              itemBuilder: (context, index) {
-                if (index == 0) return _buildInfoCard(l10n);
-                return _buildMakulCard(index - 1, l10n);
-              },
-            ),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 140),
+            itemCount: _makul.length + 1, // index 0 = info card
+            itemBuilder: (context, index) {
+              if (index == 0) return _buildInfoCard(l10n);
+              return _buildMakulCard(index - 1, l10n);
+            },
+          ),
         },
       ),
       // Bottom summary + "Simpan" only when the list is loaded (legacy
       // disables the save button otherwise).
-      bottomNavigationBar: hasList
-          ? _buildBottomBar(l10n)
-          : null,
+      bottomNavigationBar: hasList ? _buildBottomBar(l10n) : null,
     );
   }
 
@@ -396,12 +444,21 @@ class _InputKrsPageState extends State<InputKrsPage> {
                   children: [
                     Text(
                       l10n.krsTotalLabel,
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                     Text(
-                      l10n.selectedCoursesCount(_selectedMakulCount, _selectedTotalSks),
+                      l10n.selectedCoursesCount(
+                        _selectedMakulCount,
+                        _selectedTotalSks,
+                      ),
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
                     ),
                   ],
                 ),
@@ -412,16 +469,26 @@ class _InputKrsPageState extends State<InputKrsPage> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
                   foregroundColor: Colors.white,
-                  disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.35),
+                  disabledBackgroundColor: AppColors.primary.withValues(
+                    alpha: 0.35,
+                  ),
                   disabledForegroundColor: Colors.white,
                   // Override theme default minimumSize (double.infinity, 56):
                   // infinite min width breaks layout inside a Row.
                   minimumSize: const Size(0, 48),
-                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 32,
+                    vertical: 12,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
                   elevation: 0,
                 ),
-                child: Text(l10n.save, style: const TextStyle(fontWeight: FontWeight.bold)),
+                child: Text(
+                  l10n.save,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ],
           ),
@@ -450,11 +517,19 @@ class _InputKrsPageState extends State<InputKrsPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.info_outline_rounded, color: AppColors.primary, size: 18),
+              const Icon(
+                Icons.info_outline_rounded,
+                color: AppColors.primary,
+                size: 18,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.information,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
             ],
           ),
@@ -466,7 +541,11 @@ class _InputKrsPageState extends State<InputKrsPage> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.error_outline_rounded, color: AppColors.secondary, size: 16),
+              const Icon(
+                Icons.error_outline_rounded,
+                color: AppColors.secondary,
+                size: 16,
+              ),
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
@@ -491,14 +570,24 @@ class _InputKrsPageState extends State<InputKrsPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: Text(
             value == null || value.isEmpty ? '-' : value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
       ],
@@ -557,20 +646,27 @@ class _InputKrsPageState extends State<InputKrsPage> {
             ),
           ),
           ...makul.itemJadwal.asMap().entries.map(
-                (entry) => _buildJadwalRow(makulIndex, entry.key, entry.value, l10n),
-              ),
+            (entry) =>
+                _buildJadwalRow(makulIndex, entry.key, entry.value, l10n),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildJadwalRow(int makulIndex, int jadwalIndex, KrsJadwal jadwal, AppLocalizations l10n) {
+  Widget _buildJadwalRow(
+    int makulIndex,
+    int jadwalIndex,
+    KrsJadwal jadwal,
+    AppLocalizations l10n,
+  ) {
     final bool picked = _selected[makulIndex] == jadwalIndex;
     final bool disabled = jadwal.disabled;
 
     // Legacy "Sisa": the student's own pick counts toward the participants.
-    final int sisa =
-        jadwal.selected == 'Y' ? jadwal.kuota - (jadwal.jmlhPeserta + 1) : jadwal.kuota - jadwal.jmlhPeserta;
+    final int sisa = jadwal.selected == 'Y'
+        ? jadwal.kuota - (jadwal.jmlhPeserta + 1)
+        : jadwal.kuota - jadwal.jmlhPeserta;
 
     final bool notScheduled =
         (jadwal.jadwalHari.isEmpty && jadwal.jadwalJam.isEmpty);
@@ -603,7 +699,10 @@ class _InputKrsPageState extends State<InputKrsPage> {
                     if (showApprovedBadge) ...[
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.success,
                           borderRadius: BorderRadius.circular(30),
@@ -611,7 +710,11 @@ class _InputKrsPageState extends State<InputKrsPage> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            const Icon(Icons.bookmark_added_rounded, color: Colors.white, size: 12),
+                            const Icon(
+                              Icons.bookmark_added_rounded,
+                              color: Colors.white,
+                              size: 12,
+                            ),
                             const SizedBox(width: 4),
                             Text(
                               l10n.approvedBadge,
@@ -633,28 +736,40 @@ class _InputKrsPageState extends State<InputKrsPage> {
                     Expanded(
                       child: Text(
                         '${l10n.classLabel} : ${jadwal.jadwalKelas}',
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         '${l10n.quotaLabel} : ${jadwal.kuota}',
                         textAlign: TextAlign.center,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ),
                     Expanded(
                       child: Text(
                         '${l10n.remainingLabel} : $sisa',
                         textAlign: TextAlign.right,
-                        style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                       ),
                     ),
                   ],
                 ),
                 const SizedBox(height: 8),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
                     color: disabled ? AppColors.iconBackground : AppColors.info,
                     borderRadius: BorderRadius.circular(30),

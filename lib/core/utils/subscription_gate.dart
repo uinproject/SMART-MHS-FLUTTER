@@ -9,6 +9,7 @@ class SubscriptionGateFeatures {
   static const String krs = 'krs@115';
   static const String penawaranMk = 'pmk@114';
   static const String edom = 'ed@118';
+  static const String khs = 'khs@116';
 }
 
 /// Port of the legacy `SubscriptionUtils.checkSubscription` — shows an
@@ -28,7 +29,10 @@ void checkSubscription(BuildContext context, String kodeFitur) {
   final lockFitur = user.lockFitur;
   final batasRaw = user.batasSubscribe;
 
-  if (modeSubs != 'S' || minAngkatan == null || lockFitur == null || !lockFitur.contains(kodeFitur)) {
+  if (modeSubs != 'S' ||
+      minAngkatan == null ||
+      lockFitur == null ||
+      !lockFitur.contains(kodeFitur)) {
     return;
   }
 
@@ -40,7 +44,10 @@ void checkSubscription(BuildContext context, String kodeFitur) {
 
   final batas = DateTime.tryParse((batasRaw ?? '').replaceAll(' ', 'T'));
   if (batas == null) return;
-  if (DateTime.now().isBefore(batas) || DateTime.now().isAtSameMomentAs(batas)) return;
+  if (DateTime.now().isBefore(batas) ||
+      DateTime.now().isAtSameMomentAs(batas)) {
+    return;
+  }
 
   showDialog(
     context: context,
@@ -58,13 +65,21 @@ void checkSubscription(BuildContext context, String kodeFitur) {
                 color: AppColors.secondary.withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.workspace_premium_rounded, color: AppColors.secondary, size: 36),
+              child: const Icon(
+                Icons.workspace_premium_rounded,
+                color: AppColors.secondary,
+                size: 36,
+              ),
             ),
             const SizedBox(height: 16),
             Text(
               AppLocalizations.of(dialogContext)!.subscriptionRequiredMessage,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+              style: const TextStyle(
+                fontSize: 13,
+                color: AppColors.textPrimary,
+                height: 1.5,
+              ),
             ),
             const SizedBox(height: 20),
             SizedBox(

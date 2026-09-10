@@ -492,7 +492,7 @@ class AppLocalizationsEn extends AppLocalizations {
       'To continue, please complete the lecturer evaluation assessment for all semesters that have passed';
 
   @override
-  String get completeLecturerEval => 'Complete lecturer evaluation';
+  String get completeLecturerEval => 'Complete';
 
   @override
   String get krsSubmenuTitle => 'CSS Sub Menu';
@@ -646,4 +646,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try Again';
+
+  @override
+  String get ips => 'GPA Semester';
+
+  @override
+  String get khsTitle => 'Study Result';
+
+  @override
+  String get khsSemesterSks => 'Credits Course Semester';
+
+  @override
+  String get khsGradeWeight => 'Value';
+
+  @override
+  String get khsGradeIndex => 'Grade Index';
+
+  @override
+  String get khsNotFound => 'Study Result Not Found';
+
+  @override
+  String get khsPdfTitle => 'STUDY RESULT';
+
+  @override
+  String get khsWaitUntilLoaded => 'Wait until the KHS has finished loading';
+
+  @override
+  String get evalNotCompletedMessage =>
+      'You have not completed the lecturer evaluation assessment.';
+
+  @override
+  String get lastGpa => 'Last GPA';
+
+  @override
+  String get totalCredits => 'Total Credits Load';
+
+  @override
+  String get ipkChart => 'Cumulative GPA Chart';
+
+  @override
+  String get ipsChart => 'Semester GPA Chart (IPS)';
+
+  @override
+  String get sksLoadChart => 'Credits Load Per Semester';
+
+  @override
+  String get registrationHistory => 'Registration History';
+
+  @override
+  String get failedLoadData => 'Failed to load data';
 }

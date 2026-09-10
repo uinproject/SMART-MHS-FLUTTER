@@ -40,7 +40,7 @@ class _ViewKrsPageState extends State<ViewKrsPage> {
 
   Future<void> _loadKrs() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
+
     setState(() => _state = _KrsLoadState.loading);
 
     final user = _sessionManager.getUser();
@@ -55,7 +55,7 @@ class _ViewKrsPageState extends State<ViewKrsPage> {
       nim: user.nim ?? '',
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
-      language: language,
+
     );
 
     if (!mounted) return;

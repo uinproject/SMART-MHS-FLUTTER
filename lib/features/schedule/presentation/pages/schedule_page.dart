@@ -15,9 +15,17 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:path_provider/path_provider.dart';
 import 'package:open_filex/open_filex.dart';
 
-/// Load states — same pattern as the KRS/EDOM pages:
-/// success / noData / serverError (message shown) / noInternet.
-enum _ScheduleLoadState { loading, success, noData, serverError, noInternet }
+/// Load states — same pattern as the KRS/EDOM/bills pages:
+/// success / noData / serverMessage (API answered with a status+message,
+/// informational) / serverError (API-level failure) / noInternet.
+enum _ScheduleLoadState {
+  loading,
+  success,
+  noData,
+  serverMessage,
+  serverError,
+  noInternet,
+}
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({super.key});
@@ -86,7 +94,6 @@ class _SchedulePageState extends State<SchedulePage> {
       final result = await _apiService.getJadwalmhs(
         nim: user.nim ?? '',
         semester: _selectedSemester,
-        language: Localizations.localeOf(context).languageCode,
       );
 
       if (!mounted) return;
@@ -99,8 +106,9 @@ class _SchedulePageState extends State<SchedulePage> {
         } else if (result != null &&
             result.message != null &&
             result.message!.isNotEmpty) {
-          // Server explained the failure — show it verbatim.
-          _state = _ScheduleLoadState.serverError;
+          // The API ANSWERED with a status + message — informational, shown
+          // with the regular (calendar) icon, not the error icon.
+          _state = _ScheduleLoadState.serverMessage;
           _errorMessage = result.message;
         } else if (result != null) {
           // success=false without a message — connection-level failure.
@@ -144,32 +152,47 @@ class _SchedulePageState extends State<SchedulePage> {
     }
   }
 
+  /// Auto-scroll ke jadwal hari ini (legacy behaviour).
+  ///
+  /// Waits until the list frame is built, then ensures today's section is
+  /// visible. [Scrollable.ensureVisible] needs the target to actually be
+  /// BUILT — lazy lists only build visible items — so the success list uses
+  /// a large cacheExtent (see [build]) and this retries once on the next
+  /// frame if the context is somehow still missing.
   void _scrollToToday() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final today = DateFormat('EEEE', 'id_ID').format(DateTime.now());
-      int? targetIndex;
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) => _tryScrollToToday(retry: true),
+    );
+  }
 
-      if (_jadwal?.data != null) {
-        for (int i = 0; i < _jadwal!.data!.length; i++) {
-          if (_jadwal!.data![i].hari.toLowerCase() == today.toLowerCase()) {
-            targetIndex = i;
-            break;
-          }
+  void _tryScrollToToday({bool retry = false}) {
+    if (!mounted) return;
+    final today = DateFormat('EEEE', 'id_ID').format(DateTime.now());
+    int? targetIndex;
+
+    if (_jadwal?.data != null) {
+      for (int i = 0; i < _jadwal!.data!.length; i++) {
+        if (_jadwal!.data![i].hari.toLowerCase() == today.toLowerCase()) {
+          targetIndex = i;
+          break;
         }
       }
+    }
 
-      if (targetIndex != null && _dayKeys.containsKey(targetIndex)) {
-        final context = _dayKeys[targetIndex]!.currentContext;
-        if (context != null) {
-          Scrollable.ensureVisible(
-            context,
-            duration: const Duration(milliseconds: 500),
-            curve: Curves.easeInOut,
-            alignment: 0.1,
-          );
-        }
-      }
-    });
+    if (targetIndex == null || !_dayKeys.containsKey(targetIndex)) return;
+
+    final context = _dayKeys[targetIndex]!.currentContext;
+    if (context != null) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.easeInOut,
+        alignment: 0.1,
+      );
+    } else if (retry) {
+      // Target not built yet — try again after the next frame.
+      WidgetsBinding.instance.addPostFrameCallback((_) => _tryScrollToToday());
+    }
   }
 
   Future<void> _generatePdf() async {
@@ -629,6 +652,10 @@ class _SchedulePageState extends State<SchedulePage> {
             ],
           ),
           _ScheduleLoadState.noData => _buildEmptyState(l10n),
+          _ScheduleLoadState.serverMessage => _buildEmptyState(
+            l10n,
+            message: _errorMessage,
+          ),
           _ScheduleLoadState.serverError => ErrorStateWidget(
             type: ErrorStateType.serverError,
             serverMessage: _errorMessage ?? l10n.errorResponseApi,
@@ -638,11 +665,18 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
           _ScheduleLoadState.success => ListView.builder(
             controller: _scrollController,
+            // Pre-build ALL day sections (a week is only ~5-7 sections) so
+            // the auto-scroll target below the fold has a context — a lazy
+            // list would otherwise never build it and the scroll would be
+            // silently skipped.
+            cacheExtent: MediaQuery.of(context).size.height * 3,
             padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
             itemCount: _jadwal!.data!.length,
             itemBuilder: (context, index) {
               final day = _jadwal!.data![index];
-              _dayKeys[index] = GlobalKey();
+              // Stable key per index (never recreate — a new GlobalKey on
+              // every rebuild would orphan the scroll target lookup).
+              _dayKeys.putIfAbsent(index, GlobalKey.new);
               return _buildDaySection(index, day, l10n);
             },
           ),
@@ -651,7 +685,7 @@ class _SchedulePageState extends State<SchedulePage> {
     );
   }
 
-  Widget _buildEmptyState(AppLocalizations l10n) {
+  Widget _buildEmptyState(AppLocalizations l10n, {String? message}) {
     return ListView(
       // Always scrollable so swipe-to-refresh keeps working here.
       physics: const AlwaysScrollableScrollPhysics(),
@@ -702,7 +736,9 @@ class _SchedulePageState extends State<SchedulePage> {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 48),
           child: Text(
-            l10n.noScheduleSubtitle,
+            // Server message when the API answered with one, else the
+            // default localized subtitle.
+            message ?? l10n.noScheduleSubtitle,
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 14,

@@ -11,6 +11,12 @@ class KrsListResponse {
   final String? message;
   final String? waktuMulai;
   final String? waktuSelesai;
+
+  /// Server-side EDOM gate (same pattern as `PenawaranMKgetResponse` /
+  /// `KhsResponse`): `false` = student must complete the lecturer
+  /// evaluation (EDOM) before entering KRS. Defaults to `true` when the
+  /// server omits it.
+  final bool cekEval;
   final List<KrsMataKuliah>? data;
 
   KrsListResponse({
@@ -18,6 +24,7 @@ class KrsListResponse {
     this.message,
     this.waktuMulai,
     this.waktuSelesai,
+    this.cekEval = true,
     this.data,
   });
 
@@ -27,9 +34,11 @@ class KrsListResponse {
       message: json['message']?.toString(),
       waktuMulai: json['waktu_mulai']?.toString(),
       waktuSelesai: json['waktu_selesai']?.toString(),
+      cekEval: json['cekeval'] == null ? true : json['cekeval'] == true,
       data: json['data'] != null
           ? List<KrsMataKuliah>.from(
-              json['data'].map((x) => KrsMataKuliah.fromJson(x)))
+              json['data'].map((x) => KrsMataKuliah.fromJson(x)),
+            )
           : null,
     );
   }
@@ -61,7 +70,8 @@ class KrsPostResponse {
       tglInput: json['tgl_input']?.toString() ?? 'xxx',
       data: json['data'] != null
           ? List<KrsMataKuliah>.from(
-              json['data'].map((x) => KrsMataKuliah.fromJson(x)))
+              json['data'].map((x) => KrsMataKuliah.fromJson(x)),
+            )
           : null,
     );
   }
@@ -90,7 +100,8 @@ class KrsMataKuliah {
       semesterMk: _toInt(json['semester_mk']) ?? 0,
       itemJadwal: json['item_jadwal'] != null
           ? List<KrsJadwal>.from(
-              json['item_jadwal'].map((x) => KrsJadwal.fromJson(x)))
+              json['item_jadwal'].map((x) => KrsJadwal.fromJson(x)),
+            )
           : [],
     );
   }
@@ -175,8 +186,7 @@ class KrsJadwal {
 
   /// Row disabled when full (and not the student's own saved row) or already
   /// approved by the guardian lecturer — port of the legacy adapter rule.
-  bool get disabled =>
-      (jmlhPeserta >= kuota && issaved == 'T') || isacc == 'Y';
+  bool get disabled => (jmlhPeserta >= kuota && issaved == 'T') || isacc == 'Y';
 
   static int? _toInt(dynamic value) {
     if (value == null) return null;

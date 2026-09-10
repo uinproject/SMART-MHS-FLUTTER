@@ -6,8 +6,10 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/app_notifications.dart';
+import '../../../../core/widgets/action_required_dialog.dart';
 import '../../data/models/penawaran_response.dart';
 import '../../../bills/presentation/widgets/error_state_widget.dart';
+import '../../../edom/presentation/pages/edom_semesters_page.dart';
 
 /// Mirrors the legacy `InputPenawaranMkActivity` business logic:
 /// - loads the offering list on init (Future.microtask so context is ready)
@@ -54,7 +56,6 @@ class _InputOffersPageState extends State<InputOffersPage> {
 
   Future<void> _loadOffers() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
     setState(() {
       _state = _OffersLoadState.loading;
       _selected.clear(); // legacy pull-to-refresh resets the static selection
@@ -71,7 +72,7 @@ class _InputOffersPageState extends State<InputOffersPage> {
       nim: user.nim ?? '',
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
-      language: language,
+
     );
 
     if (!mounted) return;
@@ -88,14 +89,18 @@ class _InputOffersPageState extends State<InputOffersPage> {
       }
     });
 
-    if (_state == _OffersLoadState.success) {
-      final overQuota = _reconcileAutoChecked();
-      // Legacy: student must complete Edom before inputting offers.
-      if (result.cekEval == false) {
-        _showEvalRequiredDialog();
-      } else if (overQuota) {
-        _showOverQuotaSnackbar();
-      }
+    final bool overQuota = _state == _OffersLoadState.success
+        ? _reconcileAutoChecked()
+        : false;
+
+    // Legacy: student must complete Edom before inputting offers — the
+    // dialog shows whenever the API answered with cekeval == false,
+    // regardless of the list state (legacy checks `!cekeval` right after
+    // the 200 response, after show_data()).
+    if (result.cekEval == false) {
+      _showEvalRequiredDialog();
+    } else if (overQuota) {
+      _showOverQuotaSnackbar();
     }
   }
 
@@ -143,46 +148,21 @@ class _InputOffersPageState extends State<InputOffersPage> {
   }
 
   /// Blocking dialog (legacy: Lottie star + `text_show_dialog_eval`).
-  /// TODO(edow): navigate to the Edom flow once that feature is migrated.
+  /// Uses the general action-required dialog; the action replaces this
+  /// page with the EDOM flow (legacy: startActivity + finish()).
   void _showEvalRequiredDialog() {
     final l10n = AppLocalizations.of(context)!;
-    showDialog(
+    showActionRequiredDialog(
       context: context,
-      barrierDismissible: false,
-      builder: (dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 64,
-                height: 64,
-                decoration: BoxDecoration(
-                  color: Colors.amber.withValues(alpha: 0.15),
-                  shape: BoxShape.circle,
-                ),
-                child: const Icon(Icons.star_rounded, color: Colors.amber, size: 36),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                l10n.evalRequiredMessage,
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
-              ),
-              const SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.pop(dialogContext),
-                  child: Text(l10n.completeLecturerEval),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+      message: l10n.evalRequiredMessage,
+      actionLabel: l10n.completeLecturerEval,
+      onAction: () {
+        if (!mounted) return;
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const EdomSemestersPage()),
+        );
+      },
     );
   }
 
@@ -194,7 +174,9 @@ class _InputOffersPageState extends State<InputOffersPage> {
       builder: (dialogContext) => PopScope(
         canPop: false,
         child: Dialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
@@ -204,7 +186,10 @@ class _InputOffersPageState extends State<InputOffersPage> {
                 const SizedBox(height: 16),
                 Text(
                   l10n.pleaseWait,
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -234,7 +219,8 @@ class _InputOffersPageState extends State<InputOffersPage> {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: (success ? AppColors.success : AppColors.danger).withValues(alpha: 0.15),
+                  color: (success ? AppColors.success : AppColors.danger)
+                      .withValues(alpha: 0.15),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -247,7 +233,11 @@ class _InputOffersPageState extends State<InputOffersPage> {
               Text(
                 message,
                 textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 13, color: AppColors.textPrimary, height: 1.5),
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: AppColors.textPrimary,
+                  height: 1.5,
+                ),
               ),
               const SizedBox(height: 20),
               SizedBox(
@@ -271,7 +261,6 @@ class _InputOffersPageState extends State<InputOffersPage> {
     final user = _sessionManager.getUser();
     if (user == null || _selected.isEmpty) return;
 
-    final language = Localizations.localeOf(context).languageCode;
     // Same payload shape as legacy Gson().toJson(set):
     // [{"kode_mk":"...","sks_mk":2}, ...]
     final payload = jsonEncode([
@@ -285,7 +274,6 @@ class _InputOffersPageState extends State<InputOffersPage> {
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
       dataJson: payload,
-      language: language,
     );
 
     if (!mounted) return;
@@ -340,12 +328,19 @@ class _InputOffersPageState extends State<InputOffersPage> {
         backgroundColor: const Color(0xFF003D82),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(
           l10n.inputOfferTitle,
-          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         centerTitle: false,
         flexibleSpace: Container(
@@ -357,31 +352,35 @@ class _InputOffersPageState extends State<InputOffersPage> {
         color: AppColors.primary,
         child: switch (_state) {
           _OffersLoadState.loading => ListView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              children: const [
-                SizedBox(height: 300),
-                Center(child: SpinKitThreeBounce(color: AppColors.primary, size: 30)),
-              ],
-            ),
+            physics: const AlwaysScrollableScrollPhysics(),
+            children: const [
+              SizedBox(height: 300),
+              Center(
+                child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+              ),
+            ],
+          ),
           _OffersLoadState.noData => ErrorStateWidget(
-              type: ErrorStateType.noData,
-              noDataMessage: l10n.noOfferings,
-              noDataIcon: Icons.local_offer_rounded,
-            ),
+            type: ErrorStateType.noData,
+            noDataMessage: l10n.noOfferings,
+            noDataIcon: Icons.local_offer_rounded,
+          ),
           _OffersLoadState.serverError => ErrorStateWidget(
-              type: ErrorStateType.serverError,
-              serverMessage: _offers?.message,
-            ),
-          _OffersLoadState.noInternet => const ErrorStateWidget(type: ErrorStateType.noInternet),
+            type: ErrorStateType.serverError,
+            serverMessage: _offers?.message,
+          ),
+          _OffersLoadState.noInternet => const ErrorStateWidget(
+            type: ErrorStateType.noInternet,
+          ),
           _OffersLoadState.success => ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 20, 20, 140),
-              itemCount: _offers!.data!.length + 1, // index 0 = info card
-              itemBuilder: (context, index) {
-                if (index == 0) return _buildInfoCard(l10n);
-                final semester = _offers!.data![index - 1];
-                return _buildSemesterGroup(semester, l10n);
-              },
-            ),
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 140),
+            itemCount: _offers!.data!.length + 1, // index 0 = info card
+            itemBuilder: (context, index) {
+              if (index == 0) return _buildInfoCard(l10n);
+              final semester = _offers!.data![index - 1];
+              return _buildSemesterGroup(semester, l10n);
+            },
+          ),
         },
       ),
       // Bottom summary + "Simpan" only when the offering list is loaded
@@ -411,15 +410,24 @@ class _InputOffersPageState extends State<InputOffersPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              l10n.selectedCoursesCount(_selected.length, _selectedTotalSks),
-                              style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                              l10n.selectedCoursesCount(
+                                _selected.length,
+                                _selectedTotalSks,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: AppColors.textSecondary,
+                              ),
                             ),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(
                                 '$_selectedTotalSks/$_jatahSks SKS',
                                 style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: AppColors.textPrimary,
+                                ),
                               ),
                             ),
                           ],
@@ -427,20 +435,32 @@ class _InputOffersPageState extends State<InputOffersPage> {
                       ),
                       const SizedBox(width: 16),
                       ElevatedButton(
-                        onPressed: _selected.isNotEmpty ? _submitSelection : null,
+                        onPressed: _selected.isNotEmpty
+                            ? _submitSelection
+                            : null,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,
-                          disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.35),
+                          disabledBackgroundColor: AppColors.primary.withValues(
+                            alpha: 0.35,
+                          ),
                           disabledForegroundColor: Colors.white,
                           // Override theme default minimumSize (double.infinity, 56):
                           // infinite min width breaks layout inside a Row.
                           minimumSize: const Size(0, 48),
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 32,
+                            vertical: 12,
+                          ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
                           elevation: 0,
                         ),
-                        child: Text(l10n.save, style: const TextStyle(fontWeight: FontWeight.bold)),
+                        child: Text(
+                          l10n.save,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -471,22 +491,37 @@ class _InputOffersPageState extends State<InputOffersPage> {
         children: [
           Row(
             children: [
-              const Icon(Icons.info_outline_rounded, color: AppColors.primary, size: 18),
+              const Icon(
+                Icons.info_outline_rounded,
+                color: AppColors.primary,
+                size: 18,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.information,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                ),
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Text(
                   '${l10n.sksQuota}: $_jatahSks SKS',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -505,21 +540,34 @@ class _InputOffersPageState extends State<InputOffersPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: Text(
             value == null || value.isEmpty ? '-' : value,
             textAlign: TextAlign.right,
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            style: const TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: AppColors.textPrimary,
+            ),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSemesterGroup(PenawaranSemester semester, AppLocalizations l10n) {
+  Widget _buildSemesterGroup(
+    PenawaranSemester semester,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -528,7 +576,11 @@ class _InputOffersPageState extends State<InputOffersPage> {
           child: Text(
             '${l10n.semester} ${semester.semester}'.toUpperCase(),
             style: const TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 13, color: AppColors.primary, letterSpacing: 1),
+              fontWeight: FontWeight.bold,
+              fontSize: 13,
+              color: AppColors.primary,
+              letterSpacing: 1,
+            ),
           ),
         ),
         ...semester.itemMakul.map((item) => _buildCourseCard(item)),
@@ -560,13 +612,19 @@ class _InputOffersPageState extends State<InputOffersPage> {
                 Text(
                   '(${item.kdmkMk}) ${item.namaMk}',
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 6),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(30),
@@ -574,10 +632,14 @@ class _InputOffersPageState extends State<InputOffersPage> {
                       child: Text(
                         '${item.sksMk} SKS',
                         style: const TextStyle(
-                            fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.primary),
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.primary,
+                        ),
                       ),
                     ),
-                    if (item.tglInputPmk != null && item.tglInputPmk!.isNotEmpty) ...[
+                    if (item.tglInputPmk != null &&
+                        item.tglInputPmk!.isNotEmpty) ...[
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
@@ -585,7 +647,10 @@ class _InputOffersPageState extends State<InputOffersPage> {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
-                              fontSize: 10, fontWeight: FontWeight.bold, color: AppColors.success),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.success,
+                          ),
                         ),
                       ),
                     ],
@@ -596,14 +661,20 @@ class _InputOffersPageState extends State<InputOffersPage> {
                   Text(
                     item.pernahAmbilMk,
                     style: const TextStyle(
-                        fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.textSecondary),
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
                 if (!enabled && item.descPlain.isNotEmpty) ...[
                   const SizedBox(height: 6),
                   Text(
                     item.descPlain,
-                    style: const TextStyle(fontSize: 11, color: AppColors.danger),
+                    style: const TextStyle(
+                      fontSize: 11,
+                      color: AppColors.danger,
+                    ),
                   ),
                 ],
               ],

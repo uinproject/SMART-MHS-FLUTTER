@@ -6,6 +6,8 @@ import '../../../bills/presentation/pages/current_bills_page.dart';
 import '../../../offers/presentation/pages/sub_menu_offers_page.dart';
 import '../../../krs/presentation/pages/sub_menu_krs_page.dart';
 import '../../../edom/presentation/pages/edom_semesters_page.dart';
+import '../../../khs/presentation/pages/khs_page.dart';
+import '../../../academic_history/presentation/pages/academic_history_page.dart';
 
 class MainMenuGrid extends StatefulWidget {
   const MainMenuGrid({super.key});
@@ -38,8 +40,9 @@ class _MainMenuGridState extends State<MainMenuGrid> {
       {'icon': Icons.school_rounded, 'label': l10n.khs},
     ];
 
-    final visibleMenus =
-        _showAll ? allMenus : allMenus.take(_collapsedItemCount).toList();
+    final visibleMenus = _showAll
+        ? allMenus
+        : allMenus.take(_collapsedItemCount).toList();
     final bool hasMore = allMenus.length > _collapsedItemCount;
 
     return Column(
@@ -80,27 +83,49 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                 if (menu['label'] == l10n.schedule) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SchedulePage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SchedulePage(),
+                    ),
                   );
                 } else if (menu['label'] == l10n.bills) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const CurrentBillsPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const CurrentBillsPage(),
+                    ),
                   );
                 } else if (menu['label'] == l10n.offers) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SubMenuOffersPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SubMenuOffersPage(),
+                    ),
                   );
                 } else if (menu['label'] == l10n.krs) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SubMenuKrsPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const SubMenuKrsPage(),
+                    ),
                   );
                 } else if (menu['label'] == l10n.edom) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const EdomSemestersPage()),
+                    MaterialPageRoute(
+                      builder: (context) => const EdomSemestersPage(),
+                    ),
+                  );
+                } else if (menu['label'] == l10n.khs) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const KhsPage()),
+                  );
+                } else if (menu['label'] == l10n.academicHistory) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const AcademicHistoryPage(),
+                    ),
                   );
                 }
               },
@@ -114,12 +139,17 @@ class _MainMenuGridState extends State<MainMenuGrid> {
             child: TextButton.icon(
               onPressed: () => setState(() => _showAll = !_showAll),
               style: TextButton.styleFrom(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
                 minimumSize: const Size(0, 32),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               ),
               icon: Icon(
-                _showAll ? Icons.expand_less_rounded : Icons.expand_more_rounded,
+                _showAll
+                    ? Icons.expand_less_rounded
+                    : Icons.expand_more_rounded,
                 color: AppColors.primary,
                 size: 22,
               ),
@@ -159,11 +189,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.white, width: 2),
               ),
-              child: Icon(
-                icon,
-                color: AppColors.primary,
-                size: 24,
-              ),
+              child: Icon(icon, color: AppColors.primary, size: 24),
             ),
           ),
         ),

@@ -75,7 +75,6 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
 
   Future<void> _loadCourses() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
     setState(() => _state = _EdomMakulLoadState.loading);
 
     final user = _sessionManager.getUser();
@@ -87,7 +86,6 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
     final result = await _apiService.getEdomCourses(
       nim: user.nim ?? '',
       thsms: widget.item.thsms,
-      language: language,
     );
 
     if (!mounted) return;

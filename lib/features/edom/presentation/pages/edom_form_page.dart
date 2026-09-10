@@ -88,12 +88,11 @@ class _EdomFormPageState extends State<EdomFormPage> {
 
   Future<void> _loadQuestions() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
+
     setState(() => _state = _EdomFormLoadState.loading);
 
     final result = await _apiService.getEdomQuestions(
       ideval: widget.makul.ideval,
-      language: language,
     );
 
     if (!mounted) return;

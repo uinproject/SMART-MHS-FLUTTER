@@ -40,7 +40,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       final response = await _apiService.getOtpResetPassword(
         nim: _nimController.text.trim(),
         email: _emailController.text.trim(),
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {

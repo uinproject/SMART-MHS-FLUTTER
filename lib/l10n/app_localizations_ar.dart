@@ -643,4 +643,52 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get tryAgain => 'حاول مرة أخرى';
+
+  @override
+  String get ips => 'المعدل الفصلي';
+
+  @override
+  String get khsTitle => 'نتائج الدراسة';
+
+  @override
+  String get khsSemesterSks => 'الساعات المعتمدة للفصل الدراسي';
+
+  @override
+  String get khsGradeWeight => 'وزن التقدير';
+
+  @override
+  String get khsGradeIndex => 'مؤشر التقدير';
+
+  @override
+  String get khsNotFound => 'لا توجد بيانات نتائج الدراسة';
+
+  @override
+  String get khsPdfTitle => 'نتائج الدراسة';
+
+  @override
+  String get khsWaitUntilLoaded => 'انتظر حتى تكتمل عملية تحميل نتائج الدراسة';
+
+  @override
+  String get evalNotCompletedMessage => 'لم تكمل بعد تقييم المحاضرين.';
+
+  @override
+  String get lastGpa => 'المعدل التراكمي الأخير';
+
+  @override
+  String get totalCredits => 'إجمالي حمل الساعات المعتمدة';
+
+  @override
+  String get ipkChart => 'مخطط المعدل التراكمي';
+
+  @override
+  String get ipsChart => 'مخطط المعدل الفصلي (IPS)';
+
+  @override
+  String get sksLoadChart => 'حمل الساعات المعتمدة لكل فصل دراسي';
+
+  @override
+  String get registrationHistory => 'سجل التسجيل';
+
+  @override
+  String get failedLoadData => 'فشل تحميل البيانات';
 }

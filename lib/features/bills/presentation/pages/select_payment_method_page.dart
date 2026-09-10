@@ -12,8 +12,17 @@ import 'payment_instruction_page.dart';
 /// - loads payment methods on create (Future.microtask so context is ready)
 /// - sends the `language` field (legacy does send it for this endpoint)
 /// - tap a method -> detail/instructions page with the total amount
-/// - pull-to-refresh (legacy SwipeRefreshLayout)
-enum _MethodLoadState { loading, success, noData, serverError, noInternet }
+/// - pull-to-refresh (legacy SwipeRefreshLayout). Uniform error handling:
+/// an API ANSWER with status+message is informational (regular icon),
+/// API-level failures (network / HTTP error) show the error icon.
+enum _MethodLoadState {
+  loading,
+  success,
+  noData,
+  serverMessage,
+  serverError,
+  noInternet,
+}
 
 class SelectPaymentMethodPage extends StatefulWidget {
   final int totalAmount;
@@ -31,6 +40,9 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
   PaymentMethodResponse? _methods;
   _MethodLoadState _state = _MethodLoadState.loading;
 
+  /// Failure detail for the API-level error states ("Error 500" / general).
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -42,32 +54,51 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
     setState(() => _state = _MethodLoadState.loading);
     final user = _sessionManager.getUser();
     if (user == null) {
-      if (mounted) setState(() => _state = _MethodLoadState.noInternet);
+      if (mounted) {
+        setState(() {
+          _state = _MethodLoadState.serverError;
+          _errorMessage = AppLocalizations.of(context)!.sessionExpired;
+        });
+      }
       return;
     }
 
-    // NIM is filtered to digits-only inside the service (same as legacy).
-    // Legacy sends the language field for this endpoint (unlike tagihan/rekap).
-    final result = await _apiService.getPaymentMethods(
-      nim: user.nim ?? '',
-      language: Localizations.localeOf(context).languageCode,
-    );
+    try {
+      // NIM is filtered to digits-only inside the service (same as legacy).
+      // Legacy sends the language field for this endpoint (unlike tagihan/rekap).
+      final result = await _apiService.getPaymentMethods(
+        nim: user.nim ?? '',
 
-    if (!mounted) return;
-    setState(() {
-      _methods = result;
-      if (result.success && result.data != null && result.data!.isNotEmpty) {
-        _state = _MethodLoadState.success;
-      } else if (result.success) {
-        _state = _MethodLoadState.noData;
-      } else if (result.message != null) {
-        // legacy: success == false && message != null -> show server message
-        _state = _MethodLoadState.serverError;
-      } else {
-        // legacy: onFailure -> no internet animation
-        _state = _MethodLoadState.noInternet;
-      }
-    });
+      );
+
+      if (!mounted) return;
+      setState(() {
+        _methods = result;
+        if (result.success && result.data != null && result.data!.isNotEmpty) {
+          _state = _MethodLoadState.success;
+        } else if (result.success) {
+          _state = _MethodLoadState.noData;
+        } else if (result.message != null && result.message!.isNotEmpty) {
+          // The API ANSWERED with a status + message — informational, shown
+          // with the regular (bank) icon, not the error icon.
+          _state = _MethodLoadState.serverMessage;
+        } else {
+          // Answered without a message — connection-level failure.
+          _state = _MethodLoadState.noInternet;
+        }
+      });
+    } catch (e) {
+      // The call itself failed (network / HTTP error / bad payload).
+      if (!mounted) return;
+      final failure = ApiService.describeFailure(e);
+      setState(() {
+        _errorMessage =
+            failure ?? AppLocalizations.of(context)!.errorResponseApi;
+        _state = failure == null
+            ? _MethodLoadState.noInternet
+            : _MethodLoadState.serverError;
+      });
+    }
   }
 
   @override
@@ -123,11 +154,15 @@ class _SelectPaymentMethodPageState extends State<SelectPaymentMethodPage> {
             noDataMessage: l10n.noPaymentMethods,
             noDataIcon: Icons.account_balance_rounded,
           ),
+          _MethodLoadState.serverMessage => ErrorStateWidget(
+            type: ErrorStateType.noData,
+            // API answered with status+message → old (informational) icon.
+            noDataMessage: _methods?.message,
+            noDataIcon: Icons.account_balance_rounded,
+          ),
           _MethodLoadState.serverError => ErrorStateWidget(
             type: ErrorStateType.serverError,
-            serverMessage: _methods?.message,
-            noDataMessage: l10n.noPaymentMethods,
-            noDataIcon: Icons.account_balance_rounded,
+            serverMessage: _errorMessage,
           ),
           _MethodLoadState.noInternet => const ErrorStateWidget(
             type: ErrorStateType.noInternet,

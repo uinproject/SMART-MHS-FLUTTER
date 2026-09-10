@@ -69,7 +69,7 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
 
   Future<void> _loadSemesters() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
+
     setState(() => _state = _EdomSemLoadState.loading);
 
     final user = _sessionManager.getUser();
@@ -81,7 +81,7 @@ class _EdomSemestersPageState extends State<EdomSemestersPage> {
     // NIM is hashed AS-IS (legacy EDOM does not digits-filter the NIM).
     final result = await _apiService.getEdomSemesters(
       nim: user.nim ?? '',
-      language: language,
+
     );
 
     if (!mounted) return;

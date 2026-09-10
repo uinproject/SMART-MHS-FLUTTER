@@ -267,5 +267,21 @@
   "edomExitConfirmTitle": "هل أنت متأكد؟",
   "edomExitConfirmMessage": "إذا خرجت الآن فلن يتم حفظ الإجابة",
   "errorResponseApi": "تحقق من اتصالك، تعذر الاتصال بالخادم",
-  "tryAgain": "حاول مرة أخرى"
+  "tryAgain": "حاول مرة أخرى",
+  "ips": "المعدل الفصلي",
+  "khsTitle": "نتائج الدراسة",
+  "khsSemesterSks": "الساعات المعتمدة للفصل الدراسي",
+  "khsGradeWeight": "وزن التقدير",
+  "khsGradeIndex": "مؤشر التقدير",
+  "khsNotFound": "لا توجد بيانات نتائج الدراسة",
+  "khsPdfTitle": "نتائج الدراسة",
+  "khsWaitUntilLoaded": "انتظر حتى تكتمل عملية تحميل نتائج الدراسة",
+  "evalNotCompletedMessage": "لم تكمل بعد تقييم المحاضرين.",
+  "lastGpa": "المعدل التراكمي الأخير",
+  "totalCredits": "إجمالي حمل الساعات المعتمدة",
+  "ipkChart": "مخطط المعدل التراكمي",
+  "ipsChart": "مخطط المعدل الفصلي (IPS)",
+  "sksLoadChart": "حمل الساعات المعتمدة لكل فصل دراسي",
+  "registrationHistory": "سجل التسجيل",
+  "failedLoadData": "فشل تحميل البيانات"
 }

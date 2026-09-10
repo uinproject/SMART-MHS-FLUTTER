@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path_provider/path_provider.dart';
+import '../storage/session_manager.dart';
 import '../utils/app_constants.dart';
 import '../security/bni_encryption.dart';
 import '../../features/auth/data/models/api_responses.dart';
@@ -20,6 +21,8 @@ import '../../features/edom/data/models/edom_semester_response.dart';
 import '../../features/edom/data/models/edom_makul_response.dart';
 import '../../features/edom/data/models/edom_soal_response.dart';
 import '../../features/edom/data/models/edom_post_models.dart';
+import '../../features/khs/data/models/khs_response.dart';
+import '../../features/academic_history/data/models/riwayat_akademik_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -42,6 +45,7 @@ class LoginResult {
 
 class ApiService {
   late Dio _dio;
+  final _sessionManager = SessionManager();
 
   ApiService() {
     _dio = Dio(
@@ -66,6 +70,25 @@ class ApiService {
       },
     );
 
+    // Automatically inject 'language' parameter into every request
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) {
+          final lang = _sessionManager.getLocale();
+          
+          if (options.method == 'GET') {
+            options.queryParameters['language'] = lang;
+          } else {
+            // For POST/PUT/etc.
+            options.data ??= {'language': lang};
+            // Note: If data is a String (already encoded JSON), we might need to 
+            // decode, add, and re-encode, but usually it's passed as Map.
+          }
+          return handler.next(options);
+        },
+      ),
+    );
+
     _dio.interceptors.add(
       LogInterceptor(
         requestHeader: true,
@@ -84,7 +107,6 @@ class ApiService {
     required String deviceName,
     String resyncronDevice = 'ayang',
     String tokenNotif = 'undefined',
-    String language = 'in',
   }) async {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
@@ -126,7 +148,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -245,6 +266,7 @@ class ApiService {
   }
 
   Future<PengumumanResponse?> getPengumuman({
+    String? nim,
     String? kodeJen,
     String? kodeFak,
     String? kodePst,
@@ -253,6 +275,7 @@ class ApiService {
       final response = await _dio.get(
         'Pengumumanservices/pengumuman',
         queryParameters: {
+          'unim': nim,
           'kodejen': kodeJen,
           'kodefak': kodeFak,
           'kodepst': kodePst,
@@ -275,7 +298,6 @@ class ApiService {
     required String nim,
     required String kdpst,
     required String email,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -294,7 +316,6 @@ class ApiService {
           AppConstants.cid,
           AppConstants.secretKey,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -319,7 +340,6 @@ class ApiService {
     required String kdpst,
     required String email,
     required String otp,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -343,7 +363,6 @@ class ApiService {
           AppConstants.cid,
           AppConstants.secretKey,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -366,7 +385,6 @@ class ApiService {
   Future<Map<String, dynamic>?> getOtpResetPassword({
     required String nim,
     required String email,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -380,7 +398,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -404,7 +421,6 @@ class ApiService {
     required String nim,
     required String email,
     required String otp,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -423,7 +439,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -449,7 +464,6 @@ class ApiService {
     required String email,
     required String otp,
     required String newPassword,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -469,7 +483,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -493,7 +506,6 @@ class ApiService {
   Future<JadwalResponse?> getJadwalmhs({
     required String nim,
     required int semester,
-    String language = 'in',
   }) async {
     try {
       final data = {
@@ -507,7 +519,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -531,11 +542,12 @@ class ApiService {
   /// digits-only NIM, same as legacy: `nim?.filter { it.isDigit() }`
   static String nimDigits(String nim) => nim.replaceAll(RegExp(r'\D'), '');
 
-  /// Uniform failure description for the bills endpoints:
+  /// Uniform failure description for API calls — used by page-level catch
+  /// blocks to decide the error state:
   /// - network/timeout failure -> null (UI shows the localized no-internet state)
   /// - HTTP error (4xx/5xx)    -> "Error {code}" (e.g. "Error 500")
   /// - anything else           -> "error {cause}" (same shape as legacy EDOM)
-  static String? _describeFailure(Object e) {
+  static String? describeFailure(Object e) {
     if (e is DioException) {
       switch (e.type) {
         case DioExceptionType.connectionTimeout:
@@ -554,109 +566,68 @@ class ApiService {
   }
 
   /// POST {legacy}/tagihanmhs — plain params (no encryption), NO language field (same as legacy).
-  /// Non-200 -> success=false + message "error {code}" (same as legacy).
-  /// Connection failure -> success=false + message=null (UI shows no-internet state, same as legacy).
+  /// A RETURNED response means the API answered (status + message come from
+  /// the server); API-level failures (network / HTTP error / bad payload)
+  /// THROW — callers describe them via `ApiService.describeFailure`.
   Future<TuitionBillResponse> getTuitionBills({
     required String nim,
     required String kdjen,
     required String kdpst,
   }) async {
-    try {
-      final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
+    final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
 
-      final response = await _dio.post(
-        '${AppConstants.baseUrlLegacy}tagihanmhs',
-        data: data,
-        options: Options(contentType: Headers.formUrlEncodedContentType),
-      );
+    final response = await _dio.post(
+      '${AppConstants.baseUrlLegacy}tagihanmhs',
+      data: data,
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String
-            ? jsonDecode(response.data)
-            : response.data;
-        return TuitionBillResponse.fromJson(responseData);
-      }
-      return TuitionBillResponse(
-        success: false,
-        message: 'error ${response.statusCode} ${response.statusMessage}',
-        data: const [],
-      );
-    } catch (e) {
-      return TuitionBillResponse(
-        success: false,
-        message: _describeFailure(e),
-        data: const [],
-      );
-    }
+    final Map<String, dynamic> responseData = response.data is String
+        ? jsonDecode(response.data)
+        : response.data;
+    return TuitionBillResponse.fromJson(responseData);
   }
 
   /// POST {legacy}/rekappembayaran — plain params (no encryption), NO language field (same as legacy).
+  /// A RETURNED response means the API answered; API-level failures THROW
+  /// (see [getTuitionBills]).
   Future<PaymentHistoryResponse> getPaymentHistory({
     required String nim,
     required String kdjen,
     required String kdpst,
   }) async {
-    try {
-      final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
+    final data = {'unim': nimDigits(nim), 'kdjen': kdjen, 'kdpst': kdpst};
 
-      final response = await _dio.post(
-        '${AppConstants.baseUrlLegacy}rekappembayaran',
-        data: data,
-        options: Options(contentType: Headers.formUrlEncodedContentType),
-      );
+    final response = await _dio.post(
+      '${AppConstants.baseUrlLegacy}rekappembayaran',
+      data: data,
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String
-            ? jsonDecode(response.data)
-            : response.data;
-        return PaymentHistoryResponse.fromJson(responseData);
-      }
-      return PaymentHistoryResponse(
-        success: false,
-        message: 'error ${response.statusCode} ${response.statusMessage}',
-        data: const [],
-      );
-    } catch (e) {
-      return PaymentHistoryResponse(
-        success: false,
-        message: _describeFailure(e),
-        data: const [],
-      );
-    }
+    final Map<String, dynamic> responseData = response.data is String
+        ? jsonDecode(response.data)
+        : response.data;
+    return PaymentHistoryResponse.fromJson(responseData);
   }
 
   /// POST {legacy}/tatacarapembayaran — plain params, WITH language field (same as legacy).
+  /// A RETURNED response means the API answered; API-level failures THROW
+  /// (see [getTuitionBills]).
   Future<PaymentMethodResponse> getPaymentMethods({
     required String nim,
-    String language = 'in',
   }) async {
-    try {
-      final data = {'unim': nimDigits(nim), 'language': language};
+    final data = {'unim': nimDigits(nim)};
 
-      final response = await _dio.post(
-        '${AppConstants.baseUrlLegacy}tatacarapembayaran',
-        data: data,
-        options: Options(contentType: Headers.formUrlEncodedContentType),
-      );
+    final response = await _dio.post(
+      '${AppConstants.baseUrlLegacy}tatacarapembayaran',
+      data: data,
+      options: Options(contentType: Headers.formUrlEncodedContentType),
+    );
 
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> responseData = response.data is String
-            ? jsonDecode(response.data)
-            : response.data;
-        return PaymentMethodResponse.fromJson(responseData);
-      }
-      return PaymentMethodResponse(
-        success: false,
-        message: 'error ${response.statusCode} ${response.statusMessage}',
-        data: const [],
-      );
-    } catch (e) {
-      return PaymentMethodResponse(
-        success: false,
-        message: _describeFailure(e),
-        data: const [],
-      );
-    }
+    final Map<String, dynamic> responseData = response.data is String
+        ? jsonDecode(response.data)
+        : response.data;
+    return PaymentMethodResponse.fromJson(responseData);
   }
 
   /// GET {APIV2}/Penawaranmkservices/list_penawaran_mk — BNI-hashed query
@@ -668,7 +639,6 @@ class ApiService {
     required String nim,
     required String kdjen,
     required String kdpst,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -689,7 +659,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -715,7 +684,6 @@ class ApiService {
     required String kdjen,
     required String kdpst,
     required int semester,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -741,7 +709,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -771,7 +738,6 @@ class ApiService {
     required String kdjen,
     required String kdpst,
     required String dataJson,
-    String language = 'id',
   }) async {
     try {
       final data = {
@@ -795,7 +761,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -832,7 +797,6 @@ class ApiService {
     required String nim,
     required String kdjen,
     required String kdpst,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -853,7 +817,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -879,7 +842,6 @@ class ApiService {
     required String nim,
     required String kdjen,
     required String kdpst,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -900,7 +862,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -929,7 +890,6 @@ class ApiService {
     required String kdjen,
     required String kdpst,
     required String dataJson,
-    String language = 'id',
   }) async {
     try {
       final data = {
@@ -953,7 +913,6 @@ class ApiService {
           AppConstants.cidV2,
           AppConstants.secretKeyV2,
         ),
-        'language': language,
       };
 
       final response = await _dio.post(
@@ -992,7 +951,6 @@ class ApiService {
   /// (NIM as-is, no digits filtering) + plain `language`.
   Future<EdomSemestersResponse> getEdomSemesters({
     required String nim,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -1003,7 +961,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -1030,7 +987,6 @@ class ApiService {
   Future<EdomCoursesResponse> getEdomCourses({
     required String nim,
     required String thsms,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -1046,7 +1002,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -1072,7 +1027,6 @@ class ApiService {
   /// plain `language`.
   Future<EdomQuestionsResponse> getEdomQuestions({
     required String ideval,
-    String language = 'id',
   }) async {
     try {
       final response = await _dio.get(
@@ -1083,7 +1037,6 @@ class ApiService {
             AppConstants.cidV2,
             AppConstants.secretKeyV2,
           ),
-          'language': language,
         },
       );
 
@@ -1142,6 +1095,107 @@ class ApiService {
         success: false,
         message: 'error ${e is DioException ? e.message : e}',
         komentar: '',
+      );
+    }
+  }
+
+  // ---- KHS (khsservices/*) ----
+
+  /// POST {APIV2}/khsservices/khs — form-urlencoded body with BNI-hashed
+  /// `selected_semester` + `unim` + `kdjen` + `kdpst` and plain `language`
+  /// (exact port of the legacy `ApiEndpoint.get_khs`). Response is plain
+  /// JSON (no decryption).
+  ///
+  /// Error mapping mirrors the legacy `KhsActivity` callbacks:
+  /// non-200 -> success=false + "error {code} {message}" (shown as a
+  /// server-error message), connection failure -> success=false +
+  /// message=null (no-internet state).
+  Future<KhsResponse> getKhs({
+    required int semester,
+    required String nim,
+    required String kdjen,
+    required String kdpst,
+  }) async {
+    try {
+      final data = {
+        'selected_semester': BniEncryption.hashData(
+          semester.toString(),
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'unim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kdjen': BniEncryption.hashData(
+          kdjen,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'kdpst': BniEncryption.hashData(
+          kdpst,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+      };
+
+      final response = await _dio.post(
+        'khsservices/khs',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return KhsResponse.fromJson(responseData);
+      }
+      return KhsResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+        semester: semester.toString(),
+      );
+    } catch (e) {
+      return KhsResponse(
+        success: false,
+        message: null,
+        semester: semester.toString(),
+      );
+    }
+  }
+
+  /// GET {APIV2}/khsservices/riwayatakademik — BNI-hashed `unim` parameter.
+  Future<RiwayatAkademikResponse> getAcademicHistory({
+    required String nim,
+  }) async {
+    try {
+      final response = await _dio.get(
+        'khsservices/riwayatakademik',
+        queryParameters: {
+          'unim': BniEncryption.hashData(
+            nim,
+            AppConstants.cidV2,
+            AppConstants.secretKeyV2,
+          ),
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return RiwayatAkademikResponse.fromJson(responseData);
+      }
+      return RiwayatAkademikResponse(
+        success: false,
+        message: 'error ${response.statusCode} ${response.statusMessage}',
+      );
+    } catch (e) {
+      return RiwayatAkademikResponse(
+        success: false,
+        message: 'error ${e is DioException ? e.message : e}',
       );
     }
   }

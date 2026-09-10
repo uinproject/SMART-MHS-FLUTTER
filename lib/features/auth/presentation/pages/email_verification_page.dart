@@ -76,7 +76,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         nim: user.nim ?? '',
         kdpst: user.kodePst ?? '',
         email: _emailController.text.trim(),
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {

@@ -492,7 +492,7 @@ class AppLocalizationsId extends AppLocalizations {
       'Untuk melanjutkan silahkan lengkapi penilaian evaluasi dosen pada seluruh semester yang telah dilalui';
 
   @override
-  String get completeLecturerEval => 'Isi Penilaian Dosen';
+  String get completeLecturerEval => 'Isi';
 
   @override
   String get krsSubmenuTitle => 'Sub Menu KRS';
@@ -648,4 +648,53 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get tryAgain => 'Coba Lagi';
+
+  @override
+  String get ips => 'IP Semester';
+
+  @override
+  String get khsTitle => 'KHS';
+
+  @override
+  String get khsSemesterSks => 'SKS Semester';
+
+  @override
+  String get khsGradeWeight => 'Bobot Nilai';
+
+  @override
+  String get khsGradeIndex => 'Index Nilai';
+
+  @override
+  String get khsNotFound => 'Data KHS tidak ditemukan';
+
+  @override
+  String get khsPdfTitle => 'KARTU HASIL STUDI';
+
+  @override
+  String get khsWaitUntilLoaded => 'Tunggu sampai KHS selesai dimuat';
+
+  @override
+  String get evalNotCompletedMessage =>
+      'Anda belum melengkapi penilaian evaluasi dosen';
+
+  @override
+  String get lastGpa => 'IPK Terakhir';
+
+  @override
+  String get totalCredits => 'Total Beban SKS';
+
+  @override
+  String get ipkChart => 'Grafik IPK Kumulatif';
+
+  @override
+  String get ipsChart => 'Grafik IP Semester (IPS)';
+
+  @override
+  String get sksLoadChart => 'Beban SKS Per Semester';
+
+  @override
+  String get registrationHistory => 'Riwayat Registrasi';
+
+  @override
+  String get failedLoadData => 'Gagal memuat data';
 }

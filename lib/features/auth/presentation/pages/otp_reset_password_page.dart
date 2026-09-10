@@ -79,7 +79,7 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
         nim: widget.nim,
         email: widget.email,
         otp: _otpController.text,
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {
@@ -120,7 +120,7 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
       final response = await _apiService.getOtpResetPassword(
         nim: widget.nim,
         email: widget.email,
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {

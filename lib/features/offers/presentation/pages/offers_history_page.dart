@@ -43,7 +43,6 @@ class _OffersHistoryPageState extends State<OffersHistoryPage> {
 
   Future<void> _loadRiwayat() async {
     if (!mounted) return;
-    final language = Localizations.localeOf(context).languageCode;
     setState(() => _state = _RiwayatLoadState.loading);
 
     final user = _sessionManager.getUser();
@@ -57,7 +56,6 @@ class _OffersHistoryPageState extends State<OffersHistoryPage> {
       kdjen: user.kodeJen ?? '',
       kdpst: user.kodePst ?? '',
       semester: _selectedSemester,
-      language: language,
     );
 
     if (!mounted) return;

@@ -11,8 +11,16 @@ import 'select_payment_method_page.dart';
 import 'payment_history_page.dart';
 
 /// Load states — the uniform pattern shared with KRS/EDOM/schedule:
-/// success / noData / serverError (server message shown) / noInternet.
-enum _BillsLoadState { loading, success, noData, serverError, noInternet }
+/// success / noData / serverMessage (API answered with a status+message,
+/// informational) / serverError (API-level failure) / noInternet.
+enum _BillsLoadState {
+  loading,
+  success,
+  noData,
+  serverMessage,
+  serverError,
+  noInternet,
+}
 
 class CurrentBillsPage extends StatefulWidget {
   const CurrentBillsPage({super.key});
@@ -34,6 +42,10 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
   TuitionBillResponse? _bills;
   _BillsLoadState _state = _BillsLoadState.loading;
 
+  /// Failure detail for the API-level error states: server `message` →
+  /// concrete cause ("Error 500") → localized general message.
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -46,32 +58,50 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
 
     final user = _sessionManager.getUser();
     if (user == null) {
-      if (mounted) setState(() => _state = _BillsLoadState.serverError);
+      if (mounted) {
+        setState(() {
+          _state = _BillsLoadState.serverError;
+          _errorMessage = AppLocalizations.of(context)!.sessionExpired;
+        });
+      }
       return;
     }
 
-    final result = await _apiService.getTuitionBills(
-      nim: user.nim ?? '',
-      kdjen: user.kodeJen ?? '',
-      kdpst: user.kodePst ?? '',
-    );
+    try {
+      final result = await _apiService.getTuitionBills(
+        nim: user.nim ?? '',
+        kdjen: user.kodeJen ?? '',
+        kdpst: user.kodePst ?? '',
+      );
 
-    if (!mounted) return;
-    setState(() {
-      _bills = result;
-      if (result.success && result.data != null) {
-        _state = result.data!.isEmpty
-            ? _BillsLoadState.noData
-            : _BillsLoadState.success;
-      } else if (result.message != null && result.message!.isNotEmpty) {
-        // The server (or service) explained the failure — show it verbatim
-        // ("Error 500" for HTTP failures, "error …" otherwise).
-        _state = _BillsLoadState.serverError;
-      } else {
-        // No message — connection-level failure.
-        _state = _BillsLoadState.noInternet;
-      }
-    });
+      if (!mounted) return;
+      setState(() {
+        _bills = result;
+        if (result.success && result.data != null) {
+          _state = result.data!.isEmpty
+              ? _BillsLoadState.noData
+              : _BillsLoadState.success;
+        } else if (result.message != null && result.message!.isNotEmpty) {
+          // The API ANSWERED with a status + message — informational, shown
+          // with the regular (receipt) icon, not the error icon.
+          _state = _BillsLoadState.serverMessage;
+        } else {
+          // Answered without a message — treat as connection-level failure.
+          _state = _BillsLoadState.noInternet;
+        }
+      });
+    } catch (e) {
+      // The call itself failed (network / HTTP error / bad payload).
+      if (!mounted) return;
+      final failure = ApiService.describeFailure(e);
+      setState(() {
+        _errorMessage =
+            failure ?? AppLocalizations.of(context)!.errorResponseApi;
+        _state = failure == null
+            ? _BillsLoadState.noInternet
+            : _BillsLoadState.serverError;
+      });
+    }
   }
 
   int _calculateTotal() {
@@ -153,10 +183,15 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
             type: ErrorStateType.noData,
             noDataMessage: l10n.noActiveBills,
           ),
+          _BillsLoadState.serverMessage => ErrorStateWidget(
+            type: ErrorStateType.noData,
+            // API answered with a status+message → old (informational) icon.
+            noDataMessage: _bills?.message,
+            noDataIcon: Icons.receipt_long_rounded,
+          ),
           _BillsLoadState.serverError => ErrorStateWidget(
             type: ErrorStateType.serverError,
-            // Session gone -> localized "session expired" fallback.
-            serverMessage: _bills?.message ?? l10n.sessionExpired,
+            serverMessage: _errorMessage,
           ),
           _BillsLoadState.noInternet => const ErrorStateWidget(
             type: ErrorStateType.noInternet,

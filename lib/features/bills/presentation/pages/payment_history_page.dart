@@ -14,9 +14,17 @@ import '../widgets/error_state_widget.dart';
 /// - loads payment history on init (Future.microtask so context is ready)
 /// - downloads the kuitansi PDF from the exact same URL as the legacy app,
 ///   then opens it (legacy used Android DownloadManager)
-/// - pull-to-refresh (legacy SwipeRefreshLayout); a failed load with a
-///   server message shows it (uniform API-error handling)
-enum _HistoryLoadState { loading, success, noData, serverError, noInternet }
+/// - pull-to-refresh (legacy SwipeRefreshLayout). Uniform error handling:
+/// an API ANSWER with status+message is informational (regular icon),
+/// API-level failures (network / HTTP error) show the error icon.
+enum _HistoryLoadState {
+  loading,
+  success,
+  noData,
+  serverMessage,
+  serverError,
+  noInternet,
+}
 
 class PaymentHistoryPage extends StatefulWidget {
   const PaymentHistoryPage({super.key});
@@ -32,6 +40,9 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   PaymentHistoryResponse? _history;
   _HistoryLoadState _state = _HistoryLoadState.loading;
 
+  /// Failure detail for the API-level error states ("Error 500" / general).
+  String? _errorMessage;
+
   @override
   void initState() {
     super.initState();
@@ -43,33 +54,51 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     setState(() => _state = _HistoryLoadState.loading);
     final user = _sessionManager.getUser();
     if (user == null) {
-      if (mounted) setState(() => _state = _HistoryLoadState.noInternet);
+      if (mounted) {
+        setState(() {
+          _state = _HistoryLoadState.serverError;
+          _errorMessage = AppLocalizations.of(context)!.sessionExpired;
+        });
+      }
       return;
     }
 
-    // NIM is filtered to digits-only inside the service (same as legacy).
-    final result = await _apiService.getPaymentHistory(
-      nim: user.nim ?? '',
-      kdjen: user.kodeJen ?? '',
-      kdpst: user.kodePst ?? '',
-    );
+    try {
+      // NIM is filtered to digits-only inside the service (same as legacy).
+      final result = await _apiService.getPaymentHistory(
+        nim: user.nim ?? '',
+        kdjen: user.kodeJen ?? '',
+        kdpst: user.kodePst ?? '',
+      );
 
-    if (!mounted) return;
-    setState(() {
-      _history = result;
-      if (result.success && result.data != null && result.data!.isNotEmpty) {
-        _state = _HistoryLoadState.success;
-      } else if (result.success) {
-        _state = _HistoryLoadState.noData;
-      } else if (result.message != null && result.message!.isNotEmpty) {
-        // Uniform error handling: the server (or service) explained the
-        // failure — show it verbatim ("Error 500" / "error …").
-        _state = _HistoryLoadState.serverError;
-      } else {
-        // No message — connection-level failure.
-        _state = _HistoryLoadState.noInternet;
-      }
-    });
+      if (!mounted) return;
+      setState(() {
+        _history = result;
+        if (result.success && result.data != null && result.data!.isNotEmpty) {
+          _state = _HistoryLoadState.success;
+        } else if (result.success) {
+          _state = _HistoryLoadState.noData;
+        } else if (result.message != null && result.message!.isNotEmpty) {
+          // The API ANSWERED with a status + message — informational, shown
+          // with the regular (history) icon, not the error icon.
+          _state = _HistoryLoadState.serverMessage;
+        } else {
+          // Answered without a message — connection-level failure.
+          _state = _HistoryLoadState.noInternet;
+        }
+      });
+    } catch (e) {
+      // The call itself failed (network / HTTP error / bad payload).
+      if (!mounted) return;
+      final failure = ApiService.describeFailure(e);
+      setState(() {
+        _errorMessage =
+            failure ?? AppLocalizations.of(context)!.errorResponseApi;
+        _state = failure == null
+            ? _HistoryLoadState.noInternet
+            : _HistoryLoadState.serverError;
+      });
+    }
   }
 
   /// Downloads the kuitansi PDF (same URL handling as legacy: `\/` -> `/`)
@@ -170,9 +199,15 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
             noDataMessage: l10n.noPaymentHistoryFound,
             noDataIcon: Icons.history_rounded,
           ),
+          _HistoryLoadState.serverMessage => ErrorStateWidget(
+            type: ErrorStateType.noData,
+            // API answered with status+message → old (informational) icon.
+            noDataMessage: _history?.message,
+            noDataIcon: Icons.history_rounded,
+          ),
           _HistoryLoadState.serverError => ErrorStateWidget(
             type: ErrorStateType.serverError,
-            serverMessage: _history?.message,
+            serverMessage: _errorMessage,
           ),
           _HistoryLoadState.noInternet => const ErrorStateWidget(
             type: ErrorStateType.noInternet,

@@ -53,7 +53,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         email: widget.email,
         otp: widget.otp,
         newPassword: _passwordController.text.trim(),
-        language: Localizations.localeOf(context).languageCode,
+
       );
 
       if (response != null) {

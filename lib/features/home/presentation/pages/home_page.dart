@@ -8,7 +8,9 @@ import '../widgets/main_menu_grid.dart';
 import '../widgets/announcement_carousel.dart';
 import '../../data/models/pengumuman_response.dart';
 import 'package:smartmahsiswaflutter/features/auth/presentation/pages/login_screen.dart';
+import 'package:smartmahsiswaflutter/features/edom/presentation/pages/edom_semesters_page.dart';
 import '../../../../core/utils/device_utils.dart';
+import '../../../../core/widgets/action_required_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,12 +19,17 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
 
   PengumumanResponse? _pengumuman;
   bool _isLoading = true;
+
+  /// Legacy `showeval` flag: the EDOM reminder dialog is shown at most
+  /// ONCE per page lifetime (pull-to-refresh / revisits must not spam it).
+  bool _evalDialogShown = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -55,6 +62,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         _sessionManager.isJustLoggedIn = false;
 
         final pengumuman = await _apiService.getPengumuman(
+          nim: user.nim,
           kodeJen: user.kodeJen,
           kodeFak: user.kodeFakultas,
           kodePst: user.kodePst,
@@ -65,6 +73,16 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             _pengumuman = pengumuman;
             _isLoading = false;
           });
+
+          // EDOM reminder (legacy HomeFragment: `!cekeval && !showeval` on
+          // the API response) — informational dialog, cancelable.
+          // Null-safe: response can be null and `cekeval` can be null
+          // (server omits / sends null) — only an explicit `false` shows
+          // the dialog.
+          if (pengumuman?.cekEval == false && !_evalDialogShown) {
+            _evalDialogShown = true;
+            _showEvalReminderDialog();
+          }
         }
       }
     } on ForceLogoutException catch (_) {
@@ -73,13 +91,41 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       if (mounted) {
         navigator.pushAndRemoveUntil(
           // sessionExpired: true -> login page shows "session expired"
-          MaterialPageRoute(builder: (context) => const LoginScreen(sessionExpired: true)),
-              (route) => false,
+          MaterialPageRoute(
+            builder: (context) => const LoginScreen(sessionExpired: true),
+          ),
+          (route) => false,
         );
       }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  /// Legacy `HomeFragment.dialog_show_eval_notif` (two-button variant):
+  /// informational reminder that the lecturer evaluation is incomplete —
+  /// cancelable via the barrier AND a cancel button (unlike the blocking
+  /// one-button dialog in KRS/offers/KHS). The action PUSHES the EDOM flow
+  /// so Home stays on the stack (legacy: startActivity without finish).
+  void _showEvalReminderDialog() {
+    final l10n = AppLocalizations.of(context)!;
+    showActionRequiredDialog(
+      context: context,
+      message: l10n.evalNotCompletedMessage,
+      actionLabel: l10n.completeLecturerEval,
+      cancelLabel: l10n.cancel,
+      dismissible: true,
+      icon: Icons.assignment_turned_in_rounded,
+      iconColor: AppColors.primary,
+      iconBackground: AppColors.primary,
+      onAction: () {
+        if (!mounted) return;
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const EdomSemestersPage()),
+        );
+      },
+    );
   }
 
   // Satu sumber gradient yang dipakai di SliverAppBar & kotak rounded di
@@ -113,7 +159,9 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
         color: const Color(0xFF003D82),
         onRefresh: () => _loadData(isRefresh: true),
         child: CustomScrollView(
-          physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+          physics: const BouncingScrollPhysics(
+            parent: AlwaysScrollableScrollPhysics(),
+          ),
           slivers: [
             SliverAppBar(
               pinned: true,
@@ -155,7 +203,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-
                   Padding(
                     padding: const EdgeInsets.fromLTRB(24, 10, 24, 0),
                     child: HomeHeader.buildAcademicCard(user, l10n),
@@ -163,13 +210,15 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 ],
               ),
             ),
-            if (_pengumuman?.pesanPenting != null && _pengumuman!.pesanPenting!.isNotEmpty)
+            if (_pengumuman?.pesanPenting != null &&
+                _pengumuman!.pesanPenting!.isNotEmpty)
               SliverToBoxAdapter(
-                child: _buildSmallImportantMessage(_pengumuman!.pesanPenting!, l10n),
+                child: _buildSmallImportantMessage(
+                  _pengumuman!.pesanPenting!,
+                  l10n,
+                ),
               ),
-            const SliverToBoxAdapter(
-              child: MainMenuGrid(),
-            ),
+            const SliverToBoxAdapter(child: MainMenuGrid()),
             if (_isLoading)
               const SliverToBoxAdapter(
                 child: Center(
@@ -221,14 +270,21 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               children: [
                 Text(
                   l10n.checkKrs.toUpperCase(),
-                  style: const TextStyle(fontSize: 9, fontWeight: FontWeight.bold, color: AppColors.primary),
+                  style: const TextStyle(
+                    fontSize: 9,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.primary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   pesan,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
@@ -240,9 +296,14 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
               backgroundColor: AppColors.primary,
               minimumSize: const Size(60, 28),
               padding: const EdgeInsets.symmetric(horizontal: 12),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: Text(l10n.examine, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
+            child: Text(
+              l10n.examine,
+              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),

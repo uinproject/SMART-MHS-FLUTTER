@@ -1015,7 +1015,7 @@ abstract class AppLocalizations {
   /// No description provided for @completeLecturerEval.
   ///
   /// In id, this message translates to:
-  /// **'Isi Penilaian Dosen'**
+  /// **'Isi'**
   String get completeLecturerEval;
 
   /// No description provided for @krsSubmenuTitle.
@@ -1293,6 +1293,102 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Coba Lagi'**
   String get tryAgain;
+
+  /// No description provided for @ips.
+  ///
+  /// In id, this message translates to:
+  /// **'IP Semester'**
+  String get ips;
+
+  /// No description provided for @khsTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'KHS'**
+  String get khsTitle;
+
+  /// No description provided for @khsSemesterSks.
+  ///
+  /// In id, this message translates to:
+  /// **'SKS Semester'**
+  String get khsSemesterSks;
+
+  /// No description provided for @khsGradeWeight.
+  ///
+  /// In id, this message translates to:
+  /// **'Bobot Nilai'**
+  String get khsGradeWeight;
+
+  /// No description provided for @khsGradeIndex.
+  ///
+  /// In id, this message translates to:
+  /// **'Index Nilai'**
+  String get khsGradeIndex;
+
+  /// No description provided for @khsNotFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Data KHS tidak ditemukan'**
+  String get khsNotFound;
+
+  /// No description provided for @khsPdfTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'KARTU HASIL STUDI'**
+  String get khsPdfTitle;
+
+  /// No description provided for @khsWaitUntilLoaded.
+  ///
+  /// In id, this message translates to:
+  /// **'Tunggu sampai KHS selesai dimuat'**
+  String get khsWaitUntilLoaded;
+
+  /// No description provided for @evalNotCompletedMessage.
+  ///
+  /// In id, this message translates to:
+  /// **'Anda belum melengkapi penilaian evaluasi dosen'**
+  String get evalNotCompletedMessage;
+
+  /// No description provided for @lastGpa.
+  ///
+  /// In id, this message translates to:
+  /// **'IPK Terakhir'**
+  String get lastGpa;
+
+  /// No description provided for @totalCredits.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Beban SKS'**
+  String get totalCredits;
+
+  /// No description provided for @ipkChart.
+  ///
+  /// In id, this message translates to:
+  /// **'Grafik IPK Kumulatif'**
+  String get ipkChart;
+
+  /// No description provided for @ipsChart.
+  ///
+  /// In id, this message translates to:
+  /// **'Grafik IP Semester (IPS)'**
+  String get ipsChart;
+
+  /// No description provided for @sksLoadChart.
+  ///
+  /// In id, this message translates to:
+  /// **'Beban SKS Per Semester'**
+  String get sksLoadChart;
+
+  /// No description provided for @registrationHistory.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat Registrasi'**
+  String get registrationHistory;
+
+  /// No description provided for @failedLoadData.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal memuat data'**
+  String get failedLoadData;
 }
 
 class _AppLocalizationsDelegate
