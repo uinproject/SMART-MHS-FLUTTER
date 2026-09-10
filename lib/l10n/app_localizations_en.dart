@@ -698,4 +698,79 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedLoadData => 'Failed to load data';
+
+  @override
+  String get loginFailed => 'Login Failed';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get deviceSync => 'Device Synchronization';
+
+  @override
+  String get enterNim => 'Enter NIM';
+
+  @override
+  String get enterPassword => 'Enter Password';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get systemError =>
+      'A connection or system error occurred. Please try again later.';
+
+  @override
+  String get pageLoadFailed => 'Page could not be loaded';
+
+  @override
+  String get checkInternetConnection =>
+      'Please check your internet connection and try again.';
+
+  @override
+  String get linkActiveEmailInstruction =>
+      'Link your active email to receive a security verification code.';
+
+  @override
+  String get getOtpCode => 'Get OTP Code';
+
+  @override
+  String get didNotReceiveCode => 'Didn\'t receive the code?';
+
+  @override
+  String get resendOtpFailed => 'Failed to resend code.';
+
+  @override
+  String get verify => 'Verify';
+
+  @override
+  String get otpVerifyFailed => 'Failed to verify OTP.';
+
+  @override
+  String get success => 'Success';
+
+  @override
+  String get enterEmail => 'Enter Email';
+
+  @override
+  String get serverConnectionFailed => 'Failed to connect to server.';
+
+  @override
+  String get passMinLength => 'Password must be at least 8 characters';
+
+  @override
+  String get confirmNewPasswordHint => 'Confirm New Password';
+
+  @override
+  String get savePassword => 'Save Password';
+
+  @override
+  String get goToLoginPage => 'Go to Login Page';
+
+  @override
+  String get updatePasswordFailed => 'Failed to update password.';
+
+  @override
+  String get enterNewPassword => 'Enter New Password';
 }

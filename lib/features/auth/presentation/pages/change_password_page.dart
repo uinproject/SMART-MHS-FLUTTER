@@ -64,16 +64,21 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
           setState(() => _errorMessage = response.message);
         }
       } else {
-        setState(() => _errorMessage = 'Gagal memperbarui password.');
+        if (mounted) {
+          setState(() => _errorMessage = AppLocalizations.of(context)!.updatePasswordFailed);
+        }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showSuccessDialog(String message) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -97,9 +102,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Berhasil',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                l10n.success,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -127,7 +132,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: const Text('Ke Halaman Login', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.goToLoginPage, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -214,14 +219,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           _buildTextField(
                             controller: _passwordController,
                             label: l10n.newPassword.toUpperCase(),
-                            hint: 'Masukkan ${l10n.newPassword}',
+                            hint: l10n.enterNewPassword,
                             icon: Icons.lock_outline_rounded,
                             isPassword: true,
                             obscureText: _obscurePassword,
                             onToggleVisibility: () => setState(() => _obscurePassword = !_obscurePassword),
                             validator: (value) {
                               if (value == null || value.isEmpty) return l10n.newPassRequired;
-                              if (value.length < 8) return 'Password minimal 8 karakter';
+                              if (value.length < 8) return l10n.passMinLength;
                               return null;
                             },
                           ),
@@ -229,7 +234,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           _buildTextField(
                             controller: _confirmPasswordController,
                             label: l10n.confirmPassword.toUpperCase(),
-                            hint: 'Konfirmasi ${l10n.newPassword}',
+                            hint: l10n.confirmNewPasswordHint,
                             icon: Icons.lock_clock_outlined,
                             isPassword: true,
                             obscureText: _obscureConfirmPassword,
@@ -247,7 +252,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _handleChangePassword,
                               style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)), elevation: 0),
-                              child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : const Text('SIMPAN PASSWORD', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+                              child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : Text(l10n.savePassword.toUpperCase(), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
                             ),
                           ),
                         ],

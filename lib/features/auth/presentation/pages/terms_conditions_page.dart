@@ -208,20 +208,20 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                               color: Colors.grey,
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Halaman tidak dapat dimuat',
+                            Text(
+                              l10n.pageLoadFailed,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
                               ),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              'Periksa koneksi internet Anda kemudian coba lagi.',
+                            Text(
+                              l10n.checkInternetConnection,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontSize: 13,
                                 color: Colors.grey,
                               ),
@@ -230,7 +230,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
                             ElevatedButton.icon(
                               onPressed: _reloadPage,
                               icon: const Icon(Icons.refresh),
-                              label: const Text('Coba Lagi'),
+                              label: Text(l10n.tryAgain),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.primary,
                                 foregroundColor: Colors.white,

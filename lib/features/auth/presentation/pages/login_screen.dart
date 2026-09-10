@@ -92,7 +92,9 @@ class _LoginScreenState extends State<LoginScreen> {
       }
     } catch (e) {
       print('Login Error: $e');
-      _showErrorDialog('Terjadi kesalahan koneksi atau sistem. Silakan coba lagi nanti.');
+      if (mounted) {
+        _showErrorDialog(AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) {
         setState(() {
@@ -103,6 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _showErrorDialog(String message) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -126,9 +129,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Login Gagal',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                l10n.loginFailed,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -149,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: const Text('Tutup', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.close, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -184,9 +187,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Sinkronisasi Perangkat',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                l10n.deviceSync,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
@@ -383,7 +386,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _buildTextField(
                             controller: _nimController,
                             label: l10n.nim,
-                            hint: 'Masukkan ${l10n.nim}',
+                            hint: l10n.enterNim,
                             icon: Icons.person_rounded,
                             validator: (value) => value == null || value.isEmpty ? l10n.nimRequired : null,
                           ),
@@ -391,7 +394,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           _buildTextField(
                             controller: _passwordController,
                             label: l10n.password,
-                            hint: 'Masukkan ${l10n.password}',
+                            hint: l10n.enterPassword,
                             icon: Icons.lock_rounded,
                             isPassword: true,
                             validator: (value) => value == null || value.isEmpty ? l10n.passRequired : null,
@@ -442,9 +445,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     const SizedBox(height: 48),
-                    const Column(
+                    Column(
                       children: [
-                        Text(
+                        const Text(
                           'UIN Salatiga Official',
                           style: TextStyle(
                             color: AppColors.textSecondary,
@@ -453,10 +456,10 @@ class _LoginScreenState extends State<LoginScreen> {
                             letterSpacing: 1,
                           ),
                         ),
-                        SizedBox(height: 4),
+                        const SizedBox(height: 4),
                         Text(
-                          'Versi 2.0.0 (Flutter)',
-                          style: TextStyle(
+                          '${l10n.version} 2.0.0 (Flutter)',
+                          style: const TextStyle(
                             color: Color(0xFF94A3B8),
                             fontSize: 10,
                           ),

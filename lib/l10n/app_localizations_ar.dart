@@ -694,4 +694,79 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get failedLoadData => 'فشل تحميل البيانات';
+
+  @override
+  String get loginFailed => 'فشل تسجيل الدخول';
+
+  @override
+  String get close => 'إغلاق';
+
+  @override
+  String get deviceSync => 'مزامنة الجهاز';
+
+  @override
+  String get enterNim => 'أدخل الرقم الجامعي';
+
+  @override
+  String get enterPassword => 'أدخل كلمة المرور';
+
+  @override
+  String get version => 'الإصدار';
+
+  @override
+  String get systemError =>
+      'حدث خطأ في الاتصال أو النظام. يرجى المحاولة مرة أخرى لاحقاً.';
+
+  @override
+  String get pageLoadFailed => 'تعذر تحميل الصفحة';
+
+  @override
+  String get checkInternetConnection =>
+      'يرجى التحقق من اتصالك بالإنترنت ثم المحاولة مرة أخرى.';
+
+  @override
+  String get linkActiveEmailInstruction =>
+      'اربط بريدك الإلكتروني النشط لتلقي رمز التحقق الأمني.';
+
+  @override
+  String get getOtpCode => 'الحصول على رمز التحقق';
+
+  @override
+  String get didNotReceiveCode => 'لم تستلم الرمز؟';
+
+  @override
+  String get resendOtpFailed => 'فشل إعادة إرسال الرمز.';
+
+  @override
+  String get verify => 'تحقق';
+
+  @override
+  String get otpVerifyFailed => 'فشل التحقق من رمز التحقق.';
+
+  @override
+  String get success => 'نجاح';
+
+  @override
+  String get enterEmail => 'أدخل البريد الإلكتروني';
+
+  @override
+  String get serverConnectionFailed => 'فشل الاتصال بالخادم.';
+
+  @override
+  String get passMinLength => 'كلمة المرور يجب أن لا تقل عن 8 أحرف';
+
+  @override
+  String get confirmNewPasswordHint => 'تأكيد كلمة المرور الجديدة';
+
+  @override
+  String get savePassword => 'حفظ كلمة المرور';
+
+  @override
+  String get goToLoginPage => 'الانتقال إلى صفحة تسجيل الدخول';
+
+  @override
+  String get updatePasswordFailed => 'فشل تحديث كلمة المرور.';
+
+  @override
+  String get enterNewPassword => 'أدخل كلمة المرور الجديدة';
 }

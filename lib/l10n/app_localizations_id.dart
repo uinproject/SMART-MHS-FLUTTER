@@ -700,4 +700,79 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get failedLoadData => 'Gagal memuat data';
+
+  @override
+  String get loginFailed => 'Login Gagal';
+
+  @override
+  String get close => 'Tutup';
+
+  @override
+  String get deviceSync => 'Sinkronisasi Perangkat';
+
+  @override
+  String get enterNim => 'Masukkan NIM';
+
+  @override
+  String get enterPassword => 'Masukkan Password';
+
+  @override
+  String get version => 'Versi';
+
+  @override
+  String get systemError =>
+      'Terjadi kesalahan koneksi atau sistem. Silakan coba lagi nanti.';
+
+  @override
+  String get pageLoadFailed => 'Halaman tidak dapat dimuat';
+
+  @override
+  String get checkInternetConnection =>
+      'Periksa koneksi internet Anda kemudian coba lagi.';
+
+  @override
+  String get linkActiveEmailInstruction =>
+      'Tautkan email aktif Anda untuk mendapatkan kode verifikasi keamanan.';
+
+  @override
+  String get getOtpCode => 'Dapatkan Kode OTP';
+
+  @override
+  String get didNotReceiveCode => 'Tidak menerima kode?';
+
+  @override
+  String get resendOtpFailed => 'Gagal mengirim ulang kode.';
+
+  @override
+  String get verify => 'Verifikasi';
+
+  @override
+  String get otpVerifyFailed => 'Gagal memverifikasi OTP.';
+
+  @override
+  String get success => 'Berhasil';
+
+  @override
+  String get enterEmail => 'Masukkan Email';
+
+  @override
+  String get serverConnectionFailed => 'Gagal menghubungi server.';
+
+  @override
+  String get passMinLength => 'Password minimal 8 karakter';
+
+  @override
+  String get confirmNewPasswordHint => 'Konfirmasi Password Baru';
+
+  @override
+  String get savePassword => 'Simpan Password';
+
+  @override
+  String get goToLoginPage => 'Ke Halaman Login';
+
+  @override
+  String get updatePasswordFailed => 'Gagal memperbarui password.';
+
+  @override
+  String get enterNewPassword => 'Masukkan Password Baru';
 }

@@ -64,10 +64,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           setState(() => _errorMessage = message);
         }
       } else {
-        setState(() => _errorMessage = 'Gagal menghubungi server.');
+        if (mounted) {
+          setState(() => _errorMessage = AppLocalizations.of(context)!.serverConnectionFailed);
+        }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -214,7 +218,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           _buildTextField(
                             controller: _nimController,
                             label: l10n.nim.toUpperCase(),
-                            hint: 'Masukkan ${l10n.nim}',
+                            hint: l10n.enterNim,
                             icon: Icons.person_outline_rounded,
                             validator: (value) => value == null || value.isEmpty ? l10n.nimRequired : null,
                           ),
@@ -222,7 +226,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                           _buildTextField(
                             controller: _emailController,
                             label: l10n.email.toUpperCase(),
-                            hint: 'Masukkan ${l10n.email}',
+                            hint: l10n.enterEmail,
                             icon: Icons.mail_outline_rounded,
                             keyboardType: TextInputType.emailAddress,
                             validator: (value) {

@@ -106,7 +106,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -229,9 +231,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          const Text(
-                            'Tautkan email aktif Anda untuk mendapatkan kode verifikasi keamanan.',
-                            style: TextStyle(
+                          Text(
+                            l10n.linkActiveEmailInstruction,
+                            style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.textSecondary,
                               height: 1.5,
@@ -257,13 +259,13 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           ],
                           _buildTextField(
                             controller: _emailController,
-                            label: 'ALAMAT EMAIL',
+                            label: l10n.email.toUpperCase(),
                             hint: 'contoh@email.com',
                             icon: Icons.mail_outline_rounded,
                             validator: (value) {
-                              if (value == null || value.isEmpty) return 'Email wajib diisi';
+                              if (value == null || value.isEmpty) return l10n.emailRequired;
                               if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
-                                return 'Format email tidak valid';
+                                return l10n.invalidEmail;
                               }
                               return null;
                             },
@@ -286,7 +288,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                                   : Text(
                                       _secondsRemaining > 0 
                                           ? "${l10n.wait} (${_formatTime(_secondsRemaining)})"
-                                          : 'DAPATKAN KODE OTP',
+                                          : l10n.getOtpCode.toUpperCase(),
                                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
                                     ),
                             ),

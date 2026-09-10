@@ -99,7 +99,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -142,13 +144,16 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Gagal mengirim ulang kode.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.resendOtpFailed);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
   }
 
   void _showSuccessDialog(String message) {
+    final l10n = AppLocalizations.of(context)!;
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -168,9 +173,9 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 child: const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 40),
               ),
               const SizedBox(height: 24),
-              const Text(
-                'Berhasil',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              Text(
+                l10n.success,
+                style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
               Text(
@@ -197,7 +202,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     elevation: 0,
                   ),
-                  child: const Text('OK', style: TextStyle(fontWeight: FontWeight.bold)),
+                  child: Text(l10n.ok, style: const TextStyle(fontWeight: FontWeight.bold)),
                 ),
               ),
             ],
@@ -313,14 +318,17 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                           child: ElevatedButton(
                             onPressed: _isLoading ? null : _handleVerifyOtp,
                             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)), elevation: 0),
-                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : Text(l10n.login, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : Text(l10n.verify.toUpperCase(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                         ),
                         const SizedBox(height: 24),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Tidak menerima kode? ', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                            Text(
+                              '${l10n.didNotReceiveCode} ',
+                              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                            ),
                             TextButton(
                               onPressed: _secondsRemaining == 0 ? _handleResendOtp : null,
                               child: Text(

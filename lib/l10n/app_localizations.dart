@@ -1395,6 +1395,150 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Gagal memuat data'**
   String get failedLoadData;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Login Gagal'**
+  String get loginFailed;
+
+  /// No description provided for @close.
+  ///
+  /// In id, this message translates to:
+  /// **'Tutup'**
+  String get close;
+
+  /// No description provided for @deviceSync.
+  ///
+  /// In id, this message translates to:
+  /// **'Sinkronisasi Perangkat'**
+  String get deviceSync;
+
+  /// No description provided for @enterNim.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan NIM'**
+  String get enterNim;
+
+  /// No description provided for @enterPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan Password'**
+  String get enterPassword;
+
+  /// No description provided for @version.
+  ///
+  /// In id, this message translates to:
+  /// **'Versi'**
+  String get version;
+
+  /// No description provided for @systemError.
+  ///
+  /// In id, this message translates to:
+  /// **'Terjadi kesalahan koneksi atau sistem. Silakan coba lagi nanti.'**
+  String get systemError;
+
+  /// No description provided for @pageLoadFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Halaman tidak dapat dimuat'**
+  String get pageLoadFailed;
+
+  /// No description provided for @checkInternetConnection.
+  ///
+  /// In id, this message translates to:
+  /// **'Periksa koneksi internet Anda kemudian coba lagi.'**
+  String get checkInternetConnection;
+
+  /// No description provided for @linkActiveEmailInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Tautkan email aktif Anda untuk mendapatkan kode verifikasi keamanan.'**
+  String get linkActiveEmailInstruction;
+
+  /// No description provided for @getOtpCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Dapatkan Kode OTP'**
+  String get getOtpCode;
+
+  /// No description provided for @didNotReceiveCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak menerima kode?'**
+  String get didNotReceiveCode;
+
+  /// No description provided for @resendOtpFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal mengirim ulang kode.'**
+  String get resendOtpFailed;
+
+  /// No description provided for @verify.
+  ///
+  /// In id, this message translates to:
+  /// **'Verifikasi'**
+  String get verify;
+
+  /// No description provided for @otpVerifyFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal memverifikasi OTP.'**
+  String get otpVerifyFailed;
+
+  /// No description provided for @success.
+  ///
+  /// In id, this message translates to:
+  /// **'Berhasil'**
+  String get success;
+
+  /// No description provided for @enterEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan Email'**
+  String get enterEmail;
+
+  /// No description provided for @serverConnectionFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal menghubungi server.'**
+  String get serverConnectionFailed;
+
+  /// No description provided for @passMinLength.
+  ///
+  /// In id, this message translates to:
+  /// **'Password minimal 8 karakter'**
+  String get passMinLength;
+
+  /// No description provided for @confirmNewPasswordHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Konfirmasi Password Baru'**
+  String get confirmNewPasswordHint;
+
+  /// No description provided for @savePassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Simpan Password'**
+  String get savePassword;
+
+  /// No description provided for @goToLoginPage.
+  ///
+  /// In id, this message translates to:
+  /// **'Ke Halaman Login'**
+  String get goToLoginPage;
+
+  /// No description provided for @updatePasswordFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal memperbarui password.'**
+  String get updatePasswordFailed;
+
+  /// No description provided for @enterNewPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan Password Baru'**
+  String get enterNewPassword;
 }
 
 class _AppLocalizationsDelegate

@@ -99,10 +99,14 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
           setState(() => _errorMessage = response.message);
         }
       } else {
-        setState(() => _errorMessage = 'Gagal memverifikasi OTP.');
+        if (mounted) {
+          setState(() => _errorMessage = AppLocalizations.of(context)!.otpVerifyFailed);
+        }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Terjadi kesalahan sistem. Silakan coba lagi.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.systemError);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -141,7 +145,9 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
         }
       }
     } catch (e) {
-      setState(() => _errorMessage = 'Gagal mengirim ulang kode.');
+      if (mounted) {
+        setState(() => _errorMessage = AppLocalizations.of(context)!.resendOtpFailed);
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -253,14 +259,17 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
                           child: ElevatedButton(
                             onPressed: _isLoading ? null : _handleVerifyOtp,
                             style: ElevatedButton.styleFrom(backgroundColor: AppColors.primary, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)), elevation: 0),
-                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : const Text('VERIFIKASI', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                            child: _isLoading ? const SpinKitThreeBounce(color: Colors.white, size: 20) : Text(l10n.verify.toUpperCase(), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                           ),
                         ),
                         const SizedBox(height: 24),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            const Text('Tidak menerima kode? ', style: TextStyle(color: AppColors.textSecondary, fontSize: 13)),
+                            Text(
+                              '${l10n.didNotReceiveCode} ',
+                              style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                            ),
                             TextButton(
                               onPressed: _secondsRemaining == 0 ? _handleResendOtp : null,
                               child: Text(
