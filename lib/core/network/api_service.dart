@@ -75,14 +75,16 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) {
           final lang = _sessionManager.getLocale();
-          
+
           if (options.method == 'GET') {
             options.queryParameters['language'] = lang;
           } else {
             // For POST/PUT/etc.
-            options.data ??= {'language': lang};
-            // Note: If data is a String (already encoded JSON), we might need to 
-            // decode, add, and re-encode, but usually it's passed as Map.
+            if (options.data is Map) {
+              options.data['language'] = lang;
+            } else if (options.data == null) {
+              options.data = {'language': lang};
+            }
           }
           return handler.next(options);
         },
