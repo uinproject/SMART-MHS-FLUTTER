@@ -1176,11 +1176,7 @@ class ApiService {
       final response = await _dio.get(
         'khsservices/riwayatakademik',
         queryParameters: {
-          'unim': BniEncryption.hashData(
-            nim,
-            AppConstants.cidV2,
-            AppConstants.secretKeyV2,
-          ),
+          'unim': nim,
         },
       );
 

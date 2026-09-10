@@ -278,6 +278,7 @@
   "khsWaitUntilLoaded": "Tunggu sampai KHS selesai dimuat",
   "evalNotCompletedMessage": "Anda belum melengkapi penilaian evaluasi dosen",
   "lastGpa": "IPK Terakhir",
+  "lastIps": "IPS Terakhir",
   "totalCredits": "Total Beban SKS",
   "ipkChart": "Grafik IPK Kumulatif",
   "ipsChart": "Grafik IP Semester (IPS)",

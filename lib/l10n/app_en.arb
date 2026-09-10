@@ -278,6 +278,7 @@
   "khsWaitUntilLoaded": "Wait until the KHS has finished loading",
   "evalNotCompletedMessage": "You have not completed the lecturer evaluation assessment.",
   "lastGpa": "Last GPA",
+  "lastIps": "Last Semester GPA",
   "totalCredits": "Total Credits Load",
   "ipkChart": "Cumulative GPA Chart",
   "ipsChart": "Semester GPA Chart (IPS)",

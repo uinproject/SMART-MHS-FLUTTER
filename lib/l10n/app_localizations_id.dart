@@ -681,6 +681,9 @@ class AppLocalizationsId extends AppLocalizations {
   String get lastGpa => 'IPK Terakhir';
 
   @override
+  String get lastIps => 'IPS Terakhir';
+
+  @override
   String get totalCredits => 'Total Beban SKS';
 
   @override

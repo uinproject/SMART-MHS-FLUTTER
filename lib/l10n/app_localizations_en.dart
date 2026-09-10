@@ -679,6 +679,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get lastGpa => 'Last GPA';
 
   @override
+  String get lastIps => 'Last Semester GPA';
+
+  @override
   String get totalCredits => 'Total Credits Load';
 
   @override

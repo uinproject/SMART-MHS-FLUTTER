@@ -675,6 +675,9 @@ class AppLocalizationsAr extends AppLocalizations {
   String get lastGpa => 'المعدل التراكمي الأخير';
 
   @override
+  String get lastIps => 'معدل الفصل الأخير';
+
+  @override
   String get totalCredits => 'إجمالي حمل الساعات المعتمدة';
 
   @override

@@ -1354,6 +1354,12 @@ abstract class AppLocalizations {
   /// **'IPK Terakhir'**
   String get lastGpa;
 
+  /// No description provided for @lastIps.
+  ///
+  /// In id, this message translates to:
+  /// **'IPS Terakhir'**
+  String get lastIps;
+
   /// No description provided for @totalCredits.
   ///
   /// In id, this message translates to:
