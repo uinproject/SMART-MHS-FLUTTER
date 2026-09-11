@@ -300,7 +300,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get credit => 'ساعة معتمدة';
 
   @override
-  String get room => 'قاعة';
+  String get room => 'القاعة';
 
   @override
   String get lecturer => 'المحاضر';
@@ -769,4 +769,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get enterNewPassword => 'أدخل كلمة المرور الجديدة';
+
+  @override
+  String get scanQrTitle => 'مسح رمز الاستجابة السريعة للحضور';
+
+  @override
+  String get scanQrInstruction =>
+      'وجه الكاميرا نحو رمز الاستجابة السريعة المعروض من قبل المحاضر';
+
+  @override
+  String get flashOn => 'تشغيل الفلاش';
+
+  @override
+  String get flashOff => 'إيقاف الفلاش';
+
+  @override
+  String get switchCamera => 'تبديل الكاميرا';
+
+  @override
+  String get useShortCode => 'استخدام الرمز القصير';
+
+  @override
+  String get inputShortCodeHint => 'أدخل رمز الحضور';
+
+  @override
+  String get shortCodeEmpty => 'لا يمكن أن يكون رمز الحضور فارغًا';
+
+  @override
+  String get cantScanQrQuestion => 'مشكلة في الكاميرا أو لا يمكنك المسح؟';
+
+  @override
+  String get presenceProcessTitle => 'التحقق من الحضور';
+
+  @override
+  String get validatingPresenceCode => 'جارٍ التحقق من رمز الحضور...';
+
+  @override
+  String get recordingPresence => 'جارٍ تسجيل الحضور...';
+
+  @override
+  String get presenceSuccess => 'تم تسجيل الحضور بنجاح!';
+
+  @override
+  String get presenceAlreadyRecorded =>
+      'لقد تم تسجيل حضورك بالفعل في هذه المحاضرة.';
+
+  @override
+  String get presenceSuccessDetail => 'تم تسجيل حضورك بنجاح في النظام الجامعي.';
+
+  @override
+  String get presenceFailed => 'فشل تسجيل الحضور';
+
+  @override
+  String get courseInfo => 'معلومات المحاضرة';
+
+  @override
+  String meetingNumber(String number) {
+    return 'المحاضرة $number';
+  }
+
+  @override
+  String get lectureTopic => 'موضوع المحاضرة';
+
+  @override
+  String get lectureDescription => 'وصف المحاضرة';
+
+  @override
+  String get time => 'الوقت';
+
+  @override
+  String get retryPresence => 'إعادة المحاولة';
+
+  @override
+  String get backToHome => 'العودة إلى الرئيسية';
+
+  @override
+  String get submit => 'إرسال';
+
+  @override
+  String get cameraPermissionDenied =>
+      'إذن الكاميرا مطلوب لمسح رمز الاستجابة السريعة للحضور.';
 }

@@ -23,6 +23,9 @@ import '../../features/edom/data/models/edom_soal_response.dart';
 import '../../features/edom/data/models/edom_post_models.dart';
 import '../../features/khs/data/models/khs_response.dart';
 import '../../features/academic_history/data/models/riwayat_akademik_response.dart';
+import '../utils/presence_constants.dart';
+import '../../features/presence/data/models/presence_verification_response.dart';
+import '../../features/presence/data/models/presence_save_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -1244,5 +1247,135 @@ class ApiService {
     }
 
     return savedPath;
+  }
+
+  /// Verify presence via QR Code
+  Future<PresenceVerificationResponse> verifyPresenceQr({
+    required String nim,
+    required String qrKey,
+    required String language,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}smartabsensimhs_get_qrdpkloc',
+        data: FormData.fromMap({
+          'unim': nim,
+          'qrkey': qrKey,
+          'language': language,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return PresenceVerificationResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return PresenceVerificationResponse.fromJson(decoded);
+      }
+      return PresenceVerificationResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return PresenceVerificationResponse(success: false, message: msg);
+    } catch (e) {
+      return PresenceVerificationResponse(success: false, message: e.toString());
+    }
+  }
+
+  /// Verify presence via Short Code
+  Future<PresenceVerificationResponse> verifyPresenceShortCode({
+    required String nim,
+    required String shortCode,
+    required String language,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}smartabsensimhs_get_scdpkloc',
+        data: FormData.fromMap({
+          'unim': nim,
+          'shortcode': shortCode,
+          'language': language,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return PresenceVerificationResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return PresenceVerificationResponse.fromJson(decoded);
+      }
+      return PresenceVerificationResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return PresenceVerificationResponse(success: false, message: msg);
+    } catch (e) {
+      return PresenceVerificationResponse(success: false, message: e.toString());
+    }
+  }
+
+  /// Save attendance presence
+  Future<PresenceSaveResponse> savePresence({
+    required String nim,
+    required String idAbsensi,
+    required String pertemuanKe,
+    required String idDevice,
+    String fakeLoc = 'false',
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}smartabsensimhs_saveabsloc',
+        data: FormData.fromMap({
+          'unim': nim,
+          'idabsensi': idAbsensi,
+          'pertemuanke': pertemuanKe,
+          'iddevice': idDevice,
+          'fakeloc': fakeLoc,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return PresenceSaveResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return PresenceSaveResponse.fromJson(decoded);
+      }
+      return PresenceSaveResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return PresenceSaveResponse(success: false, message: msg);
+    } catch (e) {
+      return PresenceSaveResponse(success: false, message: e.toString());
+    }
   }
 }

@@ -14,28 +14,54 @@ class SalamWaktu {
 }
 
 class StatusAkademik {
-  static String getStatusText(String? status, int? semester, int? currentSemester, AppLocalizations l10n) {
-    switch (status) {
+  static String normalizeStatusCode(String? code, [String? statusText]) {
+    final c = code?.trim().toUpperCase();
+    if (c == 'A' || c == 'C' || c == 'L' || c == 'N' || c == 'K' || c == 'P' || c == 'D') {
+      return c!;
+    }
+    if (c == '1') return 'A';
+    if (c == '2') return 'C';
+    if (c == '0') return 'N';
+
+    final text = (statusText ?? '').toLowerCase();
+    if (text.contains('aktif') && !text.contains('non')) return 'A';
+    if (text.contains('cuti')) return 'C';
+    if (text.contains('lulus')) return 'L';
+    if (text.contains('keluar') || text.contains('drop')) return 'K';
+    if (text.contains('pindah')) return 'P';
+    if (text.contains('non') || text.contains('tidak registrasi') || text.contains('belum')) return 'N';
+    if (text.contains('meninggal')) return 'D';
+
+    return c ?? '';
+  }
+
+  static String getStatusText(String? status, int? semester, int? currentSemester, AppLocalizations l10n, [String? fallbackText]) {
+    final code = normalizeStatusCode(status, fallbackText);
+    switch (code) {
       case 'A': return l10n.statusActive;
       case 'C': return l10n.statusLeave;
       case 'K': return l10n.statusOut;
       case 'P': return l10n.statusMove;
       case 'L': return l10n.statusGraduated;
       case 'N':
-        if (semester != null && currentSemester != null && semester < currentSemester) {
-          return l10n.statusNonActive; // Or add a key for "Not Registered" specifically
-        } else {
-          return l10n.statusNonActive;
+        return l10n.statusNonActive;
+      case 'D':
+        return l10n.statusDeath;
+      default:
+        if (fallbackText != null && fallbackText.isNotEmpty) {
+          return fallbackText;
         }
-      default: return l10n.statusDeath;
+        return l10n.statusDeath;
     }
   }
 
-  static Color getStatusColor(String? status, int? semester, int? currentSemester) {
-    switch (status) {
+  static Color getStatusColor(String? status, int? semester, int? currentSemester, [String? fallbackText]) {
+    final code = normalizeStatusCode(status, fallbackText);
+    switch (code) {
       case 'A': return AppColors.success;
       case 'C': return AppColors.secondary;
       case 'L': return AppColors.info;
+      case 'P': return AppColors.primary;
       default: return AppColors.danger;
     }
   }

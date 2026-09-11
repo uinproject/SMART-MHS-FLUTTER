@@ -655,7 +655,7 @@ abstract class AppLocalizations {
   /// No description provided for @room.
   ///
   /// In id, this message translates to:
-  /// **'Ruang'**
+  /// **'Ruangan'**
   String get room;
 
   /// No description provided for @lecturer.
@@ -1539,6 +1539,156 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Masukkan Password Baru'**
   String get enterNewPassword;
+
+  /// No description provided for @scanQrTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Pindai QR Presensi'**
+  String get scanQrTitle;
+
+  /// No description provided for @scanQrInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Arahkan kamera ke QR Code presensi yang ditampilkan oleh dosen'**
+  String get scanQrInstruction;
+
+  /// No description provided for @flashOn.
+  ///
+  /// In id, this message translates to:
+  /// **'Nyalakan Flash'**
+  String get flashOn;
+
+  /// No description provided for @flashOff.
+  ///
+  /// In id, this message translates to:
+  /// **'Matikan Flash'**
+  String get flashOff;
+
+  /// No description provided for @switchCamera.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti Kamera'**
+  String get switchCamera;
+
+  /// No description provided for @useShortCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan Short Code'**
+  String get useShortCode;
+
+  /// No description provided for @inputShortCodeHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan Kode Presensi'**
+  String get inputShortCodeHint;
+
+  /// No description provided for @shortCodeEmpty.
+  ///
+  /// In id, this message translates to:
+  /// **'Kode presensi tidak boleh kosong'**
+  String get shortCodeEmpty;
+
+  /// No description provided for @cantScanQrQuestion.
+  ///
+  /// In id, this message translates to:
+  /// **'Kamera bermasalah atau tidak bisa memindai?'**
+  String get cantScanQrQuestion;
+
+  /// No description provided for @presenceProcessTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Verifikasi Presensi'**
+  String get presenceProcessTitle;
+
+  /// No description provided for @validatingPresenceCode.
+  ///
+  /// In id, this message translates to:
+  /// **'Memvalidasi Kode Presensi...'**
+  String get validatingPresenceCode;
+
+  /// No description provided for @recordingPresence.
+  ///
+  /// In id, this message translates to:
+  /// **'Mencatat Kehadiran...'**
+  String get recordingPresence;
+
+  /// No description provided for @presenceSuccess.
+  ///
+  /// In id, this message translates to:
+  /// **'Presensi Berhasil!'**
+  String get presenceSuccess;
+
+  /// No description provided for @presenceAlreadyRecorded.
+  ///
+  /// In id, this message translates to:
+  /// **'Anda sudah tercatat hadir pada perkuliahan ini.'**
+  String get presenceAlreadyRecorded;
+
+  /// No description provided for @presenceSuccessDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Kehadiran Anda berhasil dicatat dalam sistem perkuliahan.'**
+  String get presenceSuccessDetail;
+
+  /// No description provided for @presenceFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Presensi Gagal'**
+  String get presenceFailed;
+
+  /// No description provided for @courseInfo.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi Perkuliahan'**
+  String get courseInfo;
+
+  /// No description provided for @meetingNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Pertemuan ke-{number}'**
+  String meetingNumber(String number);
+
+  /// No description provided for @lectureTopic.
+  ///
+  /// In id, this message translates to:
+  /// **'Topik Perkuliahan'**
+  String get lectureTopic;
+
+  /// No description provided for @lectureDescription.
+  ///
+  /// In id, this message translates to:
+  /// **'Deskripsi Perkuliahan'**
+  String get lectureDescription;
+
+  /// No description provided for @time.
+  ///
+  /// In id, this message translates to:
+  /// **'Waktu'**
+  String get time;
+
+  /// No description provided for @retryPresence.
+  ///
+  /// In id, this message translates to:
+  /// **'Coba Lagi'**
+  String get retryPresence;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In id, this message translates to:
+  /// **'Kembali ke Beranda'**
+  String get backToHome;
+
+  /// No description provided for @submit.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim'**
+  String get submit;
+
+  /// No description provided for @cameraPermissionDenied.
+  ///
+  /// In id, this message translates to:
+  /// **'Izin kamera diperlukan untuk memindai QR code presensi.'**
+  String get cameraPermissionDenied;
 }
 
 class _AppLocalizationsDelegate

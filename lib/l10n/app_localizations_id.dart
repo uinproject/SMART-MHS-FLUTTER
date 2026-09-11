@@ -299,7 +299,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get credit => 'SKS';
 
   @override
-  String get room => 'Ruang';
+  String get room => 'Ruangan';
 
   @override
   String get lecturer => 'Dosen';
@@ -775,4 +775,86 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get enterNewPassword => 'Masukkan Password Baru';
+
+  @override
+  String get scanQrTitle => 'Pindai QR Presensi';
+
+  @override
+  String get scanQrInstruction =>
+      'Arahkan kamera ke QR Code presensi yang ditampilkan oleh dosen';
+
+  @override
+  String get flashOn => 'Nyalakan Flash';
+
+  @override
+  String get flashOff => 'Matikan Flash';
+
+  @override
+  String get switchCamera => 'Ganti Kamera';
+
+  @override
+  String get useShortCode => 'Gunakan Short Code';
+
+  @override
+  String get inputShortCodeHint => 'Masukkan Kode Presensi';
+
+  @override
+  String get shortCodeEmpty => 'Kode presensi tidak boleh kosong';
+
+  @override
+  String get cantScanQrQuestion =>
+      'Kamera bermasalah atau tidak bisa memindai?';
+
+  @override
+  String get presenceProcessTitle => 'Verifikasi Presensi';
+
+  @override
+  String get validatingPresenceCode => 'Memvalidasi Kode Presensi...';
+
+  @override
+  String get recordingPresence => 'Mencatat Kehadiran...';
+
+  @override
+  String get presenceSuccess => 'Presensi Berhasil!';
+
+  @override
+  String get presenceAlreadyRecorded =>
+      'Anda sudah tercatat hadir pada perkuliahan ini.';
+
+  @override
+  String get presenceSuccessDetail =>
+      'Kehadiran Anda berhasil dicatat dalam sistem perkuliahan.';
+
+  @override
+  String get presenceFailed => 'Presensi Gagal';
+
+  @override
+  String get courseInfo => 'Informasi Perkuliahan';
+
+  @override
+  String meetingNumber(String number) {
+    return 'Pertemuan ke-$number';
+  }
+
+  @override
+  String get lectureTopic => 'Topik Perkuliahan';
+
+  @override
+  String get lectureDescription => 'Deskripsi Perkuliahan';
+
+  @override
+  String get time => 'Waktu';
+
+  @override
+  String get retryPresence => 'Coba Lagi';
+
+  @override
+  String get backToHome => 'Kembali ke Beranda';
+
+  @override
+  String get submit => 'Kirim';
+
+  @override
+  String get cameraPermissionDenied =>
+      'Izin kamera diperlukan untuk memindai QR code presensi.';
 }

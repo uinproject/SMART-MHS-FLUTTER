@@ -773,4 +773,85 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterNewPassword => 'Enter New Password';
+
+  @override
+  String get scanQrTitle => 'Scan Presence QR';
+
+  @override
+  String get scanQrInstruction =>
+      'Point camera at the attendance QR Code displayed by lecturer';
+
+  @override
+  String get flashOn => 'Turn on Flash';
+
+  @override
+  String get flashOff => 'Turn off Flash';
+
+  @override
+  String get switchCamera => 'Switch Camera';
+
+  @override
+  String get useShortCode => 'Use Short Code';
+
+  @override
+  String get inputShortCodeHint => 'Enter Presence Code';
+
+  @override
+  String get shortCodeEmpty => 'Presence code cannot be empty';
+
+  @override
+  String get cantScanQrQuestion => 'Camera issue or cannot scan QR?';
+
+  @override
+  String get presenceProcessTitle => 'Presence Verification';
+
+  @override
+  String get validatingPresenceCode => 'Validating Presence Code...';
+
+  @override
+  String get recordingPresence => 'Recording Attendance...';
+
+  @override
+  String get presenceSuccess => 'Attendance Successful!';
+
+  @override
+  String get presenceAlreadyRecorded =>
+      'You have already been recorded present for this lecture.';
+
+  @override
+  String get presenceSuccessDetail =>
+      'Your attendance has been successfully recorded in the lecture system.';
+
+  @override
+  String get presenceFailed => 'Attendance Failed';
+
+  @override
+  String get courseInfo => 'Lecture Information';
+
+  @override
+  String meetingNumber(String number) {
+    return 'Meeting $number';
+  }
+
+  @override
+  String get lectureTopic => 'Lecture Topic';
+
+  @override
+  String get lectureDescription => 'Lecture Description';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get retryPresence => 'Try Again';
+
+  @override
+  String get backToHome => 'Back to Home';
+
+  @override
+  String get submit => 'Submit';
+
+  @override
+  String get cameraPermissionDenied =>
+      'Camera permission is required to scan attendance QR code.';
 }

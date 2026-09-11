@@ -51,5 +51,7 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>Flutter tools needs to communicate with the application for debugging.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Aplikasi membutuhkan akses kamera untuk melakukan pemindaian QR Code presensi perkuliahan.</string>
 </dict>
 </plist>

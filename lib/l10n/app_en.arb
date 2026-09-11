@@ -308,5 +308,38 @@
   "savePassword": "Save Password",
   "goToLoginPage": "Go to Login Page",
   "updatePasswordFailed": "Failed to update password.",
-  "enterNewPassword": "Enter New Password"
+  "enterNewPassword": "Enter New Password",
+  "scanQrTitle": "Scan Presence QR",
+  "scanQrInstruction": "Point camera at the attendance QR Code displayed by lecturer",
+  "flashOn": "Turn on Flash",
+  "flashOff": "Turn off Flash",
+  "switchCamera": "Switch Camera",
+  "useShortCode": "Use Short Code",
+  "inputShortCodeHint": "Enter Presence Code",
+  "shortCodeEmpty": "Presence code cannot be empty",
+  "cantScanQrQuestion": "Camera issue or cannot scan QR?",
+  "presenceProcessTitle": "Presence Verification",
+  "validatingPresenceCode": "Validating Presence Code...",
+  "recordingPresence": "Recording Attendance...",
+  "presenceSuccess": "Attendance Successful!",
+  "presenceAlreadyRecorded": "You have already been recorded present for this lecture.",
+  "presenceSuccessDetail": "Your attendance has been successfully recorded in the lecture system.",
+  "presenceFailed": "Attendance Failed",
+  "courseInfo": "Lecture Information",
+  "meetingNumber": "Meeting {number}",
+  "@meetingNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "lectureTopic": "Lecture Topic",
+  "lectureDescription": "Lecture Description",
+  "room": "Room",
+  "time": "Time",
+  "retryPresence": "Try Again",
+  "backToHome": "Back to Home",
+  "submit": "Submit",
+  "cameraPermissionDenied": "Camera permission is required to scan attendance QR code."
 }

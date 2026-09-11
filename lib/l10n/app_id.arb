@@ -308,5 +308,38 @@
   "savePassword": "Simpan Password",
   "goToLoginPage": "Ke Halaman Login",
   "updatePasswordFailed": "Gagal memperbarui password.",
-  "enterNewPassword": "Masukkan Password Baru"
+  "enterNewPassword": "Masukkan Password Baru",
+  "scanQrTitle": "Pindai QR Presensi",
+  "scanQrInstruction": "Arahkan kamera ke QR Code presensi yang ditampilkan oleh dosen",
+  "flashOn": "Nyalakan Flash",
+  "flashOff": "Matikan Flash",
+  "switchCamera": "Ganti Kamera",
+  "useShortCode": "Gunakan Short Code",
+  "inputShortCodeHint": "Masukkan Kode Presensi",
+  "shortCodeEmpty": "Kode presensi tidak boleh kosong",
+  "cantScanQrQuestion": "Kamera bermasalah atau tidak bisa memindai?",
+  "presenceProcessTitle": "Verifikasi Presensi",
+  "validatingPresenceCode": "Memvalidasi Kode Presensi...",
+  "recordingPresence": "Mencatat Kehadiran...",
+  "presenceSuccess": "Presensi Berhasil!",
+  "presenceAlreadyRecorded": "Anda sudah tercatat hadir pada perkuliahan ini.",
+  "presenceSuccessDetail": "Kehadiran Anda berhasil dicatat dalam sistem perkuliahan.",
+  "presenceFailed": "Presensi Gagal",
+  "courseInfo": "Informasi Perkuliahan",
+  "meetingNumber": "Pertemuan ke-{number}",
+  "@meetingNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "lectureTopic": "Topik Perkuliahan",
+  "lectureDescription": "Deskripsi Perkuliahan",
+  "room": "Ruangan",
+  "time": "Waktu",
+  "retryPresence": "Coba Lagi",
+  "backToHome": "Kembali ke Beranda",
+  "submit": "Kirim",
+  "cameraPermissionDenied": "Izin kamera diperlukan untuk memindai QR code presensi."
 }

@@ -8,6 +8,7 @@ import '../../../krs/presentation/pages/sub_menu_krs_page.dart';
 import '../../../edom/presentation/pages/edom_semesters_page.dart';
 import '../../../khs/presentation/pages/khs_page.dart';
 import '../../../academic_history/presentation/pages/academic_history_page.dart';
+import '../../../presence/presentation/pages/presence_scanner_page.dart';
 
 class MainMenuGrid extends StatefulWidget {
   const MainMenuGrid({super.key});
@@ -125,6 +126,13 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const AcademicHistoryPage(),
+                    ),
+                  );
+                } else if (menu['label'] == l10n.presence) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PresenceScannerPage(),
                     ),
                   );
                 }

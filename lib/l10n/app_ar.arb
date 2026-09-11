@@ -308,5 +308,38 @@
   "savePassword": "حفظ كلمة المرور",
   "goToLoginPage": "الانتقال إلى صفحة تسجيل الدخول",
   "updatePasswordFailed": "فشل تحديث كلمة المرور.",
-  "enterNewPassword": "أدخل كلمة المرور الجديدة"
+  "enterNewPassword": "أدخل كلمة المرور الجديدة",
+  "scanQrTitle": "مسح رمز الاستجابة السريعة للحضور",
+  "scanQrInstruction": "وجه الكاميرا نحو رمز الاستجابة السريعة المعروض من قبل المحاضر",
+  "flashOn": "تشغيل الفلاش",
+  "flashOff": "إيقاف الفلاش",
+  "switchCamera": "تبديل الكاميرا",
+  "useShortCode": "استخدام الرمز القصير",
+  "inputShortCodeHint": "أدخل رمز الحضور",
+  "shortCodeEmpty": "لا يمكن أن يكون رمز الحضور فارغًا",
+  "cantScanQrQuestion": "مشكلة في الكاميرا أو لا يمكنك المسح؟",
+  "presenceProcessTitle": "التحقق من الحضور",
+  "validatingPresenceCode": "جارٍ التحقق من رمز الحضور...",
+  "recordingPresence": "جارٍ تسجيل الحضور...",
+  "presenceSuccess": "تم تسجيل الحضور بنجاح!",
+  "presenceAlreadyRecorded": "لقد تم تسجيل حضورك بالفعل في هذه المحاضرة.",
+  "presenceSuccessDetail": "تم تسجيل حضورك بنجاح في النظام الجامعي.",
+  "presenceFailed": "فشل تسجيل الحضور",
+  "courseInfo": "معلومات المحاضرة",
+  "meetingNumber": "المحاضرة {number}",
+  "@meetingNumber": {
+    "placeholders": {
+      "number": {
+        "type": "String"
+      }
+    }
+  },
+  "lectureTopic": "موضوع المحاضرة",
+  "lectureDescription": "وصف المحاضرة",
+  "room": "القاعة",
+  "time": "الوقت",
+  "retryPresence": "إعادة المحاولة",
+  "backToHome": "العودة إلى الرئيسية",
+  "submit": "إرسال",
+  "cameraPermissionDenied": "إذن الكاميرا مطلوب لمسح رمز الاستجابة السريعة للحضور."
 }
