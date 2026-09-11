@@ -426,5 +426,6 @@
   "showingCachedData": "عرض البيانات المحفوظة (دون اتصال)",
   "refreshSchedule": "تحديث المواقيت",
   "kemenagMethod": "وزارة الشؤون الدينية الإندونيسية",
-  "prayerLocationPermissionDesc": "يتطلب التطبيق إذن الموقع لعرض مواقيت الصلاة الدقيقة بناءً على موقعك."
+  "prayerLocationPermissionDesc": "يتطلب التطبيق إذن الموقع لعرض مواقيت الصلاة الدقيقة بناءً على موقعك.",
+  "prayerShortLabel": "الصلاة"
 }

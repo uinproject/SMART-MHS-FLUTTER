@@ -2151,6 +2151,12 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.'**
   String get prayerLocationPermissionDesc;
+
+  /// No description provided for @prayerShortLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Sholat'**
+  String get prayerShortLabel;
 }
 
 class _AppLocalizationsDelegate

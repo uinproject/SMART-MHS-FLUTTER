@@ -19,9 +19,6 @@ class StatusAkademik {
     if (c == 'A' || c == 'C' || c == 'L' || c == 'N' || c == 'K' || c == 'P' || c == 'D') {
       return c!;
     }
-    if (c == '1') return 'A';
-    if (c == '2') return 'C';
-    if (c == '0') return 'N';
 
     final text = (statusText ?? '').toLowerCase();
     if (text.contains('aktif') && !text.contains('non')) return 'A';

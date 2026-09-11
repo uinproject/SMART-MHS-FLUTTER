@@ -426,5 +426,6 @@
   "showingCachedData": "Menampilkan data tersimpan (Offline)",
   "refreshSchedule": "Perbarui Jadwal",
   "kemenagMethod": "Kementerian Agama RI",
-  "prayerLocationPermissionDesc": "Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda."
+  "prayerLocationPermissionDesc": "Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.",
+  "prayerShortLabel": "Sholat"
 }

@@ -1096,4 +1096,7 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get prayerLocationPermissionDesc =>
       'Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.';
+
+  @override
+  String get prayerShortLabel => 'Sholat';
 }

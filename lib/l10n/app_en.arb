@@ -426,5 +426,6 @@
   "showingCachedData": "Showing saved data (Offline)",
   "refreshSchedule": "Refresh Schedule",
   "kemenagMethod": "Ministry of Religious Affairs RI",
-  "prayerLocationPermissionDesc": "The app requires location permission to display accurate prayer times based on your location."
+  "prayerLocationPermissionDesc": "The app requires location permission to display accurate prayer times based on your location.",
+  "prayerShortLabel": "Prayer"
 }

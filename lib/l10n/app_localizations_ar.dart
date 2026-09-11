@@ -1087,4 +1087,7 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get prayerLocationPermissionDesc =>
       'يتطلب التطبيق إذن الموقع لعرض مواقيت الصلاة الدقيقة بناءً على موقعك.';
+
+  @override
+  String get prayerShortLabel => 'الصلاة';
 }

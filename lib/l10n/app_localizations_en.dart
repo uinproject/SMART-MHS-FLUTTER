@@ -1093,4 +1093,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get prayerLocationPermissionDesc =>
       'The app requires location permission to display accurate prayer times based on your location.';
+
+  @override
+  String get prayerShortLabel => 'Prayer';
 }

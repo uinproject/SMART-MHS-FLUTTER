@@ -352,10 +352,6 @@ class ApiService {
             baseUrl = 'https://fuadah.uinsalatiga.ac.id/wp-json/wp/v2/';
             break;
           case 'SI':
-          case 'FST':
-          case 'ST':
-          case 'SAINTEK':
-          case 'F':
             baseUrl = 'https://saintek.uinsalatiga.ac.id/wp-json/wp/v2/';
             break;
           default:

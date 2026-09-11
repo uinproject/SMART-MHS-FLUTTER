@@ -8,6 +8,7 @@ import 'package:smartmahsiswaflutter/core/utils/location_helper.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../data/models/prayer_timing_model.dart';
 import '../../data/services/prayer_time_service.dart';
+import '../../../qibla/presentation/pages/qibla_page.dart';
 
 class PrayerTimePage extends StatefulWidget {
   const PrayerTimePage({super.key});
@@ -25,7 +26,6 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
   LocationPermission _locationPermission = LocationPermission.whileInUse;
 
   PrayerTimingModel? _prayerModel;
-  bool _isFromCache = false;
   String? _errorMessage;
   String? _displayAddress;
 
@@ -145,7 +145,6 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
       if (mounted) {
         setState(() {
           _prayerModel = result.model;
-          _isFromCache = result.isFromCache;
           _errorMessage = result.errorMessage;
           _displayAddress = result.address ?? address ?? 'Salatiga';
           _isLoading = false;
@@ -262,15 +261,7 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
               padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white,
-                      size: 20,
-                    ),
-                    onPressed: () => Navigator.pop(context),
-                  ),
-                  const SizedBox(width: 6),
+                  const SizedBox(width: 16),
                   Expanded(
                     child: Text(
                       l10n.prayerSchedule,
@@ -402,9 +393,6 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         children: [
-          // Cache info banner if loaded from cache
-          if (_isFromCache) _buildCacheBanner(l10n),
-
           // Top Countdown Hero Card
           _buildNextPrayerHeroCard(
             l10n: l10n,
@@ -511,39 +499,6 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
           ),
 
           const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  /// Banner when displaying cached offline data
-  Widget _buildCacheBanner(AppLocalizations l10n) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFEF3C7),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: const Color(0xFFFDE68A)),
-      ),
-      child: Row(
-        children: [
-          const Icon(
-            Icons.offline_pin_rounded,
-            color: Color(0xFFD97706),
-            size: 20,
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              l10n.showingCachedData,
-              style: const TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Color(0xFF92400E),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -720,6 +675,75 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          const Divider(color: Colors.white24, height: 1),
+          const SizedBox(height: 12),
+
+          // Qibla Direction Action inside Hero Card
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const QiblaPage()),
+                );
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.white24),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFFBBF24).withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.explore_rounded,
+                        color: Color(0xFFFBBF24),
+                        size: 18,
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.qiblaDirection,
+                            style: const TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Text(
+                            l10n.qiblaCompass,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.white.withValues(alpha: 0.8),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.white70,
+                      size: 14,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
         ],
       ),

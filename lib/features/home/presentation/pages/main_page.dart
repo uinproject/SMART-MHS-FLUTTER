@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import 'home_page.dart';
 import '../../../account/presentation/pages/account_page.dart';
 import '../../../news/presentation/pages/news_page.dart';
+import '../../../prayer_time/presentation/pages/prayer_time_page.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 
 class MainPage extends StatefulWidget {
@@ -18,7 +19,7 @@ class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = [
     const HomePage(),
     const NewsPage(),
-    const Center(child: Text('Notifikasi Page')),
+    const PrayerTimePage(),
     const AccountPage(),
   ];
 
@@ -53,9 +54,9 @@ class _MainPageState extends State<MainPage> {
             label: l10n.news,
           ),
           BottomNavigationBarItem(
-            icon: const Icon(Icons.notifications_outlined),
-            activeIcon: const Icon(Icons.notifications),
-            label: l10n.notifications,
+            icon: const Icon(Icons.mosque_outlined),
+            activeIcon: const Icon(Icons.mosque_rounded),
+            label: l10n.prayerShortLabel,
           ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.person_outline),
