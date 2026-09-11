@@ -43,6 +43,10 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   /// Failure detail for the API-level error states ("Error 500" / general).
   String? _errorMessage;
 
+  final Map<String, double> _downloadProgress = {};
+  final Map<String, String> _downloadedPaths = {};
+  final Map<String, bool> _isDownloading = {};
+
   @override
   void initState() {
     super.initState();
@@ -102,25 +106,41 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   }
 
   /// Downloads the kuitansi PDF (same URL handling as legacy: `\/` -> `/`)
-  /// and opens it. File name matches legacy:
+  /// with real-time progress indicator and opens it. File name matches legacy:
   /// `kuitansi_{nim}_semester{semester}.pdf`.
   Future<void> _downloadReceipt(HistoryItem item) async {
     final l10n = AppLocalizations.of(context)!;
-    AppNotifications.show(
-      context,
-      l10n.downloadingReceipt,
-      type: AppNotificationType.info,
-      duration: const Duration(seconds: 2),
-    );
+    final user = _sessionManager.getUser();
+    final fileName =
+        'kuitansi_${user?.nim ?? ''}_semester${item.semester}.pdf';
+    final key = item.semester.toString();
+
+    setState(() {
+      _isDownloading[key] = true;
+      _downloadProgress[key] = 0.0;
+    });
 
     try {
-      final user = _sessionManager.getUser();
-      final fileName =
-          'kuitansi_${user?.nim ?? ''}_semester${item.semester}.pdf';
       final savedPath = await _apiService.downloadReceipt(
         url: item.linkKuitansi,
         fileName: fileName,
+        onReceiveProgress: (received, total) {
+          if (total > 0 && mounted) {
+            setState(() {
+              _downloadProgress[key] = (received / total).clamp(0.0, 1.0);
+            });
+          }
+        },
       );
+
+      if (!mounted) return;
+
+      setState(() {
+        _isDownloading[key] = false;
+        _downloadProgress[key] = 1.0;
+        _downloadedPaths[key] = savedPath;
+      });
+
       final result = await OpenFilex.open(savedPath);
       if (result.type != ResultType.done && mounted) {
         AppNotifications.show(
@@ -130,13 +150,15 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
         );
       }
     } catch (e) {
-      if (mounted) {
-        AppNotifications.show(
-          context,
-          l10n.cantOpenReceipt,
-          type: AppNotificationType.error,
-        );
-      }
+      if (!mounted) return;
+      setState(() {
+        _isDownloading[key] = false;
+      });
+      AppNotifications.show(
+        context,
+        l10n.cantOpenReceipt,
+        type: AppNotificationType.error,
+      );
     }
   }
 
@@ -354,6 +376,36 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                     _buildDownloadButton(l10n, item),
                 ],
               ),
+              if (_isDownloading[item.semester.toString()] == true) ...[
+                const SizedBox(height: 12),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: LinearProgressIndicator(
+                    value: _downloadProgress[item.semester.toString()] ?? 0.0,
+                    backgroundColor: Colors.grey.shade100,
+                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    minHeight: 5,
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      l10n.downloadingReceipt,
+                      style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary),
+                    ),
+                    Text(
+                      '${((_downloadProgress[item.semester.toString()] ?? 0.0) * 100).toInt()}%',
+                      style: const TextStyle(
+                        fontSize: 10.5,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -395,25 +447,74 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
   }
 
   Widget _buildDownloadButton(AppLocalizations l10n, HistoryItem item) {
+    final key = item.semester.toString();
+    final bool isDownloading = _isDownloading[key] == true;
+    final String? downloadedPath = _downloadedPaths[key];
+
+    if (downloadedPath != null) {
+      return Material(
+        color: AppColors.success.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(10),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => OpenFilex.open(downloadedPath),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.file_open_rounded,
+                  size: 15,
+                  color: AppColors.success,
+                ),
+                const SizedBox(width: 5),
+                Text(
+                  l10n.openFile,
+                  style: const TextStyle(
+                    color: AppColors.success,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Material(
       color: AppColors.primary.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(10),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () => _downloadReceipt(item),
+        onTap: isDownloading ? null : () => _downloadReceipt(item),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 9),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(
-                Icons.download_rounded,
-                size: 16,
-                color: AppColors.primary,
-              ),
+              if (isDownloading)
+                const SizedBox(
+                  width: 14,
+                  height: 14,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  ),
+                )
+              else
+                const Icon(
+                  Icons.download_rounded,
+                  size: 16,
+                  color: AppColors.primary,
+                ),
               const SizedBox(width: 6),
               Text(
-                l10n.downloadReceipt,
+                isDownloading
+                    ? '${((_downloadProgress[key] ?? 0.0) * 100).toInt()}%'
+                    : l10n.downloadReceipt,
                 style: const TextStyle(
                   color: AppColors.primary,
                   fontSize: 12,
