@@ -381,5 +381,22 @@
   "rectorateNews": "Rectorate News",
   "newsDetail": "News Detail",
   "searchNewsHint": "Search news...",
-  "noNewsFound": "No news found"
+  "noNewsFound": "No news found",
+  "qiblaDirection": "Qibla Direction",
+  "qiblaCompass": "Qibla Compass",
+  "deviceNotSupported": "Device Not Supported",
+  "deviceNotSupportedDesc": "Your device does not have the compass/magnetometer sensor required to determine Qibla direction.",
+  "locationPermissionRequired": "Location Permission Required",
+  "locationPermissionDesc": "The app requires location permission to accurately determine the Qibla direction from your position.",
+  "enableLocation": "Enable Location",
+  "grantPermission": "Grant Location Permission",
+  "locationDisabled": "Location Services Disabled",
+  "locationDisabledDesc": "Please enable GPS or location services on your device.",
+  "facingQibla": "Facing Qibla",
+  "alignWithQibla": "Rotate device until the compass aligns with the Kaaba",
+  "distanceToKaaba": "Distance to Kaaba",
+  "qiblaAngle": "Qibla Direction",
+  "currentHeading": "Current Heading",
+  "calibrateCompassHint": "If the compass seems inaccurate, calibrate by moving your phone in a figure 8 motion.",
+  "openSettings": "Open Settings"
 }

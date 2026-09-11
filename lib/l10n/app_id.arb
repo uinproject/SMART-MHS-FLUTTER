@@ -381,5 +381,22 @@
   "rectorateNews": "Berita Rektorat",
   "newsDetail": "Detail Berita",
   "searchNewsHint": "Cari judul berita...",
-  "noNewsFound": "Tidak ada berita ditemukan"
+  "noNewsFound": "Tidak ada berita ditemukan",
+  "qiblaDirection": "Arah Kiblat",
+  "qiblaCompass": "Kompas Kiblat",
+  "deviceNotSupported": "Perangkat Tidak Mendukung",
+  "deviceNotSupportedDesc": "Perangkat Anda tidak memiliki sensor kompas/magnetometer yang diperlukan untuk menentukan arah kiblat.",
+  "locationPermissionRequired": "Izin Lokasi Diperlukan",
+  "locationPermissionDesc": "Aplikasi memerlukan izin lokasi untuk menentukan arah kiblat yang akurat dari posisi Anda.",
+  "enableLocation": "Aktifkan Lokasi",
+  "grantPermission": "Izinkan Akses Lokasi",
+  "locationDisabled": "GPS / Lokasi Tidak Aktif",
+  "locationDisabledDesc": "Silakan aktifkan GPS atau layanan lokasi pada perangkat Anda.",
+  "facingQibla": "Tepat Menghadap Kiblat",
+  "alignWithQibla": "Arahkan ponsel hingga jarum sejajar dengan Ka'bah",
+  "distanceToKaaba": "Jarak ke Ka'bah",
+  "qiblaAngle": "Arah Kiblat",
+  "currentHeading": "Arah Saat Ini",
+  "calibrateCompassHint": "Jika jarum kompas tidak akurat, kalibrasi dengan menggerakkan ponsel membentuk angka 8.",
+  "openSettings": "Buka Pengaturan"
 }

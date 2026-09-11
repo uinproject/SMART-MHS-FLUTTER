@@ -381,5 +381,22 @@
   "rectorateNews": "أخبار رئاسة الجامعة",
   "newsDetail": "تفاصيل الخبر",
   "searchNewsHint": "البحث في عناوين الأخبار...",
-  "noNewsFound": "لم يتم العثور على أخبار"
+  "noNewsFound": "لم يتم العثور على أخبار",
+  "qiblaDirection": "اتجاه القبلة",
+  "qiblaCompass": "بوصلة القبلة",
+  "deviceNotSupported": "الجهاز غير مدعوم",
+  "deviceNotSupportedDesc": "لا يحتوي جهازك على مستشعر البوصلة / مقياس المغناطيسية المطلوب لتحديد اتجاه القبلة.",
+  "locationPermissionRequired": "إذن الموقع مطلوب",
+  "locationPermissionDesc": "يتطلب التطبيق إذن الموقع لتحديد اتجاه القبلة بدقة من موقعك الحالي.",
+  "enableLocation": "تفعيل الموقع",
+  "grantPermission": "منح إذن الموقع",
+  "locationDisabled": "خدمة الموقع معطلة",
+  "locationDisabledDesc": "يرجى تفعيل نظام تحديد المواقع (GPS) أو خدمات الموقع على جهازك.",
+  "facingQibla": "باتجاه القبلة تماماً",
+  "alignWithQibla": "قم بتدوير الهاتف حتى يتطابق المؤشر مع الكعبة",
+  "distanceToKaaba": "المسافة إلى الكعبة",
+  "qiblaAngle": "زاوية القبلة",
+  "currentHeading": "الاتجاه الحالي",
+  "calibrateCompassHint": "إذا كانت البوصلة غير دقيقة، قم بمعايرتها بتحريك هاتفك على شكل رقم 8.",
+  "openSettings": "فتح الإعدادات"
 }

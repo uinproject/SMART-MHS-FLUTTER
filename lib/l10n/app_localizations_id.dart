@@ -955,4 +955,60 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get noNewsFound => 'Tidak ada berita ditemukan';
+
+  @override
+  String get qiblaDirection => 'Arah Kiblat';
+
+  @override
+  String get qiblaCompass => 'Kompas Kiblat';
+
+  @override
+  String get deviceNotSupported => 'Perangkat Tidak Mendukung';
+
+  @override
+  String get deviceNotSupportedDesc =>
+      'Perangkat Anda tidak memiliki sensor kompas/magnetometer yang diperlukan untuk menentukan arah kiblat.';
+
+  @override
+  String get locationPermissionRequired => 'Izin Lokasi Diperlukan';
+
+  @override
+  String get locationPermissionDesc =>
+      'Aplikasi memerlukan izin lokasi untuk menentukan arah kiblat yang akurat dari posisi Anda.';
+
+  @override
+  String get enableLocation => 'Aktifkan Lokasi';
+
+  @override
+  String get grantPermission => 'Izinkan Akses Lokasi';
+
+  @override
+  String get locationDisabled => 'GPS / Lokasi Tidak Aktif';
+
+  @override
+  String get locationDisabledDesc =>
+      'Silakan aktifkan GPS atau layanan lokasi pada perangkat Anda.';
+
+  @override
+  String get facingQibla => 'Tepat Menghadap Kiblat';
+
+  @override
+  String get alignWithQibla =>
+      'Arahkan ponsel hingga jarum sejajar dengan Ka\'bah';
+
+  @override
+  String get distanceToKaaba => 'Jarak ke Ka\'bah';
+
+  @override
+  String get qiblaAngle => 'Arah Kiblat';
+
+  @override
+  String get currentHeading => 'Arah Saat Ini';
+
+  @override
+  String get calibrateCompassHint =>
+      'Jika jarum kompas tidak akurat, kalibrasi dengan menggerakkan ponsel membentuk angka 8.';
+
+  @override
+  String get openSettings => 'Buka Pengaturan';
 }

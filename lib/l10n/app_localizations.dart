@@ -1881,6 +1881,108 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Tidak ada berita ditemukan'**
   String get noNewsFound;
+
+  /// No description provided for @qiblaDirection.
+  ///
+  /// In id, this message translates to:
+  /// **'Arah Kiblat'**
+  String get qiblaDirection;
+
+  /// No description provided for @qiblaCompass.
+  ///
+  /// In id, this message translates to:
+  /// **'Kompas Kiblat'**
+  String get qiblaCompass;
+
+  /// No description provided for @deviceNotSupported.
+  ///
+  /// In id, this message translates to:
+  /// **'Perangkat Tidak Mendukung'**
+  String get deviceNotSupported;
+
+  /// No description provided for @deviceNotSupportedDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Perangkat Anda tidak memiliki sensor kompas/magnetometer yang diperlukan untuk menentukan arah kiblat.'**
+  String get deviceNotSupportedDesc;
+
+  /// No description provided for @locationPermissionRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Izin Lokasi Diperlukan'**
+  String get locationPermissionRequired;
+
+  /// No description provided for @locationPermissionDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Aplikasi memerlukan izin lokasi untuk menentukan arah kiblat yang akurat dari posisi Anda.'**
+  String get locationPermissionDesc;
+
+  /// No description provided for @enableLocation.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktifkan Lokasi'**
+  String get enableLocation;
+
+  /// No description provided for @grantPermission.
+  ///
+  /// In id, this message translates to:
+  /// **'Izinkan Akses Lokasi'**
+  String get grantPermission;
+
+  /// No description provided for @locationDisabled.
+  ///
+  /// In id, this message translates to:
+  /// **'GPS / Lokasi Tidak Aktif'**
+  String get locationDisabled;
+
+  /// No description provided for @locationDisabledDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Silakan aktifkan GPS atau layanan lokasi pada perangkat Anda.'**
+  String get locationDisabledDesc;
+
+  /// No description provided for @facingQibla.
+  ///
+  /// In id, this message translates to:
+  /// **'Tepat Menghadap Kiblat'**
+  String get facingQibla;
+
+  /// No description provided for @alignWithQibla.
+  ///
+  /// In id, this message translates to:
+  /// **'Arahkan ponsel hingga jarum sejajar dengan Ka\'bah'**
+  String get alignWithQibla;
+
+  /// No description provided for @distanceToKaaba.
+  ///
+  /// In id, this message translates to:
+  /// **'Jarak ke Ka\'bah'**
+  String get distanceToKaaba;
+
+  /// No description provided for @qiblaAngle.
+  ///
+  /// In id, this message translates to:
+  /// **'Arah Kiblat'**
+  String get qiblaAngle;
+
+  /// No description provided for @currentHeading.
+  ///
+  /// In id, this message translates to:
+  /// **'Arah Saat Ini'**
+  String get currentHeading;
+
+  /// No description provided for @calibrateCompassHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika jarum kompas tidak akurat, kalibrasi dengan menggerakkan ponsel membentuk angka 8.'**
+  String get calibrateCompassHint;
+
+  /// No description provided for @openSettings.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka Pengaturan'**
+  String get openSettings;
 }
 
 class _AppLocalizationsDelegate

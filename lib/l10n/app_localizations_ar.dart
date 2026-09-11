@@ -947,4 +947,59 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noNewsFound => 'لم يتم العثور على أخبار';
+
+  @override
+  String get qiblaDirection => 'اتجاه القبلة';
+
+  @override
+  String get qiblaCompass => 'بوصلة القبلة';
+
+  @override
+  String get deviceNotSupported => 'الجهاز غير مدعوم';
+
+  @override
+  String get deviceNotSupportedDesc =>
+      'لا يحتوي جهازك على مستشعر البوصلة / مقياس المغناطيسية المطلوب لتحديد اتجاه القبلة.';
+
+  @override
+  String get locationPermissionRequired => 'إذن الموقع مطلوب';
+
+  @override
+  String get locationPermissionDesc =>
+      'يتطلب التطبيق إذن الموقع لتحديد اتجاه القبلة بدقة من موقعك الحالي.';
+
+  @override
+  String get enableLocation => 'تفعيل الموقع';
+
+  @override
+  String get grantPermission => 'منح إذن الموقع';
+
+  @override
+  String get locationDisabled => 'خدمة الموقع معطلة';
+
+  @override
+  String get locationDisabledDesc =>
+      'يرجى تفعيل نظام تحديد المواقع (GPS) أو خدمات الموقع على جهازك.';
+
+  @override
+  String get facingQibla => 'باتجاه القبلة تماماً';
+
+  @override
+  String get alignWithQibla => 'قم بتدوير الهاتف حتى يتطابق المؤشر مع الكعبة';
+
+  @override
+  String get distanceToKaaba => 'المسافة إلى الكعبة';
+
+  @override
+  String get qiblaAngle => 'زاوية القبلة';
+
+  @override
+  String get currentHeading => 'الاتجاه الحالي';
+
+  @override
+  String get calibrateCompassHint =>
+      'إذا كانت البوصلة غير دقيقة، قم بمعايرتها بتحريك هاتفك على شكل رقم 8.';
+
+  @override
+  String get openSettings => 'فتح الإعدادات';
 }

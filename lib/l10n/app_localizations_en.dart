@@ -952,4 +952,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noNewsFound => 'No news found';
+
+  @override
+  String get qiblaDirection => 'Qibla Direction';
+
+  @override
+  String get qiblaCompass => 'Qibla Compass';
+
+  @override
+  String get deviceNotSupported => 'Device Not Supported';
+
+  @override
+  String get deviceNotSupportedDesc =>
+      'Your device does not have the compass/magnetometer sensor required to determine Qibla direction.';
+
+  @override
+  String get locationPermissionRequired => 'Location Permission Required';
+
+  @override
+  String get locationPermissionDesc =>
+      'The app requires location permission to accurately determine the Qibla direction from your position.';
+
+  @override
+  String get enableLocation => 'Enable Location';
+
+  @override
+  String get grantPermission => 'Grant Location Permission';
+
+  @override
+  String get locationDisabled => 'Location Services Disabled';
+
+  @override
+  String get locationDisabledDesc =>
+      'Please enable GPS or location services on your device.';
+
+  @override
+  String get facingQibla => 'Facing Qibla';
+
+  @override
+  String get alignWithQibla =>
+      'Rotate device until the compass aligns with the Kaaba';
+
+  @override
+  String get distanceToKaaba => 'Distance to Kaaba';
+
+  @override
+  String get qiblaAngle => 'Qibla Direction';
+
+  @override
+  String get currentHeading => 'Current Heading';
+
+  @override
+  String get calibrateCompassHint =>
+      'If the compass seems inaccurate, calibrate by moving your phone in a figure 8 motion.';
+
+  @override
+  String get openSettings => 'Open Settings';
 }
