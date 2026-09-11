@@ -6,6 +6,7 @@ import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:smartmahsiswaflutter/core/theme/app_colors.dart';
+import 'package:smartmahsiswaflutter/core/utils/location_helper.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../widgets/qibla_compass_painter.dart';
 
@@ -16,7 +17,8 @@ class QiblaPage extends StatefulWidget {
   State<QiblaPage> createState() => _QiblaPageState();
 }
 
-class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMixin {
+class _QiblaPageState extends State<QiblaPage>
+    with SingleTickerProviderStateMixin, WidgetsBindingObserver {
   // Kaaba coordinates
   static const double _kaabaLat = 21.422487;
   static const double _kaabaLon = 39.826206;
@@ -30,6 +32,7 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
 
   // Sensor and GPS data
   Position? _currentPosition;
+  String? _displayAddress;
   double _qiblaAngle = 294.5; // Default approx for Indonesia
   double _distanceToKaabaKm = 0;
   double _continuousHeading = 0;
@@ -41,6 +44,7 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     // Gunakan Future.microtask untuk memicu inisialisasi sensor & GPS
     Future.microtask(() {
       _initQiblaFeature();
@@ -48,7 +52,19 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
   }
 
   @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Saat pengguna kembali dari Settings iOS/Android, otomatis cek ulang izin lokasi
+      if (_locationPermission != LocationPermission.whileInUse &&
+          _locationPermission != LocationPermission.always) {
+        _initQiblaFeature();
+      }
+    }
+  }
+
+  @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _sensorTimeoutTimer?.cancel();
     _compassSubscription?.cancel();
     super.dispose();
@@ -74,11 +90,15 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
       _isSensorSupported = true;
     });
 
-    await _checkAndRequestLocation();
-    _setupCompass();
+    final permissionGranted = await _checkAndRequestLocation();
+    // Only setup compass if permission was granted and GPS is enabled
+    if (permissionGranted) {
+      _setupCompass();
+    }
   }
 
-  Future<void> _checkAndRequestLocation() async {
+  /// Returns true if location permission was granted and GPS is enabled.
+  Future<bool> _checkAndRequestLocation() async {
     try {
       final serviceEnabled = await Geolocator.isLocationServiceEnabled();
       if (!serviceEnabled) {
@@ -88,7 +108,7 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
             _isLoading = false;
           });
         }
-        return;
+        return false;
       } else {
         if (mounted) {
           setState(() {
@@ -108,38 +128,58 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
         });
       }
 
-      if (permission == LocationPermission.whileInUse ||
-          permission == LocationPermission.always) {
-        Position? pos;
-        try {
-          pos = await Geolocator.getCurrentPosition(
-            locationSettings: const LocationSettings(
-              accuracy: LocationAccuracy.medium,
-              timeLimit: Duration(seconds: 8),
-            ),
-          );
-        } catch (_) {
-          pos = await Geolocator.getLastKnownPosition();
+      // If permission was not granted, stop loading and show permission card
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
         }
+        return false;
+      }
 
-        if (pos != null && mounted) {
-          final angle = _calculateQiblaBearing(pos.latitude, pos.longitude);
-          final distanceMeters = Geolocator.distanceBetween(
-            pos.latitude,
-            pos.longitude,
-            _kaabaLat,
-            _kaabaLon,
-          );
+      // Permission granted — fetch GPS position
+      Position? pos;
+      try {
+        pos = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+            accuracy: LocationAccuracy.medium,
+            timeLimit: Duration(seconds: 8),
+          ),
+        );
+      } catch (_) {
+        pos = await Geolocator.getLastKnownPosition();
+      }
 
+      if (pos != null && mounted) {
+        final angle = _calculateQiblaBearing(pos.latitude, pos.longitude);
+        final distanceMeters = Geolocator.distanceBetween(
+          pos.latitude,
+          pos.longitude,
+          _kaabaLat,
+          _kaabaLon,
+        );
+
+        String? address;
+        try {
+          address = await LocationHelper.getAddressFromCoordinates(pos.latitude, pos.longitude);
+        } catch (_) {}
+
+        if (mounted) {
           setState(() {
             _currentPosition = pos;
+            _displayAddress = address;
             _qiblaAngle = angle;
             _distanceToKaabaKm = distanceMeters / 1000.0;
           });
         }
       }
+
+      return true;
     } catch (_) {
-      // Continue even if GPS fails - use sensor or default angle
+      // On error, still return true to allow compass to try
+      return true;
     }
   }
 
@@ -439,26 +479,14 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
     required bool isAligned,
   }) {
     if (_isLoading) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SpinKitRing(
-              color: AppColors.primary,
-              size: 48,
-              lineWidth: 3.5,
-            ),
-            const SizedBox(height: 20),
-            Text(
-              l10n.qiblaCompass,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
-              ),
-            ),
-          ],
-        ),
+      return ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        children: [
+          SizedBox(height: MediaQuery.of(context).size.height * 0.32),
+          const Center(
+            child: SpinKitThreeBounce(color: AppColors.primary, size: 30),
+          ),
+        ],
       );
     }
 
@@ -730,13 +758,23 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
                     : '-',
               ),
             ),
-            if (_currentPosition != null) ...[
+            if (_displayAddress != null && _displayAddress!.isNotEmpty) ...[
               const SizedBox(width: 12),
               Expanded(
                 child: _buildMetricCard(
-                  icon: Icons.gps_fixed_rounded,
+                  icon: Icons.location_on_rounded,
                   iconColor: const Color(0xFF6366F1),
-                  title: 'GPS',
+                  title: 'Lokasi',
+                  value: _displayAddress!,
+                ),
+              ),
+            ] else if (_currentPosition != null) ...[
+              const SizedBox(width: 12),
+              Expanded(
+                child: _buildMetricCard(
+                  icon: Icons.location_on_rounded,
+                  iconColor: const Color(0xFF6366F1),
+                  title: 'Lokasi',
                   value:
                       '${_currentPosition!.latitude.toStringAsFixed(2)}°, ${_currentPosition!.longitude.toStringAsFixed(2)}°',
                 ),
@@ -1005,10 +1043,13 @@ class _QiblaPageState extends State<QiblaPage> with SingleTickerProviderStateMix
             ElevatedButton(
               onPressed: () async {
                 if (isPermanent) {
+                  // On iOS, deniedForever means we must redirect to Settings
                   await Geolocator.openAppSettings();
+                  // WidgetsBindingObserver.didChangeAppLifecycleState will handle
+                  // re-checking permission when user returns from Settings
                 } else {
-                  await _checkAndRequestLocation();
-                  _setupCompass();
+                  // Re-run full init flow which requests permission and sets up compass
+                  _initQiblaFeature();
                 }
               },
               style: ElevatedButton.styleFrom(

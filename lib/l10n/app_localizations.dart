@@ -1983,6 +1983,174 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Buka Pengaturan'**
   String get openSettings;
+
+  /// No description provided for @prayerSchedule.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal Sholat'**
+  String get prayerSchedule;
+
+  /// No description provided for @prayerTimes.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal Sholat'**
+  String get prayerTimes;
+
+  /// No description provided for @fajr.
+  ///
+  /// In id, this message translates to:
+  /// **'Subuh'**
+  String get fajr;
+
+  /// No description provided for @sunrise.
+  ///
+  /// In id, this message translates to:
+  /// **'Terbit'**
+  String get sunrise;
+
+  /// No description provided for @dhuhr.
+  ///
+  /// In id, this message translates to:
+  /// **'Dzuhur'**
+  String get dhuhr;
+
+  /// No description provided for @asr.
+  ///
+  /// In id, this message translates to:
+  /// **'Ashar'**
+  String get asr;
+
+  /// No description provided for @maghrib.
+  ///
+  /// In id, this message translates to:
+  /// **'Maghrib'**
+  String get maghrib;
+
+  /// No description provided for @isha.
+  ///
+  /// In id, this message translates to:
+  /// **'Isya'**
+  String get isha;
+
+  /// No description provided for @imsak.
+  ///
+  /// In id, this message translates to:
+  /// **'Imsak'**
+  String get imsak;
+
+  /// No description provided for @nextPrayer.
+  ///
+  /// In id, this message translates to:
+  /// **'Sholat Berikutnya'**
+  String get nextPrayer;
+
+  /// No description provided for @inCountdown.
+  ///
+  /// In id, this message translates to:
+  /// **'dalam'**
+  String get inCountdown;
+
+  /// No description provided for @tomorrowFajr.
+  ///
+  /// In id, this message translates to:
+  /// **'Subuh Besok'**
+  String get tomorrowFajr;
+
+  /// No description provided for @fastingSchedule.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal Puasa'**
+  String get fastingSchedule;
+
+  /// No description provided for @fastingToday.
+  ///
+  /// In id, this message translates to:
+  /// **'Jadwal Puasa Hari Ini'**
+  String get fastingToday;
+
+  /// No description provided for @fastingRamadhan.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Ramadhan'**
+  String get fastingRamadhan;
+
+  /// No description provided for @fastingMondayThursday.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Sunnah Senin - Kamis'**
+  String get fastingMondayThursday;
+
+  /// No description provided for @fastingAyyamulBidh.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Sunnah Ayyamul Bidh'**
+  String get fastingAyyamulBidh;
+
+  /// No description provided for @fastingArafah.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Sunnah Arafah'**
+  String get fastingArafah;
+
+  /// No description provided for @fastingAsyura.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Sunnah Asyura'**
+  String get fastingAsyura;
+
+  /// No description provided for @fastingTasuah.
+  ///
+  /// In id, this message translates to:
+  /// **'Puasa Sunnah Tasu\'a'**
+  String get fastingTasuah;
+
+  /// No description provided for @breakFasting.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka Puasa'**
+  String get breakFasting;
+
+  /// No description provided for @startFasting.
+  ///
+  /// In id, this message translates to:
+  /// **'Mulai Puasa'**
+  String get startFasting;
+
+  /// No description provided for @timeUntilIftar.
+  ///
+  /// In id, this message translates to:
+  /// **'Menuju Buka Puasa'**
+  String get timeUntilIftar;
+
+  /// No description provided for @timeUntilImsak.
+  ///
+  /// In id, this message translates to:
+  /// **'Menuju Imsak'**
+  String get timeUntilImsak;
+
+  /// No description provided for @showingCachedData.
+  ///
+  /// In id, this message translates to:
+  /// **'Menampilkan data tersimpan (Offline)'**
+  String get showingCachedData;
+
+  /// No description provided for @refreshSchedule.
+  ///
+  /// In id, this message translates to:
+  /// **'Perbarui Jadwal'**
+  String get refreshSchedule;
+
+  /// No description provided for @kemenagMethod.
+  ///
+  /// In id, this message translates to:
+  /// **'Kementerian Agama RI'**
+  String get kemenagMethod;
+
+  /// No description provided for @prayerLocationPermissionDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.'**
+  String get prayerLocationPermissionDesc;
 }
 
 class _AppLocalizationsDelegate

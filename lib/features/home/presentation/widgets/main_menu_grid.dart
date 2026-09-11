@@ -11,6 +11,7 @@ import '../../../academic_history/presentation/pages/academic_history_page.dart'
 import '../../../presence/presentation/pages/presence_scanner_page.dart';
 import '../../../attendance/presentation/pages/attendance_courses_page.dart';
 import '../../../qibla/presentation/pages/qibla_page.dart';
+import '../../../prayer_time/presentation/pages/prayer_time_page.dart';
 
 class MainMenuGrid extends StatefulWidget {
   const MainMenuGrid({super.key});
@@ -42,6 +43,7 @@ class _MainMenuGridState extends State<MainMenuGrid> {
       {'icon': Icons.description_rounded, 'label': l10n.krs},
       {'icon': Icons.school_rounded, 'label': l10n.khs},
       {'icon': Icons.explore_rounded, 'label': l10n.qiblaDirection},
+      {'icon': Icons.access_time_filled_rounded, 'label': l10n.prayerSchedule},
     ];
 
     final visibleMenus = _showAll
@@ -150,6 +152,13 @@ class _MainMenuGridState extends State<MainMenuGrid> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const QiblaPage(),
+                    ),
+                  );
+                } else if (menu['label'] == l10n.prayerSchedule) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const PrayerTimePage(),
                     ),
                   );
                 }

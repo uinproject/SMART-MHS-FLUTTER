@@ -1008,4 +1008,89 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSettings => 'Open Settings';
+
+  @override
+  String get prayerSchedule => 'Prayer Times';
+
+  @override
+  String get prayerTimes => 'Prayer Times';
+
+  @override
+  String get fajr => 'Fajr';
+
+  @override
+  String get sunrise => 'Sunrise';
+
+  @override
+  String get dhuhr => 'Dhuhr';
+
+  @override
+  String get asr => 'Asr';
+
+  @override
+  String get maghrib => 'Maghrib';
+
+  @override
+  String get isha => 'Isha';
+
+  @override
+  String get imsak => 'Imsak';
+
+  @override
+  String get nextPrayer => 'Next Prayer';
+
+  @override
+  String get inCountdown => 'in';
+
+  @override
+  String get tomorrowFajr => 'Tomorrow\'s Fajr';
+
+  @override
+  String get fastingSchedule => 'Fasting Schedule';
+
+  @override
+  String get fastingToday => 'Today\'s Fasting Schedule';
+
+  @override
+  String get fastingRamadhan => 'Ramadan Fasting';
+
+  @override
+  String get fastingMondayThursday => 'Monday - Thursday Fasting';
+
+  @override
+  String get fastingAyyamulBidh => 'Ayyamul Bidh Fasting';
+
+  @override
+  String get fastingArafah => 'Arafah Fasting';
+
+  @override
+  String get fastingAsyura => 'Ashura Fasting';
+
+  @override
+  String get fastingTasuah => 'Tasu\'a Fasting';
+
+  @override
+  String get breakFasting => 'Iftar';
+
+  @override
+  String get startFasting => 'Start Fasting';
+
+  @override
+  String get timeUntilIftar => 'Time Until Iftar';
+
+  @override
+  String get timeUntilImsak => 'Time Until Imsak';
+
+  @override
+  String get showingCachedData => 'Showing saved data (Offline)';
+
+  @override
+  String get refreshSchedule => 'Refresh Schedule';
+
+  @override
+  String get kemenagMethod => 'Ministry of Religious Affairs RI';
+
+  @override
+  String get prayerLocationPermissionDesc =>
+      'The app requires location permission to display accurate prayer times based on your location.';
 }

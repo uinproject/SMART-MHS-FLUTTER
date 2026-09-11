@@ -1002,4 +1002,89 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openSettings => 'فتح الإعدادات';
+
+  @override
+  String get prayerSchedule => 'مواقيت الصلاة';
+
+  @override
+  String get prayerTimes => 'مواقيت الصلاة';
+
+  @override
+  String get fajr => 'الفجر';
+
+  @override
+  String get sunrise => 'الشروق';
+
+  @override
+  String get dhuhr => 'الظهر';
+
+  @override
+  String get asr => 'العصر';
+
+  @override
+  String get maghrib => 'المغرب';
+
+  @override
+  String get isha => 'العشاء';
+
+  @override
+  String get imsak => 'الإمساك';
+
+  @override
+  String get nextPrayer => 'الصلاة القادمة';
+
+  @override
+  String get inCountdown => 'خلال';
+
+  @override
+  String get tomorrowFajr => 'فجر الغد';
+
+  @override
+  String get fastingSchedule => 'جدول الصيام';
+
+  @override
+  String get fastingToday => 'جدول صيام اليوم';
+
+  @override
+  String get fastingRamadhan => 'صيام رمضان';
+
+  @override
+  String get fastingMondayThursday => 'صيام الإثنين والخميس';
+
+  @override
+  String get fastingAyyamulBidh => 'صيام الأيام البيض';
+
+  @override
+  String get fastingArafah => 'صيام يوم عرفة';
+
+  @override
+  String get fastingAsyura => 'صيام يوم عاشوراء';
+
+  @override
+  String get fastingTasuah => 'صيام يوم تاسوعاء';
+
+  @override
+  String get breakFasting => 'الإفطار';
+
+  @override
+  String get startFasting => 'بدء الصيام';
+
+  @override
+  String get timeUntilIftar => 'الوقت حتى الإفطار';
+
+  @override
+  String get timeUntilImsak => 'الوقت حتى الإمساك';
+
+  @override
+  String get showingCachedData => 'عرض البيانات المحفوظة (دون اتصال)';
+
+  @override
+  String get refreshSchedule => 'تحديث المواقيت';
+
+  @override
+  String get kemenagMethod => 'وزارة الشؤون الدينية الإندونيسية';
+
+  @override
+  String get prayerLocationPermissionDesc =>
+      'يتطلب التطبيق إذن الموقع لعرض مواقيت الصلاة الدقيقة بناءً على موقعك.';
 }

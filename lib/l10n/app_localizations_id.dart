@@ -1011,4 +1011,89 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get openSettings => 'Buka Pengaturan';
+
+  @override
+  String get prayerSchedule => 'Jadwal Sholat';
+
+  @override
+  String get prayerTimes => 'Jadwal Sholat';
+
+  @override
+  String get fajr => 'Subuh';
+
+  @override
+  String get sunrise => 'Terbit';
+
+  @override
+  String get dhuhr => 'Dzuhur';
+
+  @override
+  String get asr => 'Ashar';
+
+  @override
+  String get maghrib => 'Maghrib';
+
+  @override
+  String get isha => 'Isya';
+
+  @override
+  String get imsak => 'Imsak';
+
+  @override
+  String get nextPrayer => 'Sholat Berikutnya';
+
+  @override
+  String get inCountdown => 'dalam';
+
+  @override
+  String get tomorrowFajr => 'Subuh Besok';
+
+  @override
+  String get fastingSchedule => 'Jadwal Puasa';
+
+  @override
+  String get fastingToday => 'Jadwal Puasa Hari Ini';
+
+  @override
+  String get fastingRamadhan => 'Puasa Ramadhan';
+
+  @override
+  String get fastingMondayThursday => 'Puasa Sunnah Senin - Kamis';
+
+  @override
+  String get fastingAyyamulBidh => 'Puasa Sunnah Ayyamul Bidh';
+
+  @override
+  String get fastingArafah => 'Puasa Sunnah Arafah';
+
+  @override
+  String get fastingAsyura => 'Puasa Sunnah Asyura';
+
+  @override
+  String get fastingTasuah => 'Puasa Sunnah Tasu\'a';
+
+  @override
+  String get breakFasting => 'Buka Puasa';
+
+  @override
+  String get startFasting => 'Mulai Puasa';
+
+  @override
+  String get timeUntilIftar => 'Menuju Buka Puasa';
+
+  @override
+  String get timeUntilImsak => 'Menuju Imsak';
+
+  @override
+  String get showingCachedData => 'Menampilkan data tersimpan (Offline)';
+
+  @override
+  String get refreshSchedule => 'Perbarui Jadwal';
+
+  @override
+  String get kemenagMethod => 'Kementerian Agama RI';
+
+  @override
+  String get prayerLocationPermissionDesc =>
+      'Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.';
 }
