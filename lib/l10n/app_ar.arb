@@ -361,5 +361,20 @@
   "downloadFailed": "فشل تنزيل المادة",
   "openFile": "فتح الملف",
   "noCoursesFound": "لم يتم العثور على مواد",
-  "lecturer": "المحاضر"
+  "lecturer": "المحاضر",
+  "announcementDetail": "تفاصيل الإعلان",
+  "searchAnnouncementHint": "البحث في عناوين الإعلانات...",
+  "maxNewsLoaded": "الحد الأقصى للأخبار التي يمكن تحميلها هو {count} سطرًا",
+  "@maxNewsLoaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noAnnouncementsFound": "لم يتم العثور على إعلانات",
+  "publisher": "الناشر",
+  "category": "الفئة",
+  "viewImage": "عرض الصورة",
+  "openInBrowser": "فتح في المتصفح"
 }

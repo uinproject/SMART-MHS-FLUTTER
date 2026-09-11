@@ -911,4 +911,30 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noCoursesFound => 'No courses found';
+
+  @override
+  String get announcementDetail => 'Announcement Detail';
+
+  @override
+  String get searchAnnouncementHint => 'Search announcement...';
+
+  @override
+  String maxNewsLoaded(int count) {
+    return 'The maximum news that can be loaded is $count Lines';
+  }
+
+  @override
+  String get noAnnouncementsFound => 'No announcements found';
+
+  @override
+  String get publisher => 'Publisher';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get viewImage => 'View Image';
+
+  @override
+  String get openInBrowser => 'Open in Browser';
 }

@@ -361,5 +361,20 @@
   "downloadFailed": "Failed to download material",
   "openFile": "Open File",
   "noCoursesFound": "No courses found",
-  "lecturer": "Lecturer"
+  "lecturer": "Lecturer",
+  "announcementDetail": "Announcement Detail",
+  "searchAnnouncementHint": "Search announcement...",
+  "maxNewsLoaded": "The maximum news that can be loaded is {count} Lines",
+  "@maxNewsLoaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noAnnouncementsFound": "No announcements found",
+  "publisher": "Publisher",
+  "category": "Category",
+  "viewImage": "View Image",
+  "openInBrowser": "Open in Browser"
 }

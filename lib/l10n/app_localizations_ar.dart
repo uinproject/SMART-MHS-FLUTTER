@@ -906,4 +906,30 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noCoursesFound => 'لم يتم العثور على مواد';
+
+  @override
+  String get announcementDetail => 'تفاصيل الإعلان';
+
+  @override
+  String get searchAnnouncementHint => 'البحث في عناوين الإعلانات...';
+
+  @override
+  String maxNewsLoaded(int count) {
+    return 'الحد الأقصى للأخبار التي يمكن تحميلها هو $count سطرًا';
+  }
+
+  @override
+  String get noAnnouncementsFound => 'لم يتم العثور على إعلانات';
+
+  @override
+  String get publisher => 'الناشر';
+
+  @override
+  String get category => 'الفئة';
+
+  @override
+  String get viewImage => 'عرض الصورة';
+
+  @override
+  String get openInBrowser => 'فتح في المتصفح';
 }

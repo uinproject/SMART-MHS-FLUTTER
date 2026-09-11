@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/home_helpers.dart';
+import '../../../announcement/presentation/pages/announcement_detail_page.dart';
+import '../../../announcement/presentation/pages/announcement_list_page.dart';
 import '../../data/models/pengumuman_response.dart';
 
 class AnnouncementCarousel extends StatefulWidget {
@@ -90,19 +92,36 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
                 style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
               ),
               InkWell(
-                onTap: () {},
-                child: Row(
-                  children: [
-                    Text(l10n.showMore, style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 13)),
-                    const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
-                  ],
+                borderRadius: BorderRadius.circular(8),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const AnnouncementListPage(),
+                    ),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                  child: Row(
+                    children: [
+                      Text(
+                        l10n.showMore,
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 13,
+                        ),
+                      ),
+                      const Icon(Icons.chevron_right, color: AppColors.textSecondary, size: 18),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
         SizedBox(
-          height: 160,
+          height: 165,
           child: PageView.builder(
             controller: _pageController,
             itemCount: widget.announcements.length,
@@ -133,53 +152,75 @@ class _AnnouncementCarouselState extends State<AnnouncementCarousel> {
           ),
         ],
       ),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 6,
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    FormatTanggalIndo.timeAgo(item.tanggal, l10n),
-                    style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    item.judul,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    _stripHtml(item.isi),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary, height: 1.4),
-                  ),
-                ],
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(24),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => AnnouncementDetailPage(pengumuman: item),
               ),
-            ),
-          ),
-          Expanded(
-            flex: 4,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(topRight: Radius.circular(24), bottomRight: Radius.circular(24)),
-              child: Image.network(
-                item.linkPicture,
-                height: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) => Container(
-                  color: const Color(0xFFF1F5F9),
-                  child: const Icon(Icons.campaign, color: AppColors.primary),
+            );
+          },
+          child: Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Padding(
+                  padding: const EdgeInsets.all(18),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        FormatTanggalIndo.timeAgo(item.tanggal, l10n),
+                        style: const TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: AppColors.primary),
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        item.judul,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF1E293B),
+                          height: 1.25,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _stripHtml(item.isi),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontSize: 11.5, color: AppColors.textSecondary, height: 1.3),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
+              Expanded(
+                flex: 4,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(topRight: Radius.circular(24), bottomRight: Radius.circular(24)),
+                  child: Image.network(
+                    item.linkPicture,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: const Color(0xFFF1F5F9),
+                      child: const Center(
+                        child: Icon(Icons.campaign, color: AppColors.primary, size: 36),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

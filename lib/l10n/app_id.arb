@@ -361,5 +361,20 @@
   "downloadFailed": "Gagal mengunduh materi",
   "openFile": "Buka File",
   "noCoursesFound": "Tidak ada mata kuliah ditemukan",
-  "lecturer": "Dosen"
+  "lecturer": "Dosen",
+  "announcementDetail": "Detail Pengumuman",
+  "searchAnnouncementHint": "Cari judul pengumuman...",
+  "maxNewsLoaded": "Maksimal berita yang dapat dimuat adalah {count} Baris",
+  "@maxNewsLoaded": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noAnnouncementsFound": "Tidak ada pengumuman ditemukan",
+  "publisher": "Penerbit",
+  "category": "Kategori",
+  "viewImage": "Lihat Gambar",
+  "openInBrowser": "Buka di Browser"
 }

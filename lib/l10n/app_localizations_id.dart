@@ -914,4 +914,30 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get noCoursesFound => 'Tidak ada mata kuliah ditemukan';
+
+  @override
+  String get announcementDetail => 'Detail Pengumuman';
+
+  @override
+  String get searchAnnouncementHint => 'Cari judul pengumuman...';
+
+  @override
+  String maxNewsLoaded(int count) {
+    return 'Maksimal berita yang dapat dimuat adalah $count Baris';
+  }
+
+  @override
+  String get noAnnouncementsFound => 'Tidak ada pengumuman ditemukan';
+
+  @override
+  String get publisher => 'Penerbit';
+
+  @override
+  String get category => 'Kategori';
+
+  @override
+  String get viewImage => 'Lihat Gambar';
+
+  @override
+  String get openInBrowser => 'Buka di Browser';
 }

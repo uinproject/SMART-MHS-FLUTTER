@@ -278,16 +278,26 @@ class ApiService {
     String? kodeJen,
     String? kodeFak,
     String? kodePst,
+    int? page,
+    String? search,
   }) async {
     try {
+      final queryParams = <String, dynamic>{
+        'unim': nim,
+        'kodejen': kodeJen,
+        'kodefak': kodeFak,
+        'kodepst': kodePst,
+      };
+      if (page != null) {
+        queryParams['page'] = page;
+      }
+      if (search != null && search.trim().isNotEmpty) {
+        queryParams['search'] = search.trim();
+      }
+
       final response = await _dio.get(
         'Pengumumanservices/pengumuman',
-        queryParameters: {
-          'unim': nim,
-          'kodejen': kodeJen,
-          'kodefak': kodeFak,
-          'kodepst': kodePst,
-        },
+        queryParameters: queryParams,
       );
 
       if (response.statusCode == 200) {

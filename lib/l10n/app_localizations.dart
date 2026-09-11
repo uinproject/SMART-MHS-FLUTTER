@@ -1803,6 +1803,54 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Tidak ada mata kuliah ditemukan'**
   String get noCoursesFound;
+
+  /// No description provided for @announcementDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail Pengumuman'**
+  String get announcementDetail;
+
+  /// No description provided for @searchAnnouncementHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari judul pengumuman...'**
+  String get searchAnnouncementHint;
+
+  /// No description provided for @maxNewsLoaded.
+  ///
+  /// In id, this message translates to:
+  /// **'Maksimal berita yang dapat dimuat adalah {count} Baris'**
+  String maxNewsLoaded(int count);
+
+  /// No description provided for @noAnnouncementsFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada pengumuman ditemukan'**
+  String get noAnnouncementsFound;
+
+  /// No description provided for @publisher.
+  ///
+  /// In id, this message translates to:
+  /// **'Penerbit'**
+  String get publisher;
+
+  /// No description provided for @category.
+  ///
+  /// In id, this message translates to:
+  /// **'Kategori'**
+  String get category;
+
+  /// No description provided for @viewImage.
+  ///
+  /// In id, this message translates to:
+  /// **'Lihat Gambar'**
+  String get viewImage;
+
+  /// No description provided for @openInBrowser.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka di Browser'**
+  String get openInBrowser;
 }
 
 class _AppLocalizationsDelegate
