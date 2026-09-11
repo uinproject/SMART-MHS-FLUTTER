@@ -11,20 +11,33 @@ class PresenceScannerPage extends StatefulWidget {
   State<PresenceScannerPage> createState() => _PresenceScannerPageState();
 }
 
-class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsBindingObserver {
-  late MobileScannerController _scannerController;
+class _PresenceScannerPageState extends State<PresenceScannerPage>
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  static const LinearGradient _mainGradient = LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [Color(0xFF003D82), Color(0xFF0056B3)],
+  );
+
+  late final MobileScannerController _scannerController;
+  late final AnimationController _animController;
   bool _isProcessing = false;
-  bool _isTorchOn = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
     _scannerController = MobileScannerController(
       detectionSpeed: DetectionSpeed.noDuplicates,
       facing: CameraFacing.back,
       torchEnabled: false,
     );
+
+    _animController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    )..repeat(reverse: true);
   }
 
   @override
@@ -49,6 +62,7 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _animController.dispose();
     _scannerController.dispose();
     super.dispose();
   }
@@ -60,7 +74,6 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
     for (final barcode in barcodes) {
       final code = barcode.rawValue;
       if (code != null && code.trim().isNotEmpty) {
-        _isProcessing = true;
         _navigateToProcessPage(qrCode: code.trim());
         break;
       }
@@ -68,7 +81,13 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
   }
 
   Future<void> _navigateToProcessPage({String? qrCode, String? shortCode}) async {
-    await _scannerController.stop();
+    if (_isProcessing) return;
+    _isProcessing = true;
+
+    try {
+      await _scannerController.stop();
+    } catch (_) {}
+
     if (!mounted) return;
 
     await Navigator.push(
@@ -85,7 +104,9 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
       setState(() {
         _isProcessing = false;
       });
-      _scannerController.start();
+      try {
+        await _scannerController.start();
+      } catch (_) {}
     }
   }
 
@@ -101,14 +122,14 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
       builder: (modalContext) {
         return Container(
           padding: EdgeInsets.only(
-            bottom: MediaQuery.of(modalContext).viewInsets.bottom + 20,
+            bottom: MediaQuery.of(modalContext).viewInsets.bottom + 24,
             left: 24,
             right: 24,
             top: 16,
           ),
           decoration: const BoxDecoration(
             color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
           ),
           child: Form(
             key: formKey,
@@ -126,18 +147,25 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
                     ),
                   ),
                 ),
-                const SizedBox(height: 18),
+                const SizedBox(height: 20),
                 Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(12),
                       decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(12),
+                        gradient: _mainGradient,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withValues(alpha: 0.25),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
                       child: const Icon(
                         Icons.pin_rounded,
-                        color: AppColors.primary,
+                        color: Colors.white,
                         size: 24,
                       ),
                     ),
@@ -167,32 +195,45 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
                     ),
                   ],
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
                 TextFormField(
                   controller: textController,
                   autofocus: true,
                   textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.text,
                   style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 1.2,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 2.0,
+                    color: AppColors.textPrimary,
                   ),
                   decoration: InputDecoration(
                     hintText: l10n.inputShortCodeHint,
-                    prefixIcon: const Icon(Icons.code_rounded, color: AppColors.primary),
+                    hintStyle: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.normal,
+                      letterSpacing: 0,
+                      color: Colors.grey.shade400,
+                    ),
+                    prefixIcon: const Icon(Icons.dialpad_rounded, color: AppColors.primary),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear_rounded, size: 20, color: Colors.grey),
+                      onPressed: () => textController.clear(),
+                    ),
                     filled: true,
-                    fillColor: AppColors.background,
+                    fillColor: const Color(0xFFF8FAFC),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                     border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(16),
                       borderSide: BorderSide(color: Colors.grey.shade300),
                     ),
                     enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: BorderSide(color: Colors.grey.shade200),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(color: AppColors.primary, width: 1.8),
+                      borderRadius: BorderRadius.circular(16),
+                      borderSide: const BorderSide(color: AppColors.primary, width: 2),
                     ),
                   ),
                   validator: (val) {
@@ -208,30 +249,43 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
                     }
                   },
                 ),
-                const SizedBox(height: 20),
-                ElevatedButton.icon(
-                  onPressed: () {
-                    if (formKey.currentState?.validate() ?? false) {
-                      Navigator.pop(modalContext);
-                      _navigateToProcessPage(shortCode: textController.text.trim());
-                    }
-                  },
-                  icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
-                  label: Text(
-                    l10n.submit,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+                const SizedBox(height: 24),
+                Container(
+                  decoration: BoxDecoration(
+                    gradient: _mainGradient,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.primary.withValues(alpha: 0.3),
+                        blurRadius: 16,
+                        offset: const Offset(0, 6),
+                      ),
+                    ],
                   ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      if (formKey.currentState?.validate() ?? false) {
+                        Navigator.pop(modalContext);
+                        _navigateToProcessPage(shortCode: textController.text.trim());
+                      }
+                    },
+                    icon: const Icon(Icons.arrow_forward_rounded, color: Colors.white),
+                    label: Text(
+                      l10n.submit,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                    elevation: 2,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -249,120 +303,139 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
     final size = MediaQuery.of(context).size;
     final scanBoxSize = size.width * 0.72;
 
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // 1. Mobile Scanner View
-          MobileScanner(
-            controller: _scannerController,
-            onDetect: _onDetect,
-            errorBuilder: (context, error) {
-              return Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.videocam_off_rounded, color: Colors.white70, size: 56),
-                      const SizedBox(height: 16),
-                      Text(
-                        l10n.cameraPermissionDenied,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+    return PopScope(
+      canPop: true,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          toolbarHeight: 70,
+          backgroundColor: const Color(0xFF003D82),
+          elevation: 0,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
           ),
-
-          // 2. Dark Mask Overlay with center transparent cut-out
-          CustomPaint(
-            size: Size(size.width, size.height),
-            painter: _ScannerOverlayPainter(
-              scanBoxSize: scanBoxSize,
-              borderColor: AppColors.primary,
+          title: Text(
+            l10n.scanQrTitle,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          centerTitle: false,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(gradient: _mainGradient),
+          ),
+          actions: [
+            // Flash On / Off Button (using reactive ValueListenableBuilder)
+            ValueListenableBuilder<MobileScannerState>(
+              valueListenable: _scannerController,
+              builder: (context, state, child) {
+                final isTorchOn = state.torchState == TorchState.on;
+                final isTorchAvailable = state.torchState != TorchState.unavailable;
 
-          // 3. Top Action Bar
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Back button
-                  _buildCircleButton(
-                    icon: Icons.arrow_back_ios_new_rounded,
-                    onTap: () => Navigator.pop(context),
+                return IconButton(
+                  tooltip: isTorchOn ? l10n.flashOff : l10n.flashOn,
+                  icon: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: isTorchOn
+                          ? Colors.amberAccent.withValues(alpha: 0.25)
+                          : Colors.white.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
+                      color: isTorchOn ? Colors.amberAccent : Colors.white,
+                      size: 20,
+                    ),
                   ),
-                  // Title
-                  Text(
-                    l10n.scanQrTitle,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(color: Colors.black54, blurRadius: 6),
+                  onPressed: isTorchAvailable
+                      ? () async {
+                          try {
+                            await _scannerController.toggleTorch();
+                          } catch (e) {
+                            debugPrint('Error toggling torch: $e');
+                          }
+                        }
+                      : null,
+                );
+              },
+            ),
+            // Short Code Action Icon in AppBar
+            IconButton(
+              tooltip: l10n.useShortCode,
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.dialpad_rounded,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              onPressed: _showShortCodeBottomSheet,
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+        body: Stack(
+          children: [
+            // 1. Mobile Scanner View
+            MobileScanner(
+              controller: _scannerController,
+              onDetect: _onDetect,
+              errorBuilder: (context, error) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.videocam_off_rounded, color: Colors.white70, size: 56),
+                        const SizedBox(height: 16),
+                        Text(
+                          l10n.cameraPermissionDenied,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(color: Colors.white, fontSize: 14),
+                        ),
                       ],
                     ),
                   ),
-                  // Flash & Switch Camera Buttons
-                  Row(
-                    children: [
-                      _buildCircleButton(
-                        icon: _isTorchOn ? Icons.flash_on_rounded : Icons.flash_off_rounded,
-                        iconColor: _isTorchOn ? Colors.amberAccent : Colors.white,
-                        onTap: () async {
-                          await _scannerController.toggleTorch();
-                          setState(() {
-                            _isTorchOn = !_isTorchOn;
-                          });
-                        },
+                );
+              },
+            ),
+
+            // 2. Viewfinder Overlay with Animated Scanline (IgnorePointer ensures touches pass through)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: AnimatedBuilder(
+                  animation: _animController,
+                  builder: (context, _) {
+                    return CustomPaint(
+                      size: Size(size.width, size.height),
+                      painter: _ScannerOverlayPainter(
+                        scanBoxSize: scanBoxSize,
+                        borderColor: const Color(0xFF38BDF8),
+                        scanProgress: _animController.value,
                       ),
-                      const SizedBox(width: 8),
-                      _buildCircleButton(
-                        icon: Icons.cameraswitch_rounded,
-                        onTap: () => _scannerController.switchCamera(),
-                      ),
-                    ],
-                  ),
-                ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
 
-          // 4. Instructions below scanner box
-          Positioned(
-            top: (size.height / 2) + (scanBoxSize / 2) + 24,
-            left: 32,
-            right: 32,
-            child: Text(
-              l10n.scanQrInstruction,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                shadows: [
-                  Shadow(color: Colors.black87, blurRadius: 8),
-                ],
-              ),
-            ),
-          ),
-
-          // 5. Bottom Alternate: Short Code Card
-          Positioned(
-            bottom: 32,
-            left: 20,
-            right: 20,
-            child: SafeArea(
+            // 3. Instruction Chip below scanner box
+            Positioned(
+              top: (size.height / 2) + (scanBoxSize / 2) - 30,
+              left: 28,
+              right: 28,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                 decoration: BoxDecoration(
                   color: Colors.black.withValues(alpha: 0.65),
                   borderRadius: BorderRadius.circular(20),
@@ -370,83 +443,144 @@ class _PresenceScannerPageState extends State<PresenceScannerPage> with WidgetsB
                 ),
                 child: Row(
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.12),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Icon(
-                        Icons.pin_outlined,
-                        color: Colors.white,
-                        size: 22,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
+                    const Icon(Icons.qr_code_scanner_rounded, color: Color(0xFF38BDF8), size: 20),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Text(
-                        l10n.useShortCode,
+                        l10n.scanQrInstruction,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: _showShortCodeBottomSheet,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primary,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: Text(
-                        l10n.enterNim.isNotEmpty ? l10n.useShortCode.split(' ').first : 'Input',
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildCircleButton({
-    required IconData icon,
-    required VoidCallback onTap,
-    Color iconColor = Colors.white,
-  }) {
-    return Material(
-      color: Colors.black.withValues(alpha: 0.45),
-      shape: const CircleBorder(),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Icon(icon, color: iconColor, size: 20),
+            // 4. Prominent Bottom Menu: Short Code Input Card
+            Positioned(
+              bottom: 24,
+              left: 16,
+              right: 16,
+              child: SafeArea(
+                top: false,
+                child: InkWell(
+                  onTap: _showShortCodeBottomSheet,
+                  borderRadius: BorderRadius.circular(24),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.18),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            gradient: _mainGradient,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.primary.withValues(alpha: 0.25),
+                                blurRadius: 10,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Icon(
+                            Icons.dialpad_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                l10n.useShortCode,
+                                style: const TextStyle(
+                                  color: AppColors.textPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                l10n.cantScanQrQuestion,
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: AppColors.primary.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Input',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(width: 4),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                size: 12,
+                                color: AppColors.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 }
 
-/// Custom painter to draw the dark semi-transparent mask and corner borders around the scan box
+/// Custom painter to draw the dark semi-transparent mask, corner accents, and animated laser line
 class _ScannerOverlayPainter extends CustomPainter {
   final double scanBoxSize;
   final Color borderColor;
+  final double scanProgress;
 
   _ScannerOverlayPainter({
     required this.scanBoxSize,
     required this.borderColor,
+    required this.scanProgress,
   });
 
   @override
@@ -454,9 +588,9 @@ class _ScannerOverlayPainter extends CustomPainter {
     final backgroundPaint = Paint()..color = Colors.black.withValues(alpha: 0.55);
 
     final left = (size.width - scanBoxSize) / 2;
-    final top = (size.height - scanBoxSize) / 2;
+    final top = (size.height - scanBoxSize) / 2 - 40; // Slight upward offset for aesthetic balance
     final rect = Rect.fromLTWH(left, top, scanBoxSize, scanBoxSize);
-    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(20));
+    final rrect = RRect.fromRectAndRadius(rect, const Radius.circular(24));
 
     // Draw background mask with cut out
     final path = Path()
@@ -470,30 +604,54 @@ class _ScannerOverlayPainter extends CustomPainter {
     final cornerPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.0
+      ..strokeWidth = 4.5
       ..strokeCap = StrokeCap.round;
 
-    const cornerLength = 28.0;
+    const cornerLength = 32.0;
 
     // Top Left
-    canvas.drawLine(Offset(left + 6, top), Offset(left + 6 + cornerLength, top), cornerPaint);
-    canvas.drawLine(Offset(left, top + 6), Offset(left, top + 6 + cornerLength), cornerPaint);
+    canvas.drawLine(Offset(left + 8, top), Offset(left + 8 + cornerLength, top), cornerPaint);
+    canvas.drawLine(Offset(left, top + 8), Offset(left, top + 8 + cornerLength), cornerPaint);
 
     // Top Right
-    canvas.drawLine(Offset(left + scanBoxSize - 6 - cornerLength, top), Offset(left + scanBoxSize - 6, top), cornerPaint);
-    canvas.drawLine(Offset(left + scanBoxSize, top + 6), Offset(left + scanBoxSize, top + 6 + cornerLength), cornerPaint);
+    canvas.drawLine(Offset(left + scanBoxSize - 8 - cornerLength, top), Offset(left + scanBoxSize - 8, top), cornerPaint);
+    canvas.drawLine(Offset(left + scanBoxSize, top + 8), Offset(left + scanBoxSize, top + 8 + cornerLength), cornerPaint);
 
     // Bottom Left
-    canvas.drawLine(Offset(left + 6, top + scanBoxSize), Offset(left + 6 + cornerLength, top + scanBoxSize), cornerPaint);
-    canvas.drawLine(Offset(left, top + scanBoxSize - 6 - cornerLength), Offset(left, top + scanBoxSize - 6), cornerPaint);
+    canvas.drawLine(Offset(left + 8, top + scanBoxSize), Offset(left + 8 + cornerLength, top + scanBoxSize), cornerPaint);
+    canvas.drawLine(Offset(left, top + scanBoxSize - 8 - cornerLength), Offset(left, top + scanBoxSize - 8), cornerPaint);
 
     // Bottom Right
-    canvas.drawLine(Offset(left + scanBoxSize - 6 - cornerLength, top + scanBoxSize), Offset(left + scanBoxSize - 6, top + scanBoxSize), cornerPaint);
-    canvas.drawLine(Offset(left + scanBoxSize, top + scanBoxSize - 6 - cornerLength), Offset(left + scanBoxSize, top + scanBoxSize - 6), cornerPaint);
+    canvas.drawLine(Offset(left + scanBoxSize - 8 - cornerLength, top + scanBoxSize), Offset(left + scanBoxSize - 8, top + scanBoxSize), cornerPaint);
+    canvas.drawLine(Offset(left + scanBoxSize, top + scanBoxSize - 8 - cornerLength), Offset(left + scanBoxSize, top + scanBoxSize - 8), cornerPaint);
+
+    // Draw Animated Laser Scan Line
+    final laserY = top + (scanBoxSize * scanProgress);
+    final laserPaint = Paint()
+      ..shader = LinearGradient(
+        colors: [
+          borderColor.withValues(alpha: 0.0),
+          borderColor.withValues(alpha: 0.85),
+          Colors.white,
+          borderColor.withValues(alpha: 0.85),
+          borderColor.withValues(alpha: 0.0),
+        ],
+        stops: const [0.0, 0.25, 0.5, 0.75, 1.0],
+      ).createShader(Rect.fromLTWH(left + 16, laserY, scanBoxSize - 32, 3))
+      ..strokeWidth = 2.5
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(
+      Offset(left + 16, laserY),
+      Offset(left + scanBoxSize - 16, laserY),
+      laserPaint,
+    );
   }
 
   @override
   bool shouldRepaint(covariant _ScannerOverlayPainter oldDelegate) {
-    return oldDelegate.scanBoxSize != scanBoxSize || oldDelegate.borderColor != borderColor;
+    return oldDelegate.scanProgress != scanProgress ||
+        oldDelegate.scanBoxSize != scanBoxSize ||
+        oldDelegate.borderColor != borderColor;
   }
 }
