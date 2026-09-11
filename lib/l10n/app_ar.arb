@@ -427,5 +427,14 @@
   "refreshSchedule": "تحديث المواقيت",
   "kemenagMethod": "وزارة الشؤون الدينية الإندونيسية",
   "prayerLocationPermissionDesc": "يتطلب التطبيق إذن الموقع لعرض مواقيت الصلاة الدقيقة بناءً على موقعك.",
-  "prayerShortLabel": "الصلاة"
+  "prayerShortLabel": "الصلاة",
+  "csListTitle": "قائمة الخدمات",
+  "csSubtitle": "نحن مستعدون للمساعدة، اختر الخدمة وفقاً لمشكلتك..",
+  "csReadyToServe": "جاهز للخدمة",
+  "csServiceClosed": "الخدمة مغلقة",
+  "csChatWa": "محادثة واتساب",
+  "csClosedReasonPrefix": "* قد لا يتم الرد على رسالتك فوراً بسبب",
+  "csClosedReasonSuffix": "اترك رسالة وسنرد خلال ساعات العمل.",
+  "whatsappNotFound": "لم يتم العثور على تطبيق واتساب",
+  "emptyCsList": "لا توجد قائمة خدمات متاحة حالياً"
 }

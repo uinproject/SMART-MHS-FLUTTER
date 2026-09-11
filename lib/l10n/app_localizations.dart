@@ -2157,6 +2157,60 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Sholat'**
   String get prayerShortLabel;
+
+  /// No description provided for @csListTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Daftar Layanan'**
+  String get csListTitle;
+
+  /// No description provided for @csSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kami Siap Membantu, pilih layanan sesuai dengan masalahmu..'**
+  String get csSubtitle;
+
+  /// No description provided for @csReadyToServe.
+  ///
+  /// In id, this message translates to:
+  /// **'Siap Melayani'**
+  String get csReadyToServe;
+
+  /// No description provided for @csServiceClosed.
+  ///
+  /// In id, this message translates to:
+  /// **'Pelayanan Tutup'**
+  String get csServiceClosed;
+
+  /// No description provided for @csChatWa.
+  ///
+  /// In id, this message translates to:
+  /// **'Chat WhatsApp'**
+  String get csChatWa;
+
+  /// No description provided for @csClosedReasonPrefix.
+  ///
+  /// In id, this message translates to:
+  /// **'* Mungkin pesan anda tidak segera dibalas karena'**
+  String get csClosedReasonPrefix;
+
+  /// No description provided for @csClosedReasonSuffix.
+  ///
+  /// In id, this message translates to:
+  /// **'Tinggalkan pesan dan kami akan membalas pada jam kerja.'**
+  String get csClosedReasonSuffix;
+
+  /// No description provided for @whatsappNotFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Aplikasi WhatsApp tidak ditemukan'**
+  String get whatsappNotFound;
+
+  /// No description provided for @emptyCsList.
+  ///
+  /// In id, this message translates to:
+  /// **'Belum ada daftar layanan yang tersedia'**
+  String get emptyCsList;
 }
 
 class _AppLocalizationsDelegate

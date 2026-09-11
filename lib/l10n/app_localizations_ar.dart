@@ -1090,4 +1090,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get prayerShortLabel => 'الصلاة';
+
+  @override
+  String get csListTitle => 'قائمة الخدمات';
+
+  @override
+  String get csSubtitle => 'نحن مستعدون للمساعدة، اختر الخدمة وفقاً لمشكلتك..';
+
+  @override
+  String get csReadyToServe => 'جاهز للخدمة';
+
+  @override
+  String get csServiceClosed => 'الخدمة مغلقة';
+
+  @override
+  String get csChatWa => 'محادثة واتساب';
+
+  @override
+  String get csClosedReasonPrefix => '* قد لا يتم الرد على رسالتك فوراً بسبب';
+
+  @override
+  String get csClosedReasonSuffix => 'اترك رسالة وسنرد خلال ساعات العمل.';
+
+  @override
+  String get whatsappNotFound => 'لم يتم العثور على تطبيق واتساب';
+
+  @override
+  String get emptyCsList => 'لا توجد قائمة خدمات متاحة حالياً';
 }

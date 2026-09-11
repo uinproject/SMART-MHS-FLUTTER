@@ -427,5 +427,14 @@
   "refreshSchedule": "Perbarui Jadwal",
   "kemenagMethod": "Kementerian Agama RI",
   "prayerLocationPermissionDesc": "Aplikasi memerlukan izin lokasi untuk menampilkan jadwal sholat yang akurat sesuai lokasi Anda.",
-  "prayerShortLabel": "Sholat"
+  "prayerShortLabel": "Sholat",
+  "csListTitle": "Daftar Layanan",
+  "csSubtitle": "Kami Siap Membantu, pilih layanan sesuai dengan masalahmu..",
+  "csReadyToServe": "Siap Melayani",
+  "csServiceClosed": "Pelayanan Tutup",
+  "csChatWa": "Chat WhatsApp",
+  "csClosedReasonPrefix": "* Mungkin pesan anda tidak segera dibalas karena",
+  "csClosedReasonSuffix": "Tinggalkan pesan dan kami akan membalas pada jam kerja.",
+  "whatsappNotFound": "Aplikasi WhatsApp tidak ditemukan",
+  "emptyCsList": "Belum ada daftar layanan yang tersedia"
 }

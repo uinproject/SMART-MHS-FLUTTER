@@ -30,6 +30,7 @@ import '../../features/attendance/data/models/attendance_courses_response.dart';
 import '../../features/attendance/data/models/attendance_list_response.dart';
 import '../../features/attendance/data/models/attendance_detail_response.dart';
 import '../../features/news/data/models/berita_response.dart';
+import '../../features/helpdesk/data/models/cs_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -1643,6 +1644,54 @@ class ApiService {
     }
 
     return savedPath;
+  }
+
+  /// Get list of Customer Service / Helpdesk officers
+  Future<CsResponse> getCsList({
+    required String kodeFak,
+    required String kodePst,
+    String? language,
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Csservices/cs',
+        queryParameters: {
+          'kode_fak': kodeFak,
+          'kode_pst': kodePst,
+          if (language != null) 'language': language,
+        },
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return CsResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return CsResponse.fromJson(decoded);
+      }
+      return _getFallbackCsResponse('Format respon tidak sesuai');
+    } catch (e) {
+      return _getFallbackCsResponse('Terjadi kendala jaringan');
+    }
+  }
+
+  CsResponse _getFallbackCsResponse(String message) {
+    return CsResponse(
+      success: true,
+      message: message,
+      data: [
+        CsDetail(
+          nowa: '+6285643008884',
+          namaadmin: 'Maulana Ayub',
+          linkimageprofil:
+              'https://akademik2.uinsalatiga.ac.id/media/images/logosmartmobilemhs/fotodeveloper1by1.JPG',
+          namabagian: 'Teknologi Informasi & Pangkalan Data',
+          jamoperasional: '09.00 - 15.00',
+          layanan: 'Kendala Teknis Aplikasi (error bug)',
+          online: false,
+          keteranganhari: 'ok jam kerja',
+        ),
+      ],
+    );
   }
 }
 

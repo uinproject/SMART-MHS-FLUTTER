@@ -1099,4 +1099,34 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get prayerShortLabel => 'Sholat';
+
+  @override
+  String get csListTitle => 'Daftar Layanan';
+
+  @override
+  String get csSubtitle =>
+      'Kami Siap Membantu, pilih layanan sesuai dengan masalahmu..';
+
+  @override
+  String get csReadyToServe => 'Siap Melayani';
+
+  @override
+  String get csServiceClosed => 'Pelayanan Tutup';
+
+  @override
+  String get csChatWa => 'Chat WhatsApp';
+
+  @override
+  String get csClosedReasonPrefix =>
+      '* Mungkin pesan anda tidak segera dibalas karena';
+
+  @override
+  String get csClosedReasonSuffix =>
+      'Tinggalkan pesan dan kami akan membalas pada jam kerja.';
+
+  @override
+  String get whatsappNotFound => 'Aplikasi WhatsApp tidak ditemukan';
+
+  @override
+  String get emptyCsList => 'Belum ada daftar layanan yang tersedia';
 }

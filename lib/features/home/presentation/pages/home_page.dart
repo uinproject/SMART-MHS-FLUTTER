@@ -14,6 +14,7 @@ import 'package:smartmahsiswaflutter/features/auth/presentation/pages/login_scre
 import 'package:smartmahsiswaflutter/features/edom/presentation/pages/edom_semesters_page.dart';
 import '../../../../core/utils/device_utils.dart';
 import '../../../../core/widgets/action_required_dialog.dart';
+import '../../../helpdesk/presentation/pages/cs_list_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -540,21 +541,12 @@ class _HomePageState extends State<HomePage>
               iconBgColor: const Color(0xFFD1FAE5),
               title: 'WhatsApp Helpdesk',
               subtitle: 'Layanan cepat via WhatsApp resmi',
-              onTap: () async {
+              onTap: () {
                 Navigator.pop(context);
-                final uri = Uri.parse(
-                    'https://wa.me/6281234567890?text=Halo%20Admin%20Smart%20Mahasiswa,%20saya%20membutuhkan%20bantuan%20terkait%20aplikasi');
-                try {
-                  final launched = await launchUrl(uri,
-                      mode: LaunchMode.externalApplication);
-                  if (!launched) {
-                    await launchUrl(uri);
-                  }
-                } catch (_) {
-                  try {
-                    await launchUrl(uri);
-                  } catch (_) {}
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const CsListPage()),
+                );
               },
             ),
             const SizedBox(height: 12),

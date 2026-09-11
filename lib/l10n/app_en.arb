@@ -427,5 +427,14 @@
   "refreshSchedule": "Refresh Schedule",
   "kemenagMethod": "Ministry of Religious Affairs RI",
   "prayerLocationPermissionDesc": "The app requires location permission to display accurate prayer times based on your location.",
-  "prayerShortLabel": "Prayer"
+  "prayerShortLabel": "Prayer",
+  "csListTitle": "CS List",
+  "csSubtitle": "We are ready to help, choose the service according to your problem..",
+  "csReadyToServe": "Ready to Serve",
+  "csServiceClosed": "Service Closed",
+  "csChatWa": "Chat WhatsApp",
+  "csClosedReasonPrefix": "* Maybe your message was not answered immediately because",
+  "csClosedReasonSuffix": "Leave a message and we will reply during business hours.",
+  "whatsappNotFound": "WhatsApp application not found",
+  "emptyCsList": "No service list available yet"
 }

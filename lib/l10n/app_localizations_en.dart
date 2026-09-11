@@ -1096,4 +1096,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get prayerShortLabel => 'Prayer';
+
+  @override
+  String get csListTitle => 'CS List';
+
+  @override
+  String get csSubtitle =>
+      'We are ready to help, choose the service according to your problem..';
+
+  @override
+  String get csReadyToServe => 'Ready to Serve';
+
+  @override
+  String get csServiceClosed => 'Service Closed';
+
+  @override
+  String get csChatWa => 'Chat WhatsApp';
+
+  @override
+  String get csClosedReasonPrefix =>
+      '* Maybe your message was not answered immediately because';
+
+  @override
+  String get csClosedReasonSuffix =>
+      'Leave a message and we will reply during business hours.';
+
+  @override
+  String get whatsappNotFound => 'WhatsApp application not found';
+
+  @override
+  String get emptyCsList => 'No service list available yet';
 }
