@@ -343,68 +343,42 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
                   _buildPaidPill(l10n),
                 ],
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
               Row(
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          item.tanggalbayar,
-                          style: const TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 11.5,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            format.format(item.jumlah),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w900,
-                              color: AppColors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
+                  const Icon(
+                    Icons.calendar_today_rounded,
+                    size: 13,
+                    color: AppColors.textSecondary,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    item.tanggalbayar,
+                    style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11.5,
                     ),
                   ),
-                  if (item.linkKuitansi.isNotEmpty)
-                    _buildDownloadButton(l10n, item),
                 ],
               ),
-              if (_isDownloading[item.semester.toString()] == true) ...[
-                const SizedBox(height: 12),
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: LinearProgressIndicator(
-                    value: _downloadProgress[item.semester.toString()] ?? 0.0,
-                    backgroundColor: Colors.grey.shade100,
-                    valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
-                    minHeight: 5,
+              const SizedBox(height: 4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  format.format(item.jumlah),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.primary,
                   ),
                 ),
-                const SizedBox(height: 6),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      l10n.downloadingReceipt,
-                      style: const TextStyle(fontSize: 10.5, color: AppColors.textSecondary),
-                    ),
-                    Text(
-                      '${((_downloadProgress[item.semester.toString()] ?? 0.0) * 100).toInt()}%',
-                      style: const TextStyle(
-                        fontSize: 10.5,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                  ],
-                ),
+              ),
+              if (item.linkKuitansi.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                const Divider(height: 1, color: Color(0xFFF1F5F9)),
+                const SizedBox(height: 14),
+                _buildDownloadSection(l10n, item),
               ],
             ],
           ),
@@ -446,85 +420,105 @@ class _PaymentHistoryPageState extends State<PaymentHistoryPage> {
     );
   }
 
-  Widget _buildDownloadButton(AppLocalizations l10n, HistoryItem item) {
+  Widget _buildDownloadSection(AppLocalizations l10n, HistoryItem item) {
     final key = item.semester.toString();
     final bool isDownloading = _isDownloading[key] == true;
+    final double progress = _downloadProgress[key] ?? 0.0;
     final String? downloadedPath = _downloadedPaths[key];
 
-    if (downloadedPath != null) {
-      return Material(
-        color: AppColors.success.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(10),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () => OpenFilex.open(downloadedPath),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.file_open_rounded,
-                  size: 15,
-                  color: AppColors.success,
-                ),
-                const SizedBox(width: 5),
-                Text(
-                  l10n.openFile,
-                  style: const TextStyle(
-                    color: AppColors.success,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        // Progress bar + persentase (tampil saat sedang mengunduh)
+        if (isDownloading) ...[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(6),
+            child: LinearProgressIndicator(
+              value: progress,
+              backgroundColor: Colors.grey.shade200,
+              valueColor: const AlwaysStoppedAnimation<Color>(AppColors.primary),
+              minHeight: 6,
             ),
           ),
-        ),
-      );
-    }
-
-    return Material(
-      color: AppColors.primary.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(10),
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: isDownloading ? null : () => _downloadReceipt(item),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
+          const SizedBox(height: 6),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              if (isDownloading)
-                const SizedBox(
-                  width: 14,
-                  height: 14,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-                  ),
-                )
-              else
-                const Icon(
-                  Icons.download_rounded,
-                  size: 16,
-                  color: AppColors.primary,
-                ),
-              const SizedBox(width: 6),
               Text(
-                isDownloading
-                    ? '${((_downloadProgress[key] ?? 0.0) * 100).toInt()}%'
-                    : l10n.downloadReceipt,
+                l10n.downloadingReceipt,
+                style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+              ),
+              Text(
+                '${(progress * 100).toInt()}%',
                 style: const TextStyle(
-                  color: AppColors.primary,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: FontWeight.bold,
+                  color: AppColors.primary,
                 ),
               ),
             ],
           ),
-        ),
-      ),
+          const SizedBox(height: 10),
+        ],
+
+        // Tombol: Buka File (setelah selesai) atau Unduh Kuitansi
+        if (downloadedPath != null)
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => OpenFilex.open(downloadedPath),
+              icon: const Icon(Icons.file_open_rounded, size: 18, color: Colors.white),
+              label: Text(
+                l10n.openFile,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.success,
+                padding: const EdgeInsets.symmetric(vertical: 11),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          )
+        else
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: isDownloading ? null : () => _downloadReceipt(item),
+              icon: isDownloading
+                  ? const SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                  : const Icon(Icons.download_rounded, size: 18, color: Colors.white),
+              label: Text(
+                l10n.downloadReceipt,
+                style: const TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.6),
+                padding: const EdgeInsets.symmetric(vertical: 11),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+            ),
+          ),
+      ],
     );
   }
 }
