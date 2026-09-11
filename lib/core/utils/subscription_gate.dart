@@ -10,6 +10,7 @@ class SubscriptionGateFeatures {
   static const String penawaranMk = 'pmk@114';
   static const String edom = 'ed@118';
   static const String khs = 'khs@116';
+  static const String attendance = 'khd@113';
 }
 
 /// Port of the legacy `SubscriptionUtils.checkSubscription` — shows an

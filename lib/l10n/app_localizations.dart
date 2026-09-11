@@ -1689,6 +1689,120 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Izin kamera diperlukan untuk memindai QR code presensi.'**
   String get cameraPermissionDenied;
+
+  /// No description provided for @attendanceTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Riwayat Kehadiran'**
+  String get attendanceTitle;
+
+  /// No description provided for @searchCourseHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari mata kuliah atau dosen...'**
+  String get searchCourseHint;
+
+  /// No description provided for @overallAttendanceSummary.
+  ///
+  /// In id, this message translates to:
+  /// **'Ringkasan Kehadiran'**
+  String get overallAttendanceSummary;
+
+  /// No description provided for @totalCourses.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Mata Kuliah'**
+  String get totalCourses;
+
+  /// No description provided for @totalMeetings.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Pertemuan'**
+  String get totalMeetings;
+
+  /// No description provided for @totalAttendance.
+  ///
+  /// In id, this message translates to:
+  /// **'Total Kehadiran'**
+  String get totalAttendance;
+
+  /// No description provided for @attendancePercentage.
+  ///
+  /// In id, this message translates to:
+  /// **'Persentase Kehadiran'**
+  String get attendancePercentage;
+
+  /// No description provided for @attendanceDetailTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Rincian Kehadiran'**
+  String get attendanceDetailTitle;
+
+  /// No description provided for @meetingDetailTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail Pertemuan'**
+  String get meetingDetailTitle;
+
+  /// No description provided for @present.
+  ///
+  /// In id, this message translates to:
+  /// **'Hadir'**
+  String get present;
+
+  /// No description provided for @absent.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak Hadir'**
+  String get absent;
+
+  /// No description provided for @lectureMaterials.
+  ///
+  /// In id, this message translates to:
+  /// **'Materi Perkuliahan'**
+  String get lectureMaterials;
+
+  /// No description provided for @noMaterials.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada materi yang diunggah'**
+  String get noMaterials;
+
+  /// No description provided for @downloadMaterial.
+  ///
+  /// In id, this message translates to:
+  /// **'Unduh Materi'**
+  String get downloadMaterial;
+
+  /// No description provided for @downloadingMaterial.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengunduh materi...'**
+  String get downloadingMaterial;
+
+  /// No description provided for @downloadSuccess.
+  ///
+  /// In id, this message translates to:
+  /// **'Materi berhasil diunduh'**
+  String get downloadSuccess;
+
+  /// No description provided for @downloadFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal mengunduh materi'**
+  String get downloadFailed;
+
+  /// No description provided for @openFile.
+  ///
+  /// In id, this message translates to:
+  /// **'Buka File'**
+  String get openFile;
+
+  /// No description provided for @noCoursesFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada mata kuliah ditemukan'**
+  String get noCoursesFound;
 }
 
 class _AppLocalizationsDelegate

@@ -849,4 +849,61 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get cameraPermissionDenied =>
       'إذن الكاميرا مطلوب لمسح رمز الاستجابة السريعة للحضور.';
+
+  @override
+  String get attendanceTitle => 'سجل الحضور';
+
+  @override
+  String get searchCourseHint => 'ابحث عن المادة أو المحاضر...';
+
+  @override
+  String get overallAttendanceSummary => 'ملخص الحضور';
+
+  @override
+  String get totalCourses => 'إجمالي المواد';
+
+  @override
+  String get totalMeetings => 'إجمالي الجلسات';
+
+  @override
+  String get totalAttendance => 'إجمالي الحضور';
+
+  @override
+  String get attendancePercentage => 'نسبة الحضور';
+
+  @override
+  String get attendanceDetailTitle => 'تفاصيل الحضور';
+
+  @override
+  String get meetingDetailTitle => 'تفاصيل الجلسة';
+
+  @override
+  String get present => 'حاضر';
+
+  @override
+  String get absent => 'غائب';
+
+  @override
+  String get lectureMaterials => 'مواد المحاضرة';
+
+  @override
+  String get noMaterials => 'لا توجد مواد مرفوعة';
+
+  @override
+  String get downloadMaterial => 'تنزيل المادة';
+
+  @override
+  String get downloadingMaterial => 'جارٍ تنزيل المادة...';
+
+  @override
+  String get downloadSuccess => 'تم تنزيل المادة بنجاح';
+
+  @override
+  String get downloadFailed => 'فشل تنزيل المادة';
+
+  @override
+  String get openFile => 'فتح الملف';
+
+  @override
+  String get noCoursesFound => 'لم يتم العثور على مواد';
 }

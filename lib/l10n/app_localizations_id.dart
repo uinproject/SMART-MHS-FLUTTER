@@ -857,4 +857,61 @@ class AppLocalizationsId extends AppLocalizations {
   @override
   String get cameraPermissionDenied =>
       'Izin kamera diperlukan untuk memindai QR code presensi.';
+
+  @override
+  String get attendanceTitle => 'Riwayat Kehadiran';
+
+  @override
+  String get searchCourseHint => 'Cari mata kuliah atau dosen...';
+
+  @override
+  String get overallAttendanceSummary => 'Ringkasan Kehadiran';
+
+  @override
+  String get totalCourses => 'Total Mata Kuliah';
+
+  @override
+  String get totalMeetings => 'Total Pertemuan';
+
+  @override
+  String get totalAttendance => 'Total Kehadiran';
+
+  @override
+  String get attendancePercentage => 'Persentase Kehadiran';
+
+  @override
+  String get attendanceDetailTitle => 'Rincian Kehadiran';
+
+  @override
+  String get meetingDetailTitle => 'Detail Pertemuan';
+
+  @override
+  String get present => 'Hadir';
+
+  @override
+  String get absent => 'Tidak Hadir';
+
+  @override
+  String get lectureMaterials => 'Materi Perkuliahan';
+
+  @override
+  String get noMaterials => 'Tidak ada materi yang diunggah';
+
+  @override
+  String get downloadMaterial => 'Unduh Materi';
+
+  @override
+  String get downloadingMaterial => 'Mengunduh materi...';
+
+  @override
+  String get downloadSuccess => 'Materi berhasil diunduh';
+
+  @override
+  String get downloadFailed => 'Gagal mengunduh materi';
+
+  @override
+  String get openFile => 'Buka File';
+
+  @override
+  String get noCoursesFound => 'Tidak ada mata kuliah ditemukan';
 }

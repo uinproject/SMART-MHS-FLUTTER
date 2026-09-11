@@ -854,4 +854,61 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cameraPermissionDenied =>
       'Camera permission is required to scan attendance QR code.';
+
+  @override
+  String get attendanceTitle => 'Attendance History';
+
+  @override
+  String get searchCourseHint => 'Search course or lecturer...';
+
+  @override
+  String get overallAttendanceSummary => 'Attendance Summary';
+
+  @override
+  String get totalCourses => 'Total Courses';
+
+  @override
+  String get totalMeetings => 'Total Meetings';
+
+  @override
+  String get totalAttendance => 'Total Attendance';
+
+  @override
+  String get attendancePercentage => 'Attendance Percentage';
+
+  @override
+  String get attendanceDetailTitle => 'Attendance Details';
+
+  @override
+  String get meetingDetailTitle => 'Meeting Details';
+
+  @override
+  String get present => 'Present';
+
+  @override
+  String get absent => 'Absent';
+
+  @override
+  String get lectureMaterials => 'Lecture Materials';
+
+  @override
+  String get noMaterials => 'No materials uploaded';
+
+  @override
+  String get downloadMaterial => 'Download Material';
+
+  @override
+  String get downloadingMaterial => 'Downloading material...';
+
+  @override
+  String get downloadSuccess => 'Material downloaded successfully';
+
+  @override
+  String get downloadFailed => 'Failed to download material';
+
+  @override
+  String get openFile => 'Open File';
+
+  @override
+  String get noCoursesFound => 'No courses found';
 }

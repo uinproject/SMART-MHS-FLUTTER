@@ -26,6 +26,9 @@ import '../../features/academic_history/data/models/riwayat_akademik_response.da
 import '../utils/presence_constants.dart';
 import '../../features/presence/data/models/presence_verification_response.dart';
 import '../../features/presence/data/models/presence_save_response.dart';
+import '../../features/attendance/data/models/attendance_courses_response.dart';
+import '../../features/attendance/data/models/attendance_list_response.dart';
+import '../../features/attendance/data/models/attendance_detail_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -1378,4 +1381,182 @@ class ApiService {
       return PresenceSaveResponse(success: false, message: e.toString());
     }
   }
+
+  /// Get list of courses for attendance history
+  Future<AttendanceCoursesResponse> getAttendanceCourses({
+    required String nim,
+    required String language,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}list_all_makul_absensi',
+        data: FormData.fromMap({
+          'unim': nim,
+          'language': language,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return AttendanceCoursesResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return AttendanceCoursesResponse.fromJson(decoded);
+      }
+      return AttendanceCoursesResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+        data: [],
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return AttendanceCoursesResponse(success: false, message: msg, data: []);
+    } catch (e) {
+      return AttendanceCoursesResponse(success: false, message: e.toString(), data: []);
+    }
+  }
+
+  /// Get attendance history list for a specific course
+  Future<AttendanceListResponse> getAttendanceListPerCourse({
+    required String nim,
+    required int semester,
+    required String idAbsensi,
+    required String kodeMk,
+    required String language,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}rekap_kehadiran_mhs',
+        data: FormData.fromMap({
+          'unim': nim,
+          'semester': semester,
+          'idabsensi': idAbsensi,
+          'kode_makul': kodeMk,
+          'language': language,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return AttendanceListResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return AttendanceListResponse.fromJson(decoded);
+      }
+      return AttendanceListResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+        data: [],
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return AttendanceListResponse(success: false, message: msg, data: []);
+    } catch (e) {
+      return AttendanceListResponse(success: false, message: e.toString(), data: []);
+    }
+  }
+
+  /// Get meeting detail including uploaded lecture materials
+  Future<AttendanceDetailResponse> getAttendanceDetailMeeting({
+    required String nim,
+    required int semester,
+    required String idAbsensi,
+    required String kodeMk,
+    required int pertemuanKe,
+    required String language,
+  }) async {
+    try {
+      final response = await _dio.post(
+        '${PresenceConstants.baseUrl}detail_absensi',
+        data: FormData.fromMap({
+          'unim': nim,
+          'semester': semester,
+          'idabsensi': idAbsensi,
+          'kode_makul': kodeMk,
+          'pertemuanke': pertemuanKe,
+          'language': language,
+        }),
+        options: Options(
+          headers: {
+            'Authorization': PresenceConstants.authHeader,
+            'SIMONA-API-KEY': PresenceConstants.simonaApiKey,
+          },
+        ),
+      );
+
+      if (response.data is Map<String, dynamic>) {
+        return AttendanceDetailResponse.fromJson(response.data);
+      } else if (response.data is String) {
+        final decoded = json.decode(response.data);
+        return AttendanceDetailResponse.fromJson(decoded);
+      }
+      return AttendanceDetailResponse(
+        success: false,
+        message: 'Format respon tidak sesuai',
+        data: null,
+      );
+    } on DioException catch (e) {
+      final msg = e.response?.data?['message']?.toString() ??
+          e.message ??
+          'Terjadi kesalahan koneksi';
+      return AttendanceDetailResponse(success: false, message: msg, data: null);
+    } catch (e) {
+      return AttendanceDetailResponse(success: false, message: e.toString(), data: null);
+    }
+  }
+
+  /// Download a lecture material file with progress tracking
+  Future<String> downloadMaterialFile({
+    required String url,
+    required String fileName,
+    void Function(int received, int total)? onReceiveProgress,
+  }) async {
+    final cleanUrl = Uri.decodeFull(url.replaceAll('\\/', '/'));
+    String? savedPath;
+
+    if (Platform.isAndroid) {
+      final publicDownloadDir = Directory('/storage/emulated/0/Download');
+      if (await publicDownloadDir.exists()) {
+        final target = '${publicDownloadDir.path}/$fileName';
+        try {
+          await _dio.download(
+            cleanUrl,
+            target,
+            onReceiveProgress: onReceiveProgress,
+          );
+          savedPath = target;
+        } catch (_) {
+          savedPath = null;
+        }
+      }
+    }
+
+    if (savedPath == null) {
+      final appDir = await getApplicationDocumentsDirectory();
+      final target = '${appDir.path}/$fileName';
+      await _dio.download(
+        cleanUrl,
+        target,
+        onReceiveProgress: onReceiveProgress,
+      );
+      savedPath = target;
+    }
+
+    return savedPath;
+  }
 }
+
