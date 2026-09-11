@@ -138,21 +138,60 @@ class _AttendanceCoursesPageState extends State<AttendanceCoursesPage> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: _isSearchExpanded
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                style: const TextStyle(color: Colors.white, fontSize: 16),
-                cursorColor: Colors.white,
-                decoration: InputDecoration(
-                  hintText: l10n.searchCourseHint,
-                  hintStyle: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 14),
-                  border: InputBorder.none,
+            ? Container(
+                height: 44,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(14),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.12),
+                      blurRadius: 10,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
                 ),
-                onChanged: (val) {
-                  setState(() {
-                    _filterCourses(val);
-                  });
-                },
+                child: TextField(
+                  controller: _searchController,
+                  autofocus: true,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  cursorColor: AppColors.primary,
+                  decoration: InputDecoration(
+                    hintText: l10n.searchCourseHint,
+                    hintStyle: TextStyle(
+                      color: Colors.grey.shade400,
+                      fontSize: 13,
+                      fontWeight: FontWeight.normal,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search_rounded,
+                      color: AppColors.primary,
+                      size: 20,
+                    ),
+                    suffixIcon: _searchController.text.isNotEmpty
+                        ? IconButton(
+                            icon: const Icon(Icons.cancel_rounded, size: 18, color: Colors.grey),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {
+                                _filterCourses('');
+                              });
+                            },
+                          )
+                        : null,
+                    border: InputBorder.none,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                  ),
+                  onChanged: (val) {
+                    setState(() {
+                      _filterCourses(val);
+                    });
+                  },
+                ),
               )
             : Text(
                 l10n.attendanceTitle,
@@ -254,9 +293,13 @@ class _AttendanceCoursesPageState extends State<AttendanceCoursesPage> {
           children: [
             // 1. Card Ringkasan Total Persentase Kehadiran (User Requirement #1)
             _buildOverallSummaryHeroCard(l10n),
-            const SizedBox(height: 24),
+            const SizedBox(height: 18),
 
-            // 2. Section Label
+            // 2. Kotak Search Modern
+            _buildModernSearchBox(l10n),
+            const SizedBox(height: 22),
+
+            // 3. Section Label
             Row(
               children: [
                 Container(
@@ -486,6 +529,64 @@ class _AttendanceCoursesPageState extends State<AttendanceCoursesPage> {
           ),
         ),
       ],
+    );
+  }
+
+  /// Modern Search Box in Body
+  Widget _buildModernSearchBox(AppLocalizations l10n) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 14,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: TextField(
+        controller: _searchController,
+        style: const TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 14,
+          fontWeight: FontWeight.w600,
+        ),
+        cursorColor: AppColors.primary,
+        decoration: InputDecoration(
+          hintText: l10n.searchCourseHint,
+          hintStyle: TextStyle(
+            color: Colors.grey.shade400,
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+          prefixIcon: const Icon(
+            Icons.search_rounded,
+            color: AppColors.primary,
+            size: 22,
+          ),
+          suffixIcon: _searchController.text.isNotEmpty
+              ? IconButton(
+                  icon: const Icon(Icons.cancel_rounded, color: Colors.grey, size: 20),
+                  onPressed: () {
+                    _searchController.clear();
+                    setState(() {
+                      _filterCourses('');
+                    });
+                  },
+                )
+              : null,
+          border: InputBorder.none,
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        ),
+        onChanged: (val) {
+          setState(() {
+            _filterCourses(val);
+          });
+        },
+      ),
     );
   }
 
