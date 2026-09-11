@@ -131,7 +131,7 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -147,9 +147,6 @@ class _CurrentBillsPageState extends State<CurrentBillsPage> {
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
-        ),
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mainGradient),
         ),
         actions: [
           IconButton(

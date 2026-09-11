@@ -156,7 +156,7 @@ class _KhsPageState extends State<KhsPage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -174,9 +174,6 @@ class _KhsPageState extends State<KhsPage> {
           ),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mainGradient),
-        ),
         actions: [
           Material(
             color: Colors.transparent,

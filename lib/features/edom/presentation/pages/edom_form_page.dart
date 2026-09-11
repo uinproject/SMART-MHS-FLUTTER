@@ -502,7 +502,7 @@ class _EdomFormPageState extends State<EdomFormPage> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           toolbarHeight: 70,
-          backgroundColor: const Color(0xFF003D82),
+          backgroundColor: AppColors.primary,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
@@ -524,9 +524,6 @@ class _EdomFormPageState extends State<EdomFormPage> {
             ),
           ),
           centerTitle: false,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(gradient: mainGradient),
-          ),
         ),
         body: switch (_state) {
           _EdomFormLoadState.loading => const Center(

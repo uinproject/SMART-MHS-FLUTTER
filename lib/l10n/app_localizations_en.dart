@@ -1043,7 +1043,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get inCountdown => 'in';
 
   @override
-  String get tomorrowFajr => 'Tomorrow\'s Fajr';
+  String get tomorrowFajr => 'Tomorrow';
 
   @override
   String get fastingSchedule => 'Fasting Schedule';

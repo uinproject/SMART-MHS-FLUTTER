@@ -149,17 +149,11 @@ class _OffersHistoryPageState extends State<OffersHistoryPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    const mainGradient = LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
@@ -170,9 +164,6 @@ class _OffersHistoryPageState extends State<OffersHistoryPage> {
           style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mainGradient),
-        ),
         // Semester filter (legacy PopupMenu), styled like schedule_page.
         actions: [
           Material(

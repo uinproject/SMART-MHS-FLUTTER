@@ -1046,7 +1046,7 @@ class AppLocalizationsId extends AppLocalizations {
   String get inCountdown => 'dalam';
 
   @override
-  String get tomorrowFajr => 'Subuh Besok';
+  String get tomorrowFajr => 'Besok';
 
   @override
   String get fastingSchedule => 'Jadwal Puasa';

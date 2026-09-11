@@ -2053,7 +2053,7 @@ abstract class AppLocalizations {
   /// No description provided for @tomorrowFajr.
   ///
   /// In id, this message translates to:
-  /// **'Subuh Besok'**
+  /// **'Besok'**
   String get tomorrowFajr;
 
   /// No description provided for @fastingSchedule.

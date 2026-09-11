@@ -538,7 +538,7 @@ class _SchedulePageState extends State<SchedulePage> {
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         automaticallyImplyLeading: false,
         leading: IconButton(
@@ -557,9 +557,6 @@ class _SchedulePageState extends State<SchedulePage> {
           ),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mainGradient),
-        ),
         actions: [
           Material(
             color: Colors.transparent,

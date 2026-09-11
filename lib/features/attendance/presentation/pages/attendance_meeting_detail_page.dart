@@ -32,11 +32,6 @@ class AttendanceMeetingDetailPage extends StatefulWidget {
 }
 
 class _AttendanceMeetingDetailPageState extends State<AttendanceMeetingDetailPage> {
-  static const LinearGradient _mainGradient = LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
-    colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-  );
 
   final ApiService _apiService = ApiService();
   final SessionManager _sessionManager = SessionManager();
@@ -177,7 +172,7 @@ class _AttendanceMeetingDetailPageState extends State<AttendanceMeetingDetailPag
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
@@ -192,9 +187,6 @@ class _AttendanceMeetingDetailPageState extends State<AttendanceMeetingDetailPag
           ),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: _mainGradient),
-        ),
       ),
       body: RefreshIndicator(
         onRefresh: _loadData,

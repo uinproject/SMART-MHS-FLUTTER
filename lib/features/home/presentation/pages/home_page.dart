@@ -129,20 +129,7 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // Satu sumber gradient yang dipakai di SliverAppBar & kotak rounded di
-  // bawahnya, supaya keduanya benar-benar identik dan tidak ada "sambungan"
-  // warna yang kelihatan, dalam kondisi apa pun (termasuk saat overscroll
-  // pull-to-refresh).
-  static const LinearGradient headerGradient = LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
-    colors: [
-      Color(0xFF002B5C), // navy lebih dalam, kesan lebih premium
-      Color(0xFF003D82),
-      Color(0xFF0062CC),
-    ],
-    stops: [0.0, 0.55, 1.0],
-  );
+  static const Color headerColor = AppColors.primary;
 
   @override
   Widget build(BuildContext context) {
@@ -158,31 +145,13 @@ class _HomePageState extends State<HomePage>
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF002B5C),
+        backgroundColor: headerColor,
         elevation: 0,
         scrolledUnderElevation: 0,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         automaticallyImplyLeading: false,
         titleSpacing: 16,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: headerGradient),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Positioned(
-                right: -20,
-                top: -30,
-                child: _glowCircle(90, 0.08),
-              ),
-              Positioned(
-                left: -30,
-                bottom: -40,
-                child: _glowCircle(70, 0.06),
-              ),
-            ],
-          ),
-        ),
         title: Row(
           children: [
             _buildAvatar(user),
@@ -232,16 +201,29 @@ class _HomePageState extends State<HomePage>
         ),
       ),
       body: RefreshIndicator(
-        color: const Color(0xFF003D82),
+        color: headerColor,
+        backgroundColor: Colors.white,
         onRefresh: () => _loadData(isRefresh: true),
         child: CustomScrollView(
+          clipBehavior: Clip.none,
           physics: const BouncingScrollPhysics(
             parent: AlwaysScrollableScrollPhysics(),
           ),
           slivers: [
             SliverToBoxAdapter(
               child: Stack(
+                clipBehavior: Clip.none,
                 children: [
+                  // Background overscroll yang menyatu ke AppBar saat layar ditarik ke bawah (swipe refresh)
+                  Positioned(
+                    top: -600,
+                    left: 0,
+                    right: 0,
+                    height: 600,
+                    child: Container(
+                      color: headerColor,
+                    ),
+                  ),
                   // Background yang warnanya menyatu dengan AppBar,
                   // tinggi dari AppBar (top: 0) sampai tengah-tengah card (~105px), dibuat melengkung
                   Positioned(
@@ -251,7 +233,7 @@ class _HomePageState extends State<HomePage>
                     height: 105,
                     child: Container(
                       decoration: const BoxDecoration(
-                        gradient: headerGradient,
+                        color: headerColor,
                         borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(28),
                           bottomRight: Radius.circular(28),
@@ -562,24 +544,39 @@ class _HomePageState extends State<HomePage>
                 Navigator.pop(context);
                 final uri = Uri.parse(
                     'https://wa.me/6281234567890?text=Halo%20Admin%20Smart%20Mahasiswa,%20saya%20membutuhkan%20bantuan%20terkait%20aplikasi');
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                try {
+                  final launched = await launchUrl(uri,
+                      mode: LaunchMode.externalApplication);
+                  if (!launched) {
+                    await launchUrl(uri);
+                  }
+                } catch (_) {
+                  try {
+                    await launchUrl(uri);
+                  } catch (_) {}
                 }
               },
             ),
             const SizedBox(height: 12),
             _buildCsActionTile(
-              icon: Icons.email_rounded,
+              icon: Icons.help_center_rounded,
               iconColor: const Color(0xFF0284C7),
               iconBgColor: const Color(0xFFE0F2FE),
-              title: 'Email Layanan TIPD',
-              subtitle: 'tipd@uinsalatiga.ac.id',
+              title: 'Laporkan Kendala Teknis Aplikasi',
+              subtitle: 'helpdesk.uinsalatiga.ac.id',
               onTap: () async {
                 Navigator.pop(context);
-                final uri = Uri.parse(
-                    'mailto:tipd@uinsalatiga.ac.id?subject=Bantuan%20Smart%20Mahasiswa');
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
+                final uri = Uri.parse('https://helpdesk.uinsalatiga.ac.id');
+                try {
+                  final launched = await launchUrl(uri,
+                      mode: LaunchMode.externalApplication);
+                  if (!launched) {
+                    await launchUrl(uri);
+                  }
+                } catch (_) {
+                  try {
+                    await launchUrl(uri);
+                  } catch (_) {}
                 }
               },
             ),
@@ -656,17 +653,6 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  // Aksen lingkaran halus untuk kesan header lebih modern/premium.
-  Widget _glowCircle(double size, double opacity) {
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: opacity),
-      ),
-    );
-  }
 
   Widget _buildSmallImportantMessage(String pesan, AppLocalizations l10n) {
     return Container(

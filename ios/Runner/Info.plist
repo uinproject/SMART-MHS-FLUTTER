@@ -57,5 +57,11 @@
 	<string>Aplikasi membutuhkan akses lokasi untuk menentukan arah kiblat dan jadwal sholat yang akurat sesuai posisi Anda.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Aplikasi membutuhkan akses lokasi untuk menentukan arah kiblat dan jadwal sholat yang akurat sesuai posisi Anda.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>https</string>
+		<string>http</string>
+		<string>whatsapp</string>
+	</array>
 </dict>
 </plist>

@@ -1037,7 +1037,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get inCountdown => 'خلال';
 
   @override
-  String get tomorrowFajr => 'فجر الغد';
+  String get tomorrowFajr => 'غداً';
 
   @override
   String get fastingSchedule => 'جدول الصيام';

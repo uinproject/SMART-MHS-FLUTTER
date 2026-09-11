@@ -246,13 +246,7 @@ class _AnnouncementListPageState extends State<AnnouncementListPage> {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(70),
           child: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-              ),
-            ),
+            color: AppColors.primary,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),

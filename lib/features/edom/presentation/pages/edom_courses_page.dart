@@ -157,7 +157,7 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
         backgroundColor: AppColors.background,
         appBar: AppBar(
           toolbarHeight: 70,
-          backgroundColor: const Color(0xFF003D82),
+          backgroundColor: AppColors.primary,
           elevation: 0,
           leading: IconButton(
             icon: const Icon(
@@ -175,9 +175,6 @@ class _EdomCoursesPageState extends State<EdomCoursesPage> {
             ),
           ),
           centerTitle: false,
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(gradient: mainGradient),
-          ),
         ),
         body: RefreshIndicator(
           onRefresh: _loadCourses,

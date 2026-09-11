@@ -126,7 +126,7 @@ class _AccountPageState extends State<AccountPage> {
                   pinned: true,
                   expandedHeight: null,
                   toolbarHeight: 64,
-                  backgroundColor: const Color(0xFF003D82),
+                  backgroundColor: AppColors.primary,
                   elevation: 0,
                   automaticallyImplyLeading: false,
                   title: Text(
@@ -138,9 +138,6 @@ class _AccountPageState extends State<AccountPage> {
                     ),
                   ),
                   titleSpacing: 24,
-                  flexibleSpace: Container(
-                    decoration: const BoxDecoration(gradient: mainGradient),
-                  ),
                 ),
 
                 SliverToBoxAdapter(

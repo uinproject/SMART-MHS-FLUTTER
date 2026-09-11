@@ -109,7 +109,7 @@ class _AttendanceCourseDetailPageState extends State<AttendanceCourseDetailPage>
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
@@ -124,9 +124,6 @@ class _AttendanceCourseDetailPageState extends State<AttendanceCourseDetailPage>
           ),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: _mainGradient),
-        ),
       ),
       body: RefreshIndicator(
         onRefresh: _loadData,

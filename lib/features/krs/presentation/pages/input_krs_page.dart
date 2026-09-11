@@ -343,19 +343,13 @@ class _InputKrsPageState extends State<InputKrsPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    const mainGradient = LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-    );
-
     final bool hasList = _state == _KrsMkLoadState.success;
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         toolbarHeight: 70,
-        backgroundColor: const Color(0xFF003D82),
+        backgroundColor: AppColors.primary,
         elevation: 0,
         leading: IconButton(
           icon: const Icon(
@@ -373,9 +367,6 @@ class _InputKrsPageState extends State<InputKrsPage> {
           ),
         ),
         centerTitle: false,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(gradient: mainGradient),
-        ),
       ),
       body: RefreshIndicator(
         onRefresh: _loadKrsMk,
