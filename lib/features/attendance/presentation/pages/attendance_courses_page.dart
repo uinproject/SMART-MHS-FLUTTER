@@ -32,7 +32,6 @@ class _AttendanceCoursesPageState extends State<AttendanceCoursesPage> {
   List<AttendanceCourseItem> _allCourses = [];
   List<AttendanceCourseItem> _filteredCourses = [];
   String _errorMessage = '';
-  bool _isSearchExpanded = false;
 
   @override
   void initState() {
@@ -137,94 +136,18 @@ class _AttendanceCoursesPageState extends State<AttendanceCoursesPage> {
           icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: _isSearchExpanded
-            ? Container(
-                height: 44,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withValues(alpha: 0.12),
-                      blurRadius: 10,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: TextField(
-                  controller: _searchController,
-                  autofocus: true,
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                  cursorColor: AppColors.primary,
-                  decoration: InputDecoration(
-                    hintText: l10n.searchCourseHint,
-                    hintStyle: TextStyle(
-                      color: Colors.grey.shade400,
-                      fontSize: 13,
-                      fontWeight: FontWeight.normal,
-                    ),
-                    prefixIcon: const Icon(
-                      Icons.search_rounded,
-                      color: AppColors.primary,
-                      size: 20,
-                    ),
-                    suffixIcon: _searchController.text.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.cancel_rounded, size: 18, color: Colors.grey),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _filterCourses('');
-                              });
-                            },
-                          )
-                        : null,
-                    border: InputBorder.none,
-                    contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                  ),
-                  onChanged: (val) {
-                    setState(() {
-                      _filterCourses(val);
-                    });
-                  },
-                ),
-              )
-            : Text(
-                l10n.attendanceTitle,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+        title: Text(
+          l10n.attendanceTitle,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         centerTitle: false,
         flexibleSpace: Container(
           decoration: const BoxDecoration(gradient: _mainGradient),
         ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _isSearchExpanded ? Icons.close_rounded : Icons.search_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              setState(() {
-                if (_isSearchExpanded) {
-                  _isSearchExpanded = false;
-                  _searchController.clear();
-                  _filterCourses('');
-                } else {
-                  _isSearchExpanded = true;
-                }
-              });
-            },
-          ),
-          const SizedBox(width: 8),
-        ],
       ),
       body: RefreshIndicator(
         onRefresh: _loadData,
