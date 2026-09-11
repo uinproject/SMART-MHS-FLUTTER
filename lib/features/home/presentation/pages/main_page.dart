@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'home_page.dart';
 import '../../../account/presentation/pages/account_page.dart';
+import '../../../news/presentation/pages/news_page.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 
 class MainPage extends StatefulWidget {
@@ -16,7 +17,7 @@ class _MainPageState extends State<MainPage> {
 
   final List<Widget> _pages = [
     const HomePage(),
-    const Center(child: Text('News Page')),
+    const NewsPage(),
     const Center(child: Text('Notifikasi Page')),
     const AccountPage(),
   ];

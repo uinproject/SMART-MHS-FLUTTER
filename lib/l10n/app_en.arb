@@ -376,5 +376,10 @@
   "publisher": "Publisher",
   "category": "Category",
   "viewImage": "View Image",
-  "openInBrowser": "Open in Browser"
+  "openInBrowser": "Open in Browser",
+  "facultyNews": "Faculty News",
+  "rectorateNews": "Rectorate News",
+  "newsDetail": "News Detail",
+  "searchNewsHint": "Search news...",
+  "noNewsFound": "No news found"
 }

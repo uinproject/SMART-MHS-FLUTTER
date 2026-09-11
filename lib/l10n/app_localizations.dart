@@ -1851,6 +1851,36 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Buka di Browser'**
   String get openInBrowser;
+
+  /// No description provided for @facultyNews.
+  ///
+  /// In id, this message translates to:
+  /// **'Berita Fakultas'**
+  String get facultyNews;
+
+  /// No description provided for @rectorateNews.
+  ///
+  /// In id, this message translates to:
+  /// **'Berita Rektorat'**
+  String get rectorateNews;
+
+  /// No description provided for @newsDetail.
+  ///
+  /// In id, this message translates to:
+  /// **'Detail Berita'**
+  String get newsDetail;
+
+  /// No description provided for @searchNewsHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Cari judul berita...'**
+  String get searchNewsHint;
+
+  /// No description provided for @noNewsFound.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak ada berita ditemukan'**
+  String get noNewsFound;
 }
 
 class _AppLocalizationsDelegate

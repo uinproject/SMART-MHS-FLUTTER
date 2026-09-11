@@ -937,4 +937,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openInBrowser => 'Open in Browser';
+
+  @override
+  String get facultyNews => 'Faculty News';
+
+  @override
+  String get rectorateNews => 'Rectorate News';
+
+  @override
+  String get newsDetail => 'News Detail';
+
+  @override
+  String get searchNewsHint => 'Search news...';
+
+  @override
+  String get noNewsFound => 'No news found';
 }

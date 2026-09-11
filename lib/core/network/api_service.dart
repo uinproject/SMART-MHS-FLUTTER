@@ -29,6 +29,7 @@ import '../../features/presence/data/models/presence_save_response.dart';
 import '../../features/attendance/data/models/attendance_courses_response.dart';
 import '../../features/attendance/data/models/attendance_list_response.dart';
 import '../../features/attendance/data/models/attendance_detail_response.dart';
+import '../../features/news/data/models/berita_response.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -307,6 +308,85 @@ class ApiService {
         return PengumumanResponse.fromJson(responseData);
       }
       return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<BeritaResponse>> getBerita({
+    required bool isRektorat,
+    String? kodeFakultas,
+    int page = 1,
+    int perPage = 10,
+    String? search,
+  }) async {
+    try {
+      final String endpointUrl;
+      final queryParams = <String, dynamic>{
+        'filter[orderby]': 'date',
+        'order': 'desc',
+        'page': page,
+        'per_page': perPage,
+      };
+
+      if (isRektorat) {
+        endpointUrl = 'https://uinsalatiga.ac.id/wp-json/wp/v2/posts?_embed';
+        queryParams['categories'] = '12';
+      } else {
+        final kode = kodeFakultas?.trim().toUpperCase();
+        final String baseUrl;
+        switch (kode) {
+          case 'D':
+            baseUrl = 'https://dakwah.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          case 'E':
+            baseUrl = 'https://febi.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          case 'PS':
+            baseUrl = 'https://pps.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          case 'T':
+            baseUrl = 'https://tarbiyah.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          case 'U':
+            baseUrl = 'https://fuadah.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          case 'SI':
+          case 'FST':
+          case 'ST':
+          case 'SAINTEK':
+          case 'F':
+            baseUrl = 'https://saintek.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+          default:
+            baseUrl = 'https://syariah.uinsalatiga.ac.id/wp-json/wp/v2/';
+            break;
+        }
+        endpointUrl = '${baseUrl}posts?_embed';
+      }
+
+      if (search != null && search.trim().isNotEmpty) {
+        queryParams['search'] = search.trim();
+      }
+
+      final response = await _dio.get(
+        endpointUrl,
+        queryParameters: queryParams,
+        options: Options(
+          headers: {},
+        ),
+      );
+
+      if (response.statusCode == 200 && response.data != null) {
+        final List<dynamic> listData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return listData
+            .whereType<Map<String, dynamic>>()
+            .map((e) => BeritaResponse.fromJson(e))
+            .toList();
+      }
+      return [];
     } catch (e) {
       rethrow;
     }

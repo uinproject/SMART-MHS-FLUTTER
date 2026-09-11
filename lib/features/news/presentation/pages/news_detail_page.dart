@@ -4,22 +4,22 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/home_helpers.dart';
-import '../../../home/data/models/pengumuman_response.dart';
-import 'announcement_image_view_page.dart';
+import '../../../announcement/presentation/pages/announcement_image_view_page.dart';
+import '../../data/models/berita_response.dart';
 
-class AnnouncementDetailPage extends StatefulWidget {
-  final PengumumanData pengumuman;
+class NewsDetailPage extends StatefulWidget {
+  final BeritaResponse berita;
 
-  const AnnouncementDetailPage({
+  const NewsDetailPage({
     super.key,
-    required this.pengumuman,
+    required this.berita,
   });
 
   @override
-  State<AnnouncementDetailPage> createState() => _AnnouncementDetailPageState();
+  State<NewsDetailPage> createState() => _NewsDetailPageState();
 }
 
-class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
+class _NewsDetailPageState extends State<NewsDetailPage> {
   late final WebViewController _webViewController;
   bool _isWebViewLoading = true;
   double _webViewHeight = 300.0;
@@ -31,7 +31,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
   }
 
   void _initWebViewController() {
-    final rawHtml = widget.pengumuman.isi;
+    final rawHtml = widget.berita.content?.rendered ?? '';
     final styledHtml = '''
 <!DOCTYPE html>
 <html>
@@ -130,7 +130,6 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
             }
           },
           onNavigationRequest: (NavigationRequest request) async {
-            // Intercept URL clicks so external links open in device browser
             final uri = Uri.tryParse(request.url);
             if (uri != null &&
                 (uri.scheme == 'http' ||
@@ -166,14 +165,15 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final locale = Localizations.localeOf(context);
-    final hasImage = widget.pengumuman.linkPicture.trim().isNotEmpty;
+    final imageUrl = widget.berita.imageUrl;
+    final hasImage = imageUrl != null && imageUrl.isNotEmpty;
     final formattedDate = FormatTanggalIndo.formatDateTime(
-      widget.pengumuman.tanggal,
+      widget.berita.date,
       locale,
     );
     final displayDate = formattedDate.isNotEmpty
         ? formattedDate
-        : widget.pengumuman.tanggal;
+        : (widget.berita.date ?? '');
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -200,7 +200,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                 ),
                 Expanded(
                   child: Text(
-                    l10n.announcementDetail,
+                    l10n.newsDetail,
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -218,12 +218,12 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image Banner with Zoom Capability
+            // Banner Image
             if (hasImage)
               GestureDetector(
                 onTap: () => _openImageViewer(
-                  widget.pengumuman.linkPicture,
-                  widget.pengumuman.judul,
+                  imageUrl,
+                  widget.berita.displayTitle,
                 ),
                 child: Stack(
                   children: [
@@ -234,7 +234,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                         color: Color(0xFFE2E8F0),
                       ),
                       child: Image.network(
-                        widget.pengumuman.linkPicture,
+                        imageUrl,
                         width: double.infinity,
                         height: 230,
                         fit: BoxFit.cover,
@@ -242,7 +242,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                           color: const Color(0xFFE2E8F0),
                           child: const Center(
                             child: Icon(
-                              Icons.campaign_rounded,
+                              Icons.newspaper_rounded,
                               size: 64,
                               color: AppColors.primary,
                             ),
@@ -287,7 +287,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                 ),
               ),
 
-            // Main Content Card
+            // Card Body
             Container(
               margin: EdgeInsets.only(
                 left: 16,
@@ -311,31 +311,29 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Category Badge
-                  if (widget.pengumuman.kategori.trim().isNotEmpty) ...[
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        widget.pengumuman.kategori.trim(),
-                        style: const TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                        ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      widget.berita.categoryName,
+                      style: const TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 12),
-                  ],
+                  ),
+                  const SizedBox(height: 12),
 
-                  // Judul
+                  // Title
                   Text(
-                    widget.pengumuman.judul,
+                    widget.berita.displayTitle,
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -352,7 +350,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                   ),
                   const SizedBox(height: 12),
 
-                  // Metadata info: Date and Publisher
+                  // Metadata: Date & Author
                   Row(
                     children: [
                       const Icon(
@@ -373,29 +371,27 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                       ),
                     ],
                   ),
-                  if (widget.pengumuman.publisher.trim().isNotEmpty) ...[
-                    const SizedBox(height: 6),
-                    Row(
-                      children: [
-                        const Icon(
-                          Icons.person_outline_rounded,
-                          size: 14,
-                          color: AppColors.textSecondary,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(
-                          child: Text(
-                            widget.pengumuman.publisher.trim(),
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: AppColors.textSecondary,
-                              fontWeight: FontWeight.w500,
-                            ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.person_outline_rounded,
+                        size: 14,
+                        color: AppColors.textSecondary,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          widget.berita.authorName,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
 
                   const SizedBox(height: 16),
                   Container(
@@ -404,7 +400,7 @@ class _AnnouncementDetailPageState extends State<AnnouncementDetailPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Webview container for formatted HTML content
+                  // HTML Content in Webview
                   SizedBox(
                     height: _webViewHeight,
                     child: Stack(

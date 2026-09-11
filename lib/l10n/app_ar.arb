@@ -376,5 +376,10 @@
   "publisher": "الناشر",
   "category": "الفئة",
   "viewImage": "عرض الصورة",
-  "openInBrowser": "فتح في المتصفح"
+  "openInBrowser": "فتح في المتصفح",
+  "facultyNews": "أخبار الكلية",
+  "rectorateNews": "أخبار رئاسة الجامعة",
+  "newsDetail": "تفاصيل الخبر",
+  "searchNewsHint": "البحث في عناوين الأخبار...",
+  "noNewsFound": "لم يتم العثور على أخبار"
 }

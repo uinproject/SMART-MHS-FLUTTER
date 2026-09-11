@@ -932,4 +932,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get openInBrowser => 'فتح في المتصفح';
+
+  @override
+  String get facultyNews => 'أخبار الكلية';
+
+  @override
+  String get rectorateNews => 'أخبار رئاسة الجامعة';
+
+  @override
+  String get newsDetail => 'تفاصيل الخبر';
+
+  @override
+  String get searchNewsHint => 'البحث في عناوين الأخبار...';
+
+  @override
+  String get noNewsFound => 'لم يتم العثور على أخبار';
 }

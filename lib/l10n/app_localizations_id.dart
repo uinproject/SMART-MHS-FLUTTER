@@ -940,4 +940,19 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get openInBrowser => 'Buka di Browser';
+
+  @override
+  String get facultyNews => 'Berita Fakultas';
+
+  @override
+  String get rectorateNews => 'Berita Rektorat';
+
+  @override
+  String get newsDetail => 'Detail Berita';
+
+  @override
+  String get searchNewsHint => 'Cari judul berita...';
+
+  @override
+  String get noNewsFound => 'Tidak ada berita ditemukan';
 }
