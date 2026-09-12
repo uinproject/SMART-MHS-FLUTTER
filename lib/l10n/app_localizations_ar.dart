@@ -1338,4 +1338,68 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get waitOtp => 'يرجى الانتظار..';
+
+  @override
+  String get otherDevices => 'الأجهزة النشطة الأخرى';
+
+  @override
+  String get thisDevice => 'هذا الجهاز';
+
+  @override
+  String get activeNow => 'نشط الآن';
+
+  @override
+  String get noOtherDevices => 'لا توجد أجهزة أخرى نشطة';
+
+  @override
+  String get noOtherDevicesDesc => 'حسابك نشط ومتصل فقط على هذا الجهاز.';
+
+  @override
+  String get forceLogout => 'تسجيل الخروج';
+
+  @override
+  String get forceLogoutDevice => 'تسجيل خروج الجهاز';
+
+  @override
+  String get forceLogoutConfirmTitle => 'تسجيل خروج الجهاز؟';
+
+  @override
+  String get forceLogoutConfirmDesc =>
+      'هل أنت متأكد من رغبتك في تسجيل الخروج من هذا الجهاز؟ سيتم إنهاء الجلسة النشطة على ذلك الجهاز فورًا.';
+
+  @override
+  String get forceLogoutSuccess => 'تم تسجيل خروج الحساب من الجهاز بنجاح.';
+
+  @override
+  String get forceLogoutFailed => 'فشل في تسجيل خروج الحساب من الجهاز.';
+
+  @override
+  String get loggingOutDevice => 'جارٍ تسجيل خروج الجهاز...';
+
+  @override
+  String get copied => 'تم النسخ!';
+
+  @override
+  String get loginTime => 'تسجيل الدخول';
+
+  @override
+  String get lastActive => 'آخر نشاط';
+
+  @override
+  String get deviceSecurityNoticeWarning =>
+      'إذا لاحظت أي جهاز غير معروف، فقم بتسجيل خروجه فورًا وقم بتحديث كلمة المرور لحماية بياناتك.';
+
+  @override
+  String devicesCount(int count) {
+    return '$count أجهزة';
+  }
+
+  @override
+  String get loadingDevices => 'جارٍ تحميل الأجهزة النشطة...';
+
+  @override
+  String get refresh => 'تحديث';
+
+  @override
+  String get firstLogin => 'أول تسجيل دخول';
 }

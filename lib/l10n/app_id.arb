@@ -518,5 +518,32 @@
   "oldPassRequired": "Password lama wajib diisi",
   "forgotOldPassword": "Lupa password lama?",
   "changePassUseOldInstruction": "Masukkan password lama Anda dan buat password baru. Password baru harus kuat.",
-  "waitOtp": "Mohon tunggu.."
+  "waitOtp": "Mohon tunggu..",
+  "otherDevices": "Perangkat Lain yang Aktif",
+  "thisDevice": "Perangkat Ini",
+  "activeNow": "Aktif Sekarang",
+  "noOtherDevices": "Tidak Ada Perangkat Lain yang Aktif",
+  "noOtherDevicesDesc": "Akun Anda hanya aktif dan terhubung di perangkat ini.",
+  "forceLogout": "Keluarkan",
+  "forceLogoutDevice": "Keluarkan Perangkat",
+  "forceLogoutConfirmTitle": "Keluarkan Perangkat?",
+  "forceLogoutConfirmDesc": "Apakah Anda yakin ingin mengeluarkan akun dari perangkat ini? Sesi aktif pada perangkat tersebut akan langsung ditutup.",
+  "forceLogoutSuccess": "Berhasil mengeluarkan akun dari perangkat.",
+  "forceLogoutFailed": "Gagal mengeluarkan akun dari perangkat.",
+  "loggingOutDevice": "Mengeluarkan perangkat...",
+  "copied": "Tersalin!",
+  "copy": "Salin",
+  "loginTime": "Masuk",
+  "lastActive": "Terakhir Aktif",
+  "deviceSecurityNoticeWarning": "Jika mendeteksi perangkat tidak dikenal, segera keluarkan dan perbarui kata sandi akun Anda demi menjaga keamanan data.",
+  "devicesCount": "{count} Perangkat",
+  "@devicesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "loadingDevices": "Memuat data perangkat aktif...",
+  "refresh": "Perbarui",
+  "close": "Tutup",
+  "firstLogin": "Login Pertama"
 }

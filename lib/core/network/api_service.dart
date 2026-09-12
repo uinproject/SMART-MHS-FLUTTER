@@ -31,6 +31,7 @@ import '../../features/attendance/data/models/attendance_list_response.dart';
 import '../../features/attendance/data/models/attendance_detail_response.dart';
 import '../../features/news/data/models/berita_response.dart';
 import '../../features/helpdesk/data/models/cs_response.dart';
+import '../../features/keamanan_akun/data/models/active_device_model.dart';
 
 class ForceLogoutException implements Exception {
   final String message;
@@ -90,8 +91,8 @@ class ApiService {
             // For POST/PUT/etc.
             if (options.data is Map) {
               options.data['language'] = lang;
-            } else if (options.data == null) {
-              options.data = {'language': lang};
+            } else {
+              options.data ??= {'language': lang};
             }
           }
           return handler.next(options);
@@ -1742,6 +1743,62 @@ class ApiService {
         ),
       ],
     );
+  }
+
+  /// Get all active other devices for the logged in user
+  Future<ActiveDevicesResponse> getAllActiveDevices({
+    required String nim,
+    required String deviceId,
+  }) async {
+    try {
+      final response = await _dio.get(
+        'Authservices/get_all_perangkat_user_aktif',
+        queryParameters: {
+          'unim': nim,
+          'deviceid': deviceId,
+        },
+      );
+
+      final Map<String, dynamic> responseData = response.data is String
+          ? jsonDecode(response.data)
+          : (response.data as Map<String, dynamic>);
+
+      return ActiveDevicesResponse.fromJson(responseData);
+    } catch (e) {
+      return ActiveDevicesResponse(
+        success: false,
+        message: 'Gagal memuat perangkat aktif: $e',
+        devices: [],
+      );
+    }
+  }
+
+  /// Force logout user account from a specific target device
+  Future<Map<String, dynamic>> forceLogoutDevice({
+    required String nim,
+    required String targetDeviceId,
+  }) async {
+    try {
+      final response = await _dio.post(
+        'Authservices/keluarkan_akun_dari_perangkat',
+        data: {
+          'unim': nim,
+          'deviceid': targetDeviceId,
+        },
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      final Map<String, dynamic> responseData = response.data is String
+          ? jsonDecode(response.data)
+          : (response.data as Map<String, dynamic>);
+
+      return responseData;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Gagal mengeluarkan akun dari perangkat: $e',
+      };
+    }
   }
 }
 

@@ -518,5 +518,32 @@
   "oldPassRequired": "كلمة المرور القديمة مطلوبة",
   "forgotOldPassword": "نسيت كلمة المرور القديمة؟",
   "changePassUseOldInstruction": "أدخل كلمة المرور الحالية وأنشئ كلمة مرور جديدة. يجب أن تكون كلمة المرور الجديدة قوية.",
-  "waitOtp": "يرجى الانتظار.."
+  "waitOtp": "يرجى الانتظار..",
+  "otherDevices": "الأجهزة النشطة الأخرى",
+  "thisDevice": "هذا الجهاز",
+  "activeNow": "نشط الآن",
+  "noOtherDevices": "لا توجد أجهزة أخرى نشطة",
+  "noOtherDevicesDesc": "حسابك نشط ومتصل فقط على هذا الجهاز.",
+  "forceLogout": "تسجيل الخروج",
+  "forceLogoutDevice": "تسجيل خروج الجهاز",
+  "forceLogoutConfirmTitle": "تسجيل خروج الجهاز؟",
+  "forceLogoutConfirmDesc": "هل أنت متأكد من رغبتك في تسجيل الخروج من هذا الجهاز؟ سيتم إنهاء الجلسة النشطة على ذلك الجهاز فورًا.",
+  "forceLogoutSuccess": "تم تسجيل خروج الحساب من الجهاز بنجاح.",
+  "forceLogoutFailed": "فشل في تسجيل خروج الحساب من الجهاز.",
+  "loggingOutDevice": "جارٍ تسجيل خروج الجهاز...",
+  "copied": "تم النسخ!",
+  "copy": "نسخ",
+  "loginTime": "تسجيل الدخول",
+  "lastActive": "آخر نشاط",
+  "deviceSecurityNoticeWarning": "إذا لاحظت أي جهاز غير معروف، فقم بتسجيل خروجه فورًا وقم بتحديث كلمة المرور لحماية بياناتك.",
+  "devicesCount": "{count} أجهزة",
+  "@devicesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "loadingDevices": "جارٍ تحميل الأجهزة النشطة...",
+  "refresh": "تحديث",
+  "close": "إغلاق",
+  "firstLogin": "أول تسجيل دخول"
 }

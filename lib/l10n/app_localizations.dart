@@ -2619,6 +2619,126 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Mohon tunggu..'**
   String get waitOtp;
+
+  /// No description provided for @otherDevices.
+  ///
+  /// In id, this message translates to:
+  /// **'Perangkat Lain yang Aktif'**
+  String get otherDevices;
+
+  /// No description provided for @thisDevice.
+  ///
+  /// In id, this message translates to:
+  /// **'Perangkat Ini'**
+  String get thisDevice;
+
+  /// No description provided for @activeNow.
+  ///
+  /// In id, this message translates to:
+  /// **'Aktif Sekarang'**
+  String get activeNow;
+
+  /// No description provided for @noOtherDevices.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak Ada Perangkat Lain yang Aktif'**
+  String get noOtherDevices;
+
+  /// No description provided for @noOtherDevicesDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Akun Anda hanya aktif dan terhubung di perangkat ini.'**
+  String get noOtherDevicesDesc;
+
+  /// No description provided for @forceLogout.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluarkan'**
+  String get forceLogout;
+
+  /// No description provided for @forceLogoutDevice.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluarkan Perangkat'**
+  String get forceLogoutDevice;
+
+  /// No description provided for @forceLogoutConfirmTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Keluarkan Perangkat?'**
+  String get forceLogoutConfirmTitle;
+
+  /// No description provided for @forceLogoutConfirmDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Apakah Anda yakin ingin mengeluarkan akun dari perangkat ini? Sesi aktif pada perangkat tersebut akan langsung ditutup.'**
+  String get forceLogoutConfirmDesc;
+
+  /// No description provided for @forceLogoutSuccess.
+  ///
+  /// In id, this message translates to:
+  /// **'Berhasil mengeluarkan akun dari perangkat.'**
+  String get forceLogoutSuccess;
+
+  /// No description provided for @forceLogoutFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal mengeluarkan akun dari perangkat.'**
+  String get forceLogoutFailed;
+
+  /// No description provided for @loggingOutDevice.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengeluarkan perangkat...'**
+  String get loggingOutDevice;
+
+  /// No description provided for @copied.
+  ///
+  /// In id, this message translates to:
+  /// **'Tersalin!'**
+  String get copied;
+
+  /// No description provided for @loginTime.
+  ///
+  /// In id, this message translates to:
+  /// **'Masuk'**
+  String get loginTime;
+
+  /// No description provided for @lastActive.
+  ///
+  /// In id, this message translates to:
+  /// **'Terakhir Aktif'**
+  String get lastActive;
+
+  /// No description provided for @deviceSecurityNoticeWarning.
+  ///
+  /// In id, this message translates to:
+  /// **'Jika mendeteksi perangkat tidak dikenal, segera keluarkan dan perbarui kata sandi akun Anda demi menjaga keamanan data.'**
+  String get deviceSecurityNoticeWarning;
+
+  /// No description provided for @devicesCount.
+  ///
+  /// In id, this message translates to:
+  /// **'{count} Perangkat'**
+  String devicesCount(int count);
+
+  /// No description provided for @loadingDevices.
+  ///
+  /// In id, this message translates to:
+  /// **'Memuat data perangkat aktif...'**
+  String get loadingDevices;
+
+  /// No description provided for @refresh.
+  ///
+  /// In id, this message translates to:
+  /// **'Perbarui'**
+  String get refresh;
+
+  /// No description provided for @firstLogin.
+  ///
+  /// In id, this message translates to:
+  /// **'Login Pertama'**
+  String get firstLogin;
 }
 
 class _AppLocalizationsDelegate

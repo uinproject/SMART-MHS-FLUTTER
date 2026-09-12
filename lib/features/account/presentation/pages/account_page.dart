@@ -5,7 +5,7 @@ import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/home_helpers.dart';
 import '../../../auth/presentation/pages/login_screen.dart';
 import '../widgets/language_selector_dialog.dart';
-import 'security_page.dart';
+import '../../../keamanan_akun/presentation/pages/security_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});

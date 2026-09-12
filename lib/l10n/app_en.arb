@@ -518,5 +518,32 @@
   "oldPassRequired": "Old password is required",
   "forgotOldPassword": "Forgot old password?",
   "changePassUseOldInstruction": "Enter your current password and create a new password. The new password must be strong.",
-  "waitOtp": "Please wait.."
+  "waitOtp": "Please wait..",
+  "otherDevices": "Other Active Devices",
+  "thisDevice": "This Device",
+  "activeNow": "Active Now",
+  "noOtherDevices": "No Other Active Devices",
+  "noOtherDevicesDesc": "Your account is only active and connected on this device.",
+  "forceLogout": "Log Out",
+  "forceLogoutDevice": "Log Out Device",
+  "forceLogoutConfirmTitle": "Log Out Device?",
+  "forceLogoutConfirmDesc": "Are you sure you want to log out your account from this device? The active session on that device will be terminated immediately.",
+  "forceLogoutSuccess": "Successfully logged out account from device.",
+  "forceLogoutFailed": "Failed to log out account from device.",
+  "loggingOutDevice": "Logging out device...",
+  "copied": "Copied!",
+  "copy": "Copy",
+  "loginTime": "Login",
+  "lastActive": "Last Active",
+  "deviceSecurityNoticeWarning": "If you detect an unrecognized device, log it out immediately and update your password to protect your data.",
+  "devicesCount": "{count} Devices",
+  "@devicesCount": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "loadingDevices": "Loading active devices...",
+  "refresh": "Refresh",
+  "close": "Close",
+  "firstLogin": "First Login"
 }

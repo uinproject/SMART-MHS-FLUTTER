@@ -1349,4 +1349,70 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get waitOtp => 'Please wait..';
+
+  @override
+  String get otherDevices => 'Other Active Devices';
+
+  @override
+  String get thisDevice => 'This Device';
+
+  @override
+  String get activeNow => 'Active Now';
+
+  @override
+  String get noOtherDevices => 'No Other Active Devices';
+
+  @override
+  String get noOtherDevicesDesc =>
+      'Your account is only active and connected on this device.';
+
+  @override
+  String get forceLogout => 'Log Out';
+
+  @override
+  String get forceLogoutDevice => 'Log Out Device';
+
+  @override
+  String get forceLogoutConfirmTitle => 'Log Out Device?';
+
+  @override
+  String get forceLogoutConfirmDesc =>
+      'Are you sure you want to log out your account from this device? The active session on that device will be terminated immediately.';
+
+  @override
+  String get forceLogoutSuccess =>
+      'Successfully logged out account from device.';
+
+  @override
+  String get forceLogoutFailed => 'Failed to log out account from device.';
+
+  @override
+  String get loggingOutDevice => 'Logging out device...';
+
+  @override
+  String get copied => 'Copied!';
+
+  @override
+  String get loginTime => 'Login';
+
+  @override
+  String get lastActive => 'Last Active';
+
+  @override
+  String get deviceSecurityNoticeWarning =>
+      'If you detect an unrecognized device, log it out immediately and update your password to protect your data.';
+
+  @override
+  String devicesCount(int count) {
+    return '$count Devices';
+  }
+
+  @override
+  String get loadingDevices => 'Loading active devices...';
+
+  @override
+  String get refresh => 'Refresh';
+
+  @override
+  String get firstLogin => 'First Login';
 }

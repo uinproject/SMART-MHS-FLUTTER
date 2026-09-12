@@ -1352,4 +1352,69 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get waitOtp => 'Mohon tunggu..';
+
+  @override
+  String get otherDevices => 'Perangkat Lain yang Aktif';
+
+  @override
+  String get thisDevice => 'Perangkat Ini';
+
+  @override
+  String get activeNow => 'Aktif Sekarang';
+
+  @override
+  String get noOtherDevices => 'Tidak Ada Perangkat Lain yang Aktif';
+
+  @override
+  String get noOtherDevicesDesc =>
+      'Akun Anda hanya aktif dan terhubung di perangkat ini.';
+
+  @override
+  String get forceLogout => 'Keluarkan';
+
+  @override
+  String get forceLogoutDevice => 'Keluarkan Perangkat';
+
+  @override
+  String get forceLogoutConfirmTitle => 'Keluarkan Perangkat?';
+
+  @override
+  String get forceLogoutConfirmDesc =>
+      'Apakah Anda yakin ingin mengeluarkan akun dari perangkat ini? Sesi aktif pada perangkat tersebut akan langsung ditutup.';
+
+  @override
+  String get forceLogoutSuccess => 'Berhasil mengeluarkan akun dari perangkat.';
+
+  @override
+  String get forceLogoutFailed => 'Gagal mengeluarkan akun dari perangkat.';
+
+  @override
+  String get loggingOutDevice => 'Mengeluarkan perangkat...';
+
+  @override
+  String get copied => 'Tersalin!';
+
+  @override
+  String get loginTime => 'Masuk';
+
+  @override
+  String get lastActive => 'Terakhir Aktif';
+
+  @override
+  String get deviceSecurityNoticeWarning =>
+      'Jika mendeteksi perangkat tidak dikenal, segera keluarkan dan perbarui kata sandi akun Anda demi menjaga keamanan data.';
+
+  @override
+  String devicesCount(int count) {
+    return '$count Perangkat';
+  }
+
+  @override
+  String get loadingDevices => 'Memuat data perangkat aktif...';
+
+  @override
+  String get refresh => 'Perbarui';
+
+  @override
+  String get firstLogin => 'Login Pertama';
 }
