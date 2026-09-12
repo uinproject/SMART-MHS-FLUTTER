@@ -77,7 +77,7 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get changePassInstruction =>
-      'Silahkan masukan password baru anda, Password baru minimal 8 Karakter.';
+      'Silakan masukkan password baru Anda. Password harus kuat, berisi kombinasi huruf besar & kecil, angka, dan karakter khusus.';
 
   @override
   String get successChangePass => 'Password berhasil diperbarui';
@@ -1227,4 +1227,129 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get aiChatQuickQuestion4 => 'Berapa jumlah SKS yang bisa saya ambil?';
+
+  @override
+  String get helpdeskModalTitle => 'Layanan Bantuan & Helpdesk';
+
+  @override
+  String get helpdeskModalSubtitle =>
+      'Butuh bantuan terkait akademik atau kendala aplikasi Smart Mahasiswa? Hubungi layanan bantuan resmi.';
+
+  @override
+  String get helpdeskWhatsAppTitle => 'WhatsApp Helpdesk';
+
+  @override
+  String get helpdeskWhatsAppSubtitle => 'Layanan via WhatsApp';
+
+  @override
+  String get helpdeskTechnicalReportTitle => 'Laporkan Kendala Teknis Aplikasi';
+
+  @override
+  String get aiChatOnlineStatus => 'Online';
+
+  @override
+  String get csOfficersTitle => 'Petugas Layanan & Helpdesk';
+
+  @override
+  String get csOfficersSuffix => 'Petugas';
+
+  @override
+  String get csOperatingHours => 'Jam Kerja Operasional';
+
+  @override
+  String get passwordStrengthWeak => 'Lemah';
+
+  @override
+  String get passwordStrengthMedium => 'Sedang';
+
+  @override
+  String get passwordStrengthStrong => 'Kuat';
+
+  @override
+  String get passwordStrengthLabel => 'Kekuatan Password';
+
+  @override
+  String get passwordReqMinLength => 'Minimal 8 karakter';
+
+  @override
+  String get passwordReqUpperLower => 'Huruf besar & kecil (A-Z, a-z)';
+
+  @override
+  String get passwordReqNumber => 'Mengandung angka (0-9)';
+
+  @override
+  String get passwordReqSpecial => 'Karakter khusus (@, #, \$, dll.)';
+
+  @override
+  String get passMustContainUpperLower =>
+      'Password harus mengandung huruf besar dan huruf kecil';
+
+  @override
+  String get passMustContainNumber => 'Password harus mengandung angka';
+
+  @override
+  String get passMustContainSpecial =>
+      'Password harus mengandung karakter khusus';
+
+  @override
+  String get passMustBeStrong =>
+      'Password harus berstatus Kuat dan memenuhi semua syarat';
+
+  @override
+  String get changePassword => 'Ganti Password';
+
+  @override
+  String get deviceManagement => 'Manajemen Perangkat';
+
+  @override
+  String get securityMenuSubtitle => 'Kelola keamanan akun dan sesi login Anda';
+
+  @override
+  String get changePasswordSubtitle =>
+      'Perbarui password untuk menjaga keamanan akun';
+
+  @override
+  String get deviceManagementSubtitle =>
+      'Lihat dan kelola perangkat yang terhubung';
+
+  @override
+  String get currentDevice => 'Perangkat Saat Ini';
+
+  @override
+  String get deviceInfoLabel => 'Informasi Perangkat';
+
+  @override
+  String get deviceName => 'Nama Perangkat';
+
+  @override
+  String get deviceId => 'ID Perangkat';
+
+  @override
+  String get deviceStatus => 'Status Perangkat';
+
+  @override
+  String get deviceStatusActive => 'Terdaftar & Aktif';
+
+  @override
+  String get deviceSecurityNotice =>
+      'Akun Anda terikat pada perangkat ini demi keamanan data akademik. Jika Anda berganti ponsel, sinkronisasi perangkat dapat dilakukan pada saat login.';
+
+  @override
+  String get oldPassword => 'Password Lama';
+
+  @override
+  String get enterOldPassword => 'Masukkan Password Lama';
+
+  @override
+  String get oldPassRequired => 'Password lama wajib diisi';
+
+  @override
+  String get forgotOldPassword => 'Lupa password lama?';
+
+  @override
+  String get changePassUseOldInstruction =>
+      'Masukkan password lama Anda dan buat password baru. Password baru harus kuat.';
+
+  @override
+  String get waitOtp => 'Mohon tunggu..';
 }

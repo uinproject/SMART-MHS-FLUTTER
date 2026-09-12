@@ -193,7 +193,7 @@ class _CsListPageState extends State<CsListPage> {
                 ),
                 const SizedBox(width: 8),
                 Text(
-                  'Petugas Layanan & Helpdesk',
+                  l10n?.csOfficersTitle ?? 'Petugas Layanan & Helpdesk',
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -203,7 +203,7 @@ class _CsListPageState extends State<CsListPage> {
                 const Spacer(),
                 if (!_isLoading && _csList.isNotEmpty)
                   Text(
-                    '${_csList.length} Petugas',
+                    '${_csList.length} ${l10n?.csOfficersSuffix ?? 'Petugas'}',
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
@@ -335,7 +335,7 @@ class _CsListPageState extends State<CsListPage> {
                             Text(
                               _isLoading
                                   ? 'Memuat...'
-                                  : '$onlineCount Siap Melayani',
+                                  : '$onlineCount ${l10n?.csReadyToServe ?? 'Siap Melayani'}',
                               style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.bold,
@@ -353,18 +353,18 @@ class _CsListPageState extends State<CsListPage> {
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(color: const Color(0xFFE2E8F0)),
                         ),
-                        child: const Row(
+                        child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(
+                            const Icon(
                               Icons.schedule_rounded,
                               size: 12,
                               color: Color(0xFF64748B),
                             ),
-                            SizedBox(width: 4),
+                            const SizedBox(width: 4),
                             Text(
-                              'Jam Kerja Operasional',
-                              style: TextStyle(
+                              l10n?.csOperatingHours ?? 'Jam Kerja Operasional',
+                              style: const TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
                                 color: Color(0xFF475569),

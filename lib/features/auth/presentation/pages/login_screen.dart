@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
@@ -29,6 +30,7 @@ class _LoginScreenState extends State<LoginScreen> {
   
   bool _isLoading = false;
   bool _obscurePassword = true;
+  String _appVersion = '';
 
   final _apiService = ApiService();
   final _sessionManager = SessionManager();
@@ -36,6 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    _loadAppVersion();
     // Future.microtask ensures the context/localizations are fully ready.
     if (widget.sessionExpired) {
       Future.microtask(() {
@@ -47,6 +50,17 @@ class _LoginScreenState extends State<LoginScreen> {
         );
       });
     }
+  }
+
+  Future<void> _loadAppVersion() async {
+    try {
+      final packageInfo = await PackageInfo.fromPlatform();
+      if (mounted) {
+        setState(() {
+          _appVersion = packageInfo.version;
+        });
+      }
+    } catch (_) {}
   }
 
   Future<void> _handleLogin({String resyncronDevice = 'ayang'}) async {
@@ -448,7 +462,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Column(
                       children: [
                         const Text(
-                          'UIN Salatiga Official',
+                          'uinsalatiga.ac.id',
                           style: TextStyle(
                             color: AppColors.textSecondary,
                             fontSize: 12,
@@ -458,7 +472,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          '${l10n.version} 2.0.0 (Flutter)',
+                          _appVersion.isNotEmpty
+                              ? '${l10n.version} $_appVersion'
+                              : l10n.version,
                           style: const TextStyle(
                             color: Color(0xFF94A3B8),
                             fontSize: 10,

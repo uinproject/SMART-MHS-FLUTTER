@@ -195,7 +195,7 @@ class _HomePageState extends State<HomePage>
         foregroundColor: Colors.white,
         elevation: 4,
         shape: const CircleBorder(),
-        tooltip: 'Customer Service',
+        tooltip: l10n.helpdeskModalTitle,
         child: const Icon(
           Icons.support_agent_rounded,
           color: Colors.white,
@@ -517,9 +517,9 @@ class _HomePageState extends State<HomePage>
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Layanan Bantuan & Helpdesk',
-              style: TextStyle(
+            Text(
+              l10n?.helpdeskModalTitle ?? 'Layanan Bantuan & Helpdesk',
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Color(0xFF1E293B),
@@ -527,9 +527,10 @@ class _HomePageState extends State<HomePage>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Butuh bantuan terkait akademik atau kendala aplikasi Smart Mahasiswa? Hubungi layanan bantuan resmi.',
-              style: TextStyle(
+            Text(
+              l10n?.helpdeskModalSubtitle ??
+                  'Butuh bantuan terkait akademik atau kendala aplikasi Smart Mahasiswa? Hubungi layanan bantuan resmi.',
+              style: const TextStyle(
                 fontSize: 13,
                 color: Color(0xFF64748B),
                 height: 1.4,
@@ -558,8 +559,8 @@ class _HomePageState extends State<HomePage>
               icon: Icons.chat_rounded,
               iconColor: const Color(0xFF10B981),
               iconBgColor: const Color(0xFFD1FAE5),
-              title: 'WhatsApp Helpdesk',
-              subtitle: 'Layanan via WhatsApp',
+              title: l10n?.helpdeskWhatsAppTitle ?? 'WhatsApp Helpdesk',
+              subtitle: l10n?.helpdeskWhatsAppSubtitle ?? 'Layanan via WhatsApp',
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(
@@ -573,7 +574,8 @@ class _HomePageState extends State<HomePage>
               icon: Icons.help_center_rounded,
               iconColor: const Color(0xFF0284C7),
               iconBgColor: const Color(0xFFE0F2FE),
-              title: 'Laporkan Kendala Teknis Aplikasi',
+              title: l10n?.helpdeskTechnicalReportTitle ??
+                  'Laporkan Kendala Teknis Aplikasi',
               subtitle: 'helpdesk.uinsalatiga.ac.id',
               onTap: () async {
                 Navigator.pop(context);

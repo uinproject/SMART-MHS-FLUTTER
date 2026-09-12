@@ -6,6 +6,7 @@ import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/utils/app_notifications.dart';
+import '../../../../core/utils/string_utils.dart';
 import 'change_password_page.dart';
 
 class OtpResetPasswordPage extends StatefulWidget {
@@ -232,7 +233,7 @@ class _OtpResetPasswordPageState extends State<OtpResetPasswordPage> {
                       children: [
                         Text(l10n.otpResetPassInstruction, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
                         const SizedBox(height: 12),
-                        Text(widget.email, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text(StringUtils.maskEmail(widget.email), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                         const SizedBox(height: 40),
                         Pinput(
                           length: 4,

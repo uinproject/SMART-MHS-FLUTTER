@@ -78,7 +78,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get changePassInstruction =>
-      'يرجى إدخال كلمة المرور الجديدة، يجب أن تكون كلمة المرور الجديدة 8 أحرف على الأقل.';
+      'يرجى إدخال كلمة المرور الجديدة. يجب أن تكون كلمة المرور قوية وتحتوي على أحرف كبيرة وصغيرة وأرقام ورموز خاصة.';
 
   @override
   String get successChangePass => 'تم تحديث كلمة المرور بنجاح';
@@ -1214,4 +1214,128 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get aiChatQuickQuestion4 =>
       'كم عدد الساعات المعتمدة (SKS) التي يمكنني تسجيلها؟';
+
+  @override
+  String get helpdeskModalTitle => 'خدمات المساعدة والدعم الفني';
+
+  @override
+  String get helpdeskModalSubtitle =>
+      'هل تحتاج إلى مساعدة بخصوص الأمور الأكاديمية أو مشكلات تطبيق سمارت للطلاب؟ اتصل بالدعم الرسمي.';
+
+  @override
+  String get helpdeskWhatsAppTitle => 'واتساب الدعم الفني';
+
+  @override
+  String get helpdeskWhatsAppSubtitle => 'الخدمة عبر واتساب';
+
+  @override
+  String get helpdeskTechnicalReportTitle =>
+      'الإبلاغ عن المشكلات التقنية للتطبيق';
+
+  @override
+  String get aiChatOnlineStatus => 'متصل';
+
+  @override
+  String get csOfficersTitle => 'مسؤولو الخدمة والدعم الفني';
+
+  @override
+  String get csOfficersSuffix => 'موظف';
+
+  @override
+  String get csOperatingHours => 'ساعات العمل الرسمية';
+
+  @override
+  String get passwordStrengthWeak => 'ضعيف';
+
+  @override
+  String get passwordStrengthMedium => 'متوسط';
+
+  @override
+  String get passwordStrengthStrong => 'قوي';
+
+  @override
+  String get passwordStrengthLabel => 'قوة كلمة المرور';
+
+  @override
+  String get passwordReqMinLength => '8 أحرف على الأقل';
+
+  @override
+  String get passwordReqUpperLower => 'أحرف كبيرة وصغيرة (A-Z, a-z)';
+
+  @override
+  String get passwordReqNumber => 'تحتوي على أرقام (0-9)';
+
+  @override
+  String get passwordReqSpecial => 'رموز خاصة (@، #، \$، إلخ)';
+
+  @override
+  String get passMustContainUpperLower =>
+      'يجب أن تحتوي كلمة المرور على أحرف كبيرة وصغيرة';
+
+  @override
+  String get passMustContainNumber => 'يجب أن تحتوي كلمة المرور على أرقام';
+
+  @override
+  String get passMustContainSpecial => 'يجب أن تحتوي كلمة المرور على رموز خاصة';
+
+  @override
+  String get passMustBeStrong =>
+      'يجب أن تكون كلمة المرور قوية وتستوفي جميع الشروط';
+
+  @override
+  String get changePassword => 'تغيير كلمة المرور';
+
+  @override
+  String get deviceManagement => 'إدارة الأجهزة';
+
+  @override
+  String get securityMenuSubtitle => 'إدارة أمان حسابك وجلسات تسجيل الدخول';
+
+  @override
+  String get changePasswordSubtitle =>
+      'قم بتحديث كلمة المرور للحفاظ على أمان حسابك';
+
+  @override
+  String get deviceManagementSubtitle => 'عرض وإدارة الأجهزة المتصلة';
+
+  @override
+  String get currentDevice => 'الجهاز الحالي';
+
+  @override
+  String get deviceInfoLabel => 'معلومات الجهاز';
+
+  @override
+  String get deviceName => 'اسم الجهاز';
+
+  @override
+  String get deviceId => 'معرّف الجهاز';
+
+  @override
+  String get deviceStatus => 'حالة الجهاز';
+
+  @override
+  String get deviceStatusActive => 'مسجّل ونشط';
+
+  @override
+  String get deviceSecurityNotice =>
+      'حسابك مرتبط بهذا الجهاز لحماية بياناتك الأكاديمية. إذا قمت بتغيير الهاتف، يمكن مزامنة الجهاز أثناء تسجيل الدخول.';
+
+  @override
+  String get oldPassword => 'كلمة المرور القديمة';
+
+  @override
+  String get enterOldPassword => 'أدخل كلمة المرور القديمة';
+
+  @override
+  String get oldPassRequired => 'كلمة المرور القديمة مطلوبة';
+
+  @override
+  String get forgotOldPassword => 'نسيت كلمة المرور القديمة؟';
+
+  @override
+  String get changePassUseOldInstruction =>
+      'أدخل كلمة المرور الحالية وأنشئ كلمة مرور جديدة. يجب أن تكون كلمة المرور الجديدة قوية.';
+
+  @override
+  String get waitOtp => 'يرجى الانتظار..';
 }

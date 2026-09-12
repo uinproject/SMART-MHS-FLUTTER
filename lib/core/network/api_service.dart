@@ -598,6 +598,56 @@ class ApiService {
     }
   }
 
+  Future<ChangePasswordResponse?> changePasswordUseOldPass({
+    required String nim,
+    required String oldPassword,
+    required String newPassword,
+    required String email,
+    required String language,
+  }) async {
+    try {
+      final data = {
+        'encnim': BniEncryption.hashData(
+          nim,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'encoldpassword': BniEncryption.hashData(
+          oldPassword,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'encnewpassword': BniEncryption.hashData(
+          newPassword,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'uemail': BniEncryption.hashData(
+          email,
+          AppConstants.cidV2,
+          AppConstants.secretKeyV2,
+        ),
+        'language': language,
+      };
+
+      final response = await _dio.post(
+        'Managerpassword/change_password_mhs_use_old_password',
+        data: data,
+        options: Options(contentType: Headers.formUrlEncodedContentType),
+      );
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> responseData = response.data is String
+            ? jsonDecode(response.data)
+            : response.data;
+        return ChangePasswordResponse.fromJson(responseData);
+      }
+      return null;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<JadwalResponse?> getJadwalmhs({
     required String nim,
     required int semester,

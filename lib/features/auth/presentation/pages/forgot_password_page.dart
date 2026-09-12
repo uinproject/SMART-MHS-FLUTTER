@@ -6,7 +6,14 @@ import '../../../../core/network/api_service.dart';
 import 'otp_reset_password_page.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  final String? initialNim;
+  final String? initialEmail;
+
+  const ForgotPasswordPage({
+    super.key,
+    this.initialNim,
+    this.initialEmail,
+  });
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -20,6 +27,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   bool _isLoading = false;
   String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialNim != null) {
+      _nimController.text = widget.initialNim!;
+    }
+    if (widget.initialEmail != null) {
+      _emailController.text = widget.initialEmail!;
+    }
+  }
 
   @override
   void dispose() {

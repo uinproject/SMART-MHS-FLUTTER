@@ -77,7 +77,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get changePassInstruction =>
-      'Please enter your new password, The new password is at least 8 characters long.';
+      'Please enter your new password. Password must be strong, containing uppercase & lowercase letters, numbers, and special characters.';
 
   @override
   String get successChangePass => 'Password successfully updated';
@@ -1222,4 +1222,131 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get aiChatQuickQuestion4 => 'How many credits (SKS) can I take?';
+
+  @override
+  String get helpdeskModalTitle => 'Help & Helpdesk Services';
+
+  @override
+  String get helpdeskModalSubtitle =>
+      'Need help regarding academics or Smart Mahasiswa app issues? Contact official support.';
+
+  @override
+  String get helpdeskWhatsAppTitle => 'WhatsApp Helpdesk';
+
+  @override
+  String get helpdeskWhatsAppSubtitle => 'Service via WhatsApp';
+
+  @override
+  String get helpdeskTechnicalReportTitle =>
+      'Report Application Technical Issues';
+
+  @override
+  String get aiChatOnlineStatus => 'Online';
+
+  @override
+  String get csOfficersTitle => 'Service Officers & Helpdesk';
+
+  @override
+  String get csOfficersSuffix => 'Officers';
+
+  @override
+  String get csOperatingHours => 'Operating Hours';
+
+  @override
+  String get passwordStrengthWeak => 'Weak';
+
+  @override
+  String get passwordStrengthMedium => 'Medium';
+
+  @override
+  String get passwordStrengthStrong => 'Strong';
+
+  @override
+  String get passwordStrengthLabel => 'Password Strength';
+
+  @override
+  String get passwordReqMinLength => 'At least 8 characters';
+
+  @override
+  String get passwordReqUpperLower => 'Uppercase & lowercase (A-Z, a-z)';
+
+  @override
+  String get passwordReqNumber => 'Contains numbers (0-9)';
+
+  @override
+  String get passwordReqSpecial => 'Special character (@, #, \$, etc.)';
+
+  @override
+  String get passMustContainUpperLower =>
+      'Password must contain uppercase and lowercase letters';
+
+  @override
+  String get passMustContainNumber =>
+      'Password must contain at least one number';
+
+  @override
+  String get passMustContainSpecial =>
+      'Password must contain at least one special character';
+
+  @override
+  String get passMustBeStrong =>
+      'Password must be Strong and meet all criteria';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get deviceManagement => 'Device Management';
+
+  @override
+  String get securityMenuSubtitle =>
+      'Manage your account security and login sessions';
+
+  @override
+  String get changePasswordSubtitle =>
+      'Update your password to keep your account secure';
+
+  @override
+  String get deviceManagementSubtitle => 'View and manage connected devices';
+
+  @override
+  String get currentDevice => 'Current Device';
+
+  @override
+  String get deviceInfoLabel => 'Device Information';
+
+  @override
+  String get deviceName => 'Device Name';
+
+  @override
+  String get deviceId => 'Device ID';
+
+  @override
+  String get deviceStatus => 'Device Status';
+
+  @override
+  String get deviceStatusActive => 'Registered & Active';
+
+  @override
+  String get deviceSecurityNotice =>
+      'Your account is linked to this device for the security of your academic data. If you change phones, device synchronization can be done during login.';
+
+  @override
+  String get oldPassword => 'Old Password';
+
+  @override
+  String get enterOldPassword => 'Enter Old Password';
+
+  @override
+  String get oldPassRequired => 'Old password is required';
+
+  @override
+  String get forgotOldPassword => 'Forgot old password?';
+
+  @override
+  String get changePassUseOldInstruction =>
+      'Enter your current password and create a new password. The new password must be strong.';
+
+  @override
+  String get waitOtp => 'Please wait..';
 }

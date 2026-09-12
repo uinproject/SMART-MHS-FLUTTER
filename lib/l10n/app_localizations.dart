@@ -235,7 +235,7 @@ abstract class AppLocalizations {
   /// No description provided for @changePassInstruction.
   ///
   /// In id, this message translates to:
-  /// **'Silahkan masukan password baru anda, Password baru minimal 8 Karakter.'**
+  /// **'Silakan masukkan password baru Anda. Password harus kuat, berisi kombinasi huruf besar & kecil, angka, dan karakter khusus.'**
   String get changePassInstruction;
 
   /// No description provided for @successChangePass.
@@ -2385,6 +2385,240 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Berapa jumlah SKS yang bisa saya ambil?'**
   String get aiChatQuickQuestion4;
+
+  /// No description provided for @helpdeskModalTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Layanan Bantuan & Helpdesk'**
+  String get helpdeskModalTitle;
+
+  /// No description provided for @helpdeskModalSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Butuh bantuan terkait akademik atau kendala aplikasi Smart Mahasiswa? Hubungi layanan bantuan resmi.'**
+  String get helpdeskModalSubtitle;
+
+  /// No description provided for @helpdeskWhatsAppTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'WhatsApp Helpdesk'**
+  String get helpdeskWhatsAppTitle;
+
+  /// No description provided for @helpdeskWhatsAppSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Layanan via WhatsApp'**
+  String get helpdeskWhatsAppSubtitle;
+
+  /// No description provided for @helpdeskTechnicalReportTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Laporkan Kendala Teknis Aplikasi'**
+  String get helpdeskTechnicalReportTitle;
+
+  /// No description provided for @aiChatOnlineStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Online'**
+  String get aiChatOnlineStatus;
+
+  /// No description provided for @csOfficersTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Petugas Layanan & Helpdesk'**
+  String get csOfficersTitle;
+
+  /// No description provided for @csOfficersSuffix.
+  ///
+  /// In id, this message translates to:
+  /// **'Petugas'**
+  String get csOfficersSuffix;
+
+  /// No description provided for @csOperatingHours.
+  ///
+  /// In id, this message translates to:
+  /// **'Jam Kerja Operasional'**
+  String get csOperatingHours;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In id, this message translates to:
+  /// **'Lemah'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthMedium.
+  ///
+  /// In id, this message translates to:
+  /// **'Sedang'**
+  String get passwordStrengthMedium;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In id, this message translates to:
+  /// **'Kuat'**
+  String get passwordStrengthStrong;
+
+  /// No description provided for @passwordStrengthLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Kekuatan Password'**
+  String get passwordStrengthLabel;
+
+  /// No description provided for @passwordReqMinLength.
+  ///
+  /// In id, this message translates to:
+  /// **'Minimal 8 karakter'**
+  String get passwordReqMinLength;
+
+  /// No description provided for @passwordReqUpperLower.
+  ///
+  /// In id, this message translates to:
+  /// **'Huruf besar & kecil (A-Z, a-z)'**
+  String get passwordReqUpperLower;
+
+  /// No description provided for @passwordReqNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengandung angka (0-9)'**
+  String get passwordReqNumber;
+
+  /// No description provided for @passwordReqSpecial.
+  ///
+  /// In id, this message translates to:
+  /// **'Karakter khusus (@, #, \$, dll.)'**
+  String get passwordReqSpecial;
+
+  /// No description provided for @passMustContainUpperLower.
+  ///
+  /// In id, this message translates to:
+  /// **'Password harus mengandung huruf besar dan huruf kecil'**
+  String get passMustContainUpperLower;
+
+  /// No description provided for @passMustContainNumber.
+  ///
+  /// In id, this message translates to:
+  /// **'Password harus mengandung angka'**
+  String get passMustContainNumber;
+
+  /// No description provided for @passMustContainSpecial.
+  ///
+  /// In id, this message translates to:
+  /// **'Password harus mengandung karakter khusus'**
+  String get passMustContainSpecial;
+
+  /// No description provided for @passMustBeStrong.
+  ///
+  /// In id, this message translates to:
+  /// **'Password harus berstatus Kuat dan memenuhi semua syarat'**
+  String get passMustBeStrong;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti Password'**
+  String get changePassword;
+
+  /// No description provided for @deviceManagement.
+  ///
+  /// In id, this message translates to:
+  /// **'Manajemen Perangkat'**
+  String get deviceManagement;
+
+  /// No description provided for @securityMenuSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kelola keamanan akun dan sesi login Anda'**
+  String get securityMenuSubtitle;
+
+  /// No description provided for @changePasswordSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Perbarui password untuk menjaga keamanan akun'**
+  String get changePasswordSubtitle;
+
+  /// No description provided for @deviceManagementSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Lihat dan kelola perangkat yang terhubung'**
+  String get deviceManagementSubtitle;
+
+  /// No description provided for @currentDevice.
+  ///
+  /// In id, this message translates to:
+  /// **'Perangkat Saat Ini'**
+  String get currentDevice;
+
+  /// No description provided for @deviceInfoLabel.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi Perangkat'**
+  String get deviceInfoLabel;
+
+  /// No description provided for @deviceName.
+  ///
+  /// In id, this message translates to:
+  /// **'Nama Perangkat'**
+  String get deviceName;
+
+  /// No description provided for @deviceId.
+  ///
+  /// In id, this message translates to:
+  /// **'ID Perangkat'**
+  String get deviceId;
+
+  /// No description provided for @deviceStatus.
+  ///
+  /// In id, this message translates to:
+  /// **'Status Perangkat'**
+  String get deviceStatus;
+
+  /// No description provided for @deviceStatusActive.
+  ///
+  /// In id, this message translates to:
+  /// **'Terdaftar & Aktif'**
+  String get deviceStatusActive;
+
+  /// No description provided for @deviceSecurityNotice.
+  ///
+  /// In id, this message translates to:
+  /// **'Akun Anda terikat pada perangkat ini demi keamanan data akademik. Jika Anda berganti ponsel, sinkronisasi perangkat dapat dilakukan pada saat login.'**
+  String get deviceSecurityNotice;
+
+  /// No description provided for @oldPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Password Lama'**
+  String get oldPassword;
+
+  /// No description provided for @enterOldPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan Password Lama'**
+  String get enterOldPassword;
+
+  /// No description provided for @oldPassRequired.
+  ///
+  /// In id, this message translates to:
+  /// **'Password lama wajib diisi'**
+  String get oldPassRequired;
+
+  /// No description provided for @forgotOldPassword.
+  ///
+  /// In id, this message translates to:
+  /// **'Lupa password lama?'**
+  String get forgotOldPassword;
+
+  /// No description provided for @changePassUseOldInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan password lama Anda dan buat password baru. Password baru harus kuat.'**
+  String get changePassUseOldInstruction;
+
+  /// No description provided for @waitOtp.
+  ///
+  /// In id, this message translates to:
+  /// **'Mohon tunggu..'**
+  String get waitOtp;
 }
 
 class _AppLocalizationsDelegate

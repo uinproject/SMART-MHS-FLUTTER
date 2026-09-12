@@ -618,9 +618,9 @@ class _AiChatPageState extends State<AiChatPage> {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Text(
-                      'Online',
-                      style: TextStyle(
+                    Text(
+                      l10n?.aiChatOnlineStatus ?? 'Online',
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 11,
                         fontWeight: FontWeight.w400,

@@ -5,6 +5,7 @@ import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/home_helpers.dart';
 import '../../../auth/presentation/pages/login_screen.dart';
 import '../widgets/language_selector_dialog.dart';
+import 'security_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -112,117 +113,135 @@ class _AccountPageState extends State<AccountPage> {
       return const Scaffold(body: SizedBox.shrink());
     }
 
-    const mainGradient = LinearGradient(
-      begin: Alignment.topRight,
-      end: Alignment.bottomLeft,
-      colors: [Color(0xFF003D82), Color(0xFF0056B3)],
-    );
-
     return Scaffold(
       backgroundColor: AppColors.background,
+      appBar: AppBar(
+        toolbarHeight: 64,
+        backgroundColor: AppColors.primary,
+        elevation: 0,
+        scrolledUnderElevation: 0,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        titleSpacing: 20,
+        title: Text(
+          l10n.accountSettings,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
       body: CustomScrollView(
-              slivers: [
-                SliverAppBar(
-                  pinned: true,
-                  expandedHeight: null,
-                  toolbarHeight: 64,
-                  backgroundColor: AppColors.primary,
-                  elevation: 0,
-                  automaticallyImplyLeading: false,
-                  title: Text(
-                    l10n.accountSettings,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+        clipBehavior: Clip.none,
+        physics: const BouncingScrollPhysics(
+          parent: AlwaysScrollableScrollPhysics(),
+        ),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                // Background overscroll yang menyatu ke AppBar saat layar ditarik ke bawah
+                Positioned(
+                  top: -600,
+                  left: 0,
+                  right: 0,
+                  height: 600,
+                  child: Container(
+                    color: AppColors.primary,
+                  ),
+                ),
+                // Background yang warnanya menyatu dengan AppBar,
+                // tinggi dari AppBar (top: 0) sampai tengah card, dibuat melengkung seperti di fitur home
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: 105,
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(28),
+                        bottomRight: Radius.circular(28),
+                      ),
                     ),
                   ),
-                  titleSpacing: 24,
                 ),
-
-                SliverToBoxAdapter(
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Container(
-                        height: 80,
-                        width: double.infinity,
-                        decoration: const BoxDecoration(
-                          gradient: mainGradient,
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(40),
-                            bottomRight: Radius.circular(40),
-                          ),
-                        ),
-                      ),
-
-                      // Jarak antara Action Bar dengan Card Profil
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
-                        child: _buildInfoCard(user, l10n),
-                      ),
-                    ],
-                  ),
-                ),
-
-                SliverPadding(
-                  padding: const EdgeInsets.all(24),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-                      _buildMenuSection(l10n.settings, [
-                        _buildMenuItem(
-                          Icons.lock_outline,
-                          l10n.security,
-                          () {},
-                        ),
-                        _buildMenuItem(
-                          Icons.person_outline,
-                          l10n.profile,
-                          () {},
-                        ),
-                        _buildMenuItem(Icons.badge_outlined, 'E-KTM', () {}),
-                        _buildMenuItem(Icons.language, l10n.language, () {
-                          showDialog(
-                            context: context,
-                            builder: (context) =>
-                                const LanguageSelectorDialog(),
-                          );
-                        }),
-                        if (!user.emailVerification)
-                          _buildMenuItem(
-                            Icons.email_outlined,
-                            l10n.emailVerif,
-                            () {},
-                          ),
-                      ]),
-
-                      const SizedBox(height: 24),
-
-                      _buildMenuSection(l10n.help, [
-                        _buildMenuItem(Icons.help_outline, l10n.help, () {}),
-                        _buildMenuItem(Icons.info_outline, l10n.about, () {}),
-                        _buildMenuItem(Icons.star_outline, l10n.rateApp, () {}),
-                      ]),
-
-                      const SizedBox(height: 32),
-
-                      ElevatedButton(
-                        onPressed: _handleLogout,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white,
-                          foregroundColor: AppColors.danger,
-                          side: const BorderSide(color: AppColors.danger),
-                          elevation: 0,
-                        ),
-                        child: Text(l10n.logout),
-                      ),
-
-                      const SizedBox(height: 40),
-                    ]),
-                  ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
+                  child: _buildInfoCard(user, l10n),
                 ),
               ],
             ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                _buildMenuSection(l10n.settings, [
+                  _buildMenuItem(
+                    Icons.lock_outline,
+                    l10n.security,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SecurityPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildMenuItem(
+                    Icons.person_outline,
+                    l10n.profile,
+                    () {},
+                  ),
+                  _buildMenuItem(Icons.badge_outlined, 'E-KTM', () {}),
+                  _buildMenuItem(Icons.language, l10n.language, () {
+                    showDialog(
+                      context: context,
+                      builder: (context) =>
+                          const LanguageSelectorDialog(),
+                    );
+                  }),
+                  if (!user.emailVerification)
+                    _buildMenuItem(
+                      Icons.email_outlined,
+                      l10n.emailVerif,
+                      () {},
+                    ),
+                ]),
+
+                const SizedBox(height: 24),
+
+                _buildMenuSection(l10n.help, [
+                  _buildMenuItem(Icons.help_outline, l10n.help, () {}),
+                  _buildMenuItem(Icons.info_outline, l10n.about, () {}),
+                  _buildMenuItem(Icons.star_outline, l10n.rateApp, () {}),
+                ]),
+
+                const SizedBox(height: 32),
+
+                ElevatedButton(
+                  onPressed: _handleLogout,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: AppColors.danger,
+                    side: const BorderSide(color: AppColors.danger),
+                    elevation: 0,
+                  ),
+                  child: Text(l10n.logout),
+                ),
+
+                const SizedBox(height: 40),
+              ]),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -236,10 +255,10 @@ class _AccountPageState extends State<AccountPage> {
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(24),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.06),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
             offset: const Offset(0, 10),
           ),
@@ -408,7 +427,6 @@ class _AccountPageState extends State<AccountPage> {
         const SizedBox(height: 16),
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
             borderRadius: BorderRadius.circular(24),
             boxShadow: [
               BoxShadow(
@@ -418,7 +436,26 @@ class _AccountPageState extends State<AccountPage> {
               ),
             ],
           ),
-          child: Column(children: items),
+          child: Material(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(24),
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              children: [
+                for (int i = 0; i < items.length; i++) ...[
+                  items[i],
+                  if (i < items.length - 1)
+                    const Divider(
+                      height: 1,
+                      thickness: 1,
+                      indent: 60,
+                      endIndent: 16,
+                      color: Color(0xFFF1F5F9),
+                    ),
+                ],
+              ],
+            ),
+          ),
         ),
       ],
     );
@@ -448,8 +485,9 @@ class _AccountPageState extends State<AccountPage> {
         color: AppColors.textSecondary,
       ),
       onTap: onTap,
+      splashColor: AppColors.primary.withValues(alpha: 0.12),
+      hoverColor: AppColors.primary.withValues(alpha: 0.06),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     );
   }
 }

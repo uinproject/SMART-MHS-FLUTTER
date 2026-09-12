@@ -7,6 +7,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/network/api_service.dart';
 import '../../../../core/utils/app_notifications.dart';
 import '../../../../core/storage/session_manager.dart';
+import '../../../../core/utils/string_utils.dart';
 import '../../../home/presentation/pages/main_page.dart';
 
 class OtpVerificationPage extends StatefulWidget {
@@ -291,7 +292,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                       children: [
                         Text(l10n.enterOtp, textAlign: TextAlign.center, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
                         const SizedBox(height: 12),
-                        Text(widget.email, textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text(StringUtils.maskEmail(widget.email), textAlign: TextAlign.center, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                         const SizedBox(height: 40),
                         Pinput(
                           length: 4,
