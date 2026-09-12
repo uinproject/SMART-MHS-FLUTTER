@@ -718,63 +718,71 @@ class _QiblaPageState extends State<QiblaPage>
   Widget _buildInfoCards(AppLocalizations l10n) {
     return Column(
       children: [
-        Row(
-          children: [
-            Expanded(
-              child: _buildMetricCard(
-                icon: Icons.explore_rounded,
-                iconColor: const Color(0xFFD97706),
-                title: l10n.qiblaAngle,
-                value: '${_qiblaAngle.toStringAsFixed(1)}°',
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _buildMetricCard(
-                icon: Icons.navigation_rounded,
-                iconColor: const Color(0xFF003D82),
-                title: l10n.currentHeading,
-                value: '${_currentHeadingDegrees.round()}°',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            Expanded(
-              child: _buildMetricCard(
-                icon: Icons.place_rounded,
-                iconColor: const Color(0xFF059669),
-                title: l10n.distanceToKaaba,
-                value: _distanceToKaabaKm > 0
-                    ? '${_distanceToKaabaKm.round().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')} km'
-                    : '-',
-              ),
-            ),
-            if (_displayAddress != null && _displayAddress!.isNotEmpty) ...[
-              const SizedBox(width: 12),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
               Expanded(
                 child: _buildMetricCard(
-                  icon: Icons.location_on_rounded,
-                  iconColor: const Color(0xFF6366F1),
-                  title: 'Lokasi',
-                  value: _displayAddress!,
+                  icon: Icons.explore_rounded,
+                  iconColor: const Color(0xFFD97706),
+                  title: l10n.qiblaAngle,
+                  value: '${_qiblaAngle.toStringAsFixed(1)}°',
                 ),
               ),
-            ] else if (_currentPosition != null) ...[
               const SizedBox(width: 12),
               Expanded(
                 child: _buildMetricCard(
-                  icon: Icons.location_on_rounded,
-                  iconColor: const Color(0xFF6366F1),
-                  title: 'Lokasi',
-                  value:
-                      '${_currentPosition!.latitude.toStringAsFixed(2)}°, ${_currentPosition!.longitude.toStringAsFixed(2)}°',
+                  icon: Icons.navigation_rounded,
+                  iconColor: const Color(0xFF003D82),
+                  title: l10n.currentHeading,
+                  value: '${_currentHeadingDegrees.round()}°',
                 ),
               ),
             ],
-          ],
+          ),
+        ),
+        const SizedBox(height: 12),
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _buildMetricCard(
+                  icon: Icons.place_rounded,
+                  iconColor: const Color(0xFF059669),
+                  title: l10n.distanceToKaaba,
+                  value: _distanceToKaabaKm > 0
+                      ? '${_distanceToKaabaKm.round().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (m) => '${m[1]}.')} km'
+                      : '-',
+                ),
+              ),
+              if (_displayAddress != null && _displayAddress!.isNotEmpty) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildMetricCard(
+                    icon: Icons.location_on_rounded,
+                    iconColor: const Color(0xFF6366F1),
+                    title: 'Lokasi',
+                    value: _displayAddress!,
+                    maxLines: 2,
+                  ),
+                ),
+              ] else if (_currentPosition != null) ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildMetricCard(
+                    icon: Icons.location_on_rounded,
+                    iconColor: const Color(0xFF6366F1),
+                    title: 'Lokasi',
+                    value:
+                        '${_currentPosition!.latitude.toStringAsFixed(2)}°, ${_currentPosition!.longitude.toStringAsFixed(2)}°',
+                    maxLines: 2,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ],
     );
@@ -785,6 +793,7 @@ class _QiblaPageState extends State<QiblaPage>
     required Color iconColor,
     required String title,
     required String value,
+    int maxLines = 1,
   }) {
     return Container(
       padding: const EdgeInsets.all(14),
@@ -802,6 +811,7 @@ class _QiblaPageState extends State<QiblaPage>
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
@@ -831,11 +841,14 @@ class _QiblaPageState extends State<QiblaPage>
           const SizedBox(height: 10),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
+            style: TextStyle(
+              fontSize: maxLines > 1 ? 14 : 16,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1E293B),
+              color: const Color(0xFF1E293B),
+              height: 1.25,
             ),
+            maxLines: maxLines,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

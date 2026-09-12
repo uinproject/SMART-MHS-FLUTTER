@@ -2227,7 +2227,7 @@ abstract class AppLocalizations {
   /// No description provided for @aiChatHelpdeskSubtitle.
   ///
   /// In id, this message translates to:
-  /// **'Tanya jawab dengan AI'**
+  /// **'Tanya AI respon lebih cepat dari wa helpdesk'**
   String get aiChatHelpdeskSubtitle;
 
   /// No description provided for @aiChatDisclaimer.

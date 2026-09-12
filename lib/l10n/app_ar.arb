@@ -439,7 +439,7 @@
   "emptyCsList": "لا توجد قائمة خدمات متاحة حالياً",
   "aiChatTitle": "المساعد الذكي",
   "aiChatHelpdeskOption": "محادثة مع المساعد الذكي",
-  "aiChatHelpdeskSubtitle": "أسئلة وأجوبة مع الذكاء الاصطناعي",
+  "aiChatHelpdeskSubtitle": "اسأل الذكاء الاصطناعي، استجابة أسرع من واتساب",
   "aiChatDisclaimer": "هذا المساعد هو روبوت افتراضي، قد تحتمل الإجابات بعض الخطأ.",
   "aiChatGreeting": "مرحباً {name} 👋، كيف يمكنني مساعدتك؟",
   "@aiChatGreeting": {

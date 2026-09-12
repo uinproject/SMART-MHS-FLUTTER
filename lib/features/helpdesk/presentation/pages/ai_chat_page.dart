@@ -781,10 +781,10 @@ class _AiChatPageState extends State<AiChatPage> {
             height: 34,
             margin: const EdgeInsets.only(top: 2, right: 10),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: const LinearGradient(
                 colors: [
-                  const Color(0xFF6366F1),
-                  AppColors.primary,
+                  Color(0xFFF59E0B),
+                  Color(0xFFD97706),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -792,7 +792,7 @@ class _AiChatPageState extends State<AiChatPage> {
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.2),
+                  color: const Color(0xFFD97706).withValues(alpha: 0.25),
                   blurRadius: 4,
                   offset: const Offset(0, 2),
                 ),
@@ -1042,11 +1042,11 @@ class _AiChatPageState extends State<AiChatPage> {
             width: 34,
             height: 34,
             margin: const EdgeInsets.only(top: 2, right: 10),
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  const Color(0xFF6366F1),
-                  AppColors.primary,
+                  Color(0xFFF59E0B),
+                  Color(0xFFD97706),
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -1072,7 +1072,7 @@ class _AiChatPageState extends State<AiChatPage> {
               border: Border.all(color: const Color(0xFFE2E8F0)),
             ),
             child: const SpinKitThreeBounce(
-              color: Color(0xFF6366F1),
+              color: Color(0xFFD97706),
               size: 18.0,
             ),
           ),

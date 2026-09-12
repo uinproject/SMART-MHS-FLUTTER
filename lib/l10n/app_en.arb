@@ -439,7 +439,7 @@
   "emptyCsList": "No service list available yet",
   "aiChatTitle": "AI Assistant",
   "aiChatHelpdeskOption": "Chat with AI Assistant",
-  "aiChatHelpdeskSubtitle": "Q&A with AI",
+  "aiChatHelpdeskSubtitle": "Ask AI, faster response than WA helpdesk",
   "aiChatDisclaimer": "This is a virtual robot assistant, answers may contain inaccuracies.",
   "aiChatGreeting": "Hello {name} 👋, how can I help you?",
   "@aiChatGreeting": {

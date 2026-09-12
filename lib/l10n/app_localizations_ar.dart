@@ -1125,7 +1125,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get aiChatHelpdeskOption => 'محادثة مع المساعد الذكي';
 
   @override
-  String get aiChatHelpdeskSubtitle => 'أسئلة وأجوبة مع الذكاء الاصطناعي';
+  String get aiChatHelpdeskSubtitle =>
+      'اسأل الذكاء الاصطناعي، استجابة أسرع من واتساب';
 
   @override
   String get aiChatDisclaimer =>

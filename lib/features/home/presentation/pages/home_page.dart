@@ -540,10 +540,11 @@ class _HomePageState extends State<HomePage>
             // Chat dengan Asisten AI
             _buildCsActionTile(
               icon: Icons.support_agent_rounded,
-              iconColor: const Color(0xFF7C3AED),
-              iconBgColor: const Color(0xFFEDE9FE),
+              iconColor: const Color(0xFFD97706),
+              iconBgColor: const Color(0xFFFEF3C7),
               title: l10n?.aiChatHelpdeskOption ?? 'Chat dengan Asisten AI',
-              subtitle: l10n?.aiChatHelpdeskSubtitle ?? 'Tanya jawab dengan AI',
+              subtitle: l10n?.aiChatHelpdeskSubtitle ??
+                  'Tanya AI respon lebih cepat dari wa helpdesk',
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(

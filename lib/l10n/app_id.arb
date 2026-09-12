@@ -439,7 +439,7 @@
   "emptyCsList": "Belum ada daftar layanan yang tersedia",
   "aiChatTitle": "Asisten AI",
   "aiChatHelpdeskOption": "Chat dengan Asisten AI",
-  "aiChatHelpdeskSubtitle": "Tanya jawab dengan AI",
+  "aiChatHelpdeskSubtitle": "Tanya AI respon lebih cepat dari wa helpdesk",
   "aiChatDisclaimer": "Asisten ini adalah robot virtual, jawaban mungkin bisa salah.",
   "aiChatGreeting": "Halo {name} 👋, ada yang bisa saya bantu?",
   "@aiChatGreeting": {

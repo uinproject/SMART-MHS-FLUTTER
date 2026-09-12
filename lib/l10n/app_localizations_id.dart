@@ -1137,7 +1137,8 @@ class AppLocalizationsId extends AppLocalizations {
   String get aiChatHelpdeskOption => 'Chat dengan Asisten AI';
 
   @override
-  String get aiChatHelpdeskSubtitle => 'Tanya jawab dengan AI';
+  String get aiChatHelpdeskSubtitle =>
+      'Tanya AI respon lebih cepat dari wa helpdesk';
 
   @override
   String get aiChatDisclaimer =>
