@@ -13,4 +13,9 @@ class AppConstants {
   static const String appName = 'Smart MHS';
   static const String company = 'TIPD UIN Salatiga';
   static const String developer = 'TIPD UIN Salatiga';
+
+  // AI Chat Assistant
+  static const String aiChatBaseUrl = 'https://helpdesksmart.uinsalatiga.ac.id/api/';
+  static const String aiChatApiKey = 'sk-helpdesk-303c2290d147550b236427d824ff22d5fc0c80b3e15f824f';
+  static const String aiAssistantName = 'Saga';
 }

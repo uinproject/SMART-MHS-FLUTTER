@@ -1129,4 +1129,101 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get emptyCsList => 'Belum ada daftar layanan yang tersedia';
+
+  @override
+  String get aiChatTitle => 'Asisten AI';
+
+  @override
+  String get aiChatHelpdeskOption => 'Chat dengan Asisten AI';
+
+  @override
+  String get aiChatHelpdeskSubtitle => 'Tanya jawab dengan AI';
+
+  @override
+  String get aiChatDisclaimer =>
+      'Asisten ini adalah robot virtual, jawaban mungkin bisa salah.';
+
+  @override
+  String aiChatGreeting(String name) {
+    return 'Halo $name 👋, ada yang bisa saya bantu?';
+  }
+
+  @override
+  String get aiChatInputHint => 'Tulis pertanyaan...';
+
+  @override
+  String get aiChatWaitLonger =>
+      'Asisten AI sedang memproses, mohon tunggu sebentar...';
+
+  @override
+  String get aiChatTimeout =>
+      'Koneksi timeout. Server membutuhkan waktu terlalu lama untuk merespon.';
+
+  @override
+  String get aiChatError => 'Gagal mengirim pesan. Silakan coba lagi.';
+
+  @override
+  String get aiChatRetry => 'Coba Lagi';
+
+  @override
+  String aiChatContactCs(String label) {
+    return 'Hubungi $label via WhatsApp';
+  }
+
+  @override
+  String get aiChatFeedbackTitle => 'Berikan Penilaian';
+
+  @override
+  String get aiChatFeedbackPositive => 'Apa yang membuat jawaban ini membantu?';
+
+  @override
+  String get aiChatFeedbackNegative => 'Apa kendala pada jawaban ini?';
+
+  @override
+  String get aiChatFeedbackThankYou =>
+      'Terima kasih atas penilaian dan masukan Anda!';
+
+  @override
+  String get aiChatFeedbackAccurate => 'Jawaban akurat dan lengkap';
+
+  @override
+  String get aiChatFeedbackEasyToUnderstand => 'Mudah dipahami';
+
+  @override
+  String get aiChatFeedbackVeryHelpful => 'Sangat membantu';
+
+  @override
+  String get aiChatFeedbackNotRelevant => 'Jawaban tidak sesuai pertanyaan';
+
+  @override
+  String get aiChatFeedbackIncomplete => 'Informasi kurang lengkap';
+
+  @override
+  String get aiChatFeedbackTooSlow => 'Respon terlalu lama';
+
+  @override
+  String get aiChatFeedbackHardToUnderstand => 'Jawaban sulit dipahami';
+
+  @override
+  String get aiChatFeedbackCustomPlaceholder =>
+      'Tulis komentar lainnya (opsional, maks 50 karakter)...';
+
+  @override
+  String get aiChatFeedbackSubmit => 'Kirim Penilaian';
+
+  @override
+  String get aiChatQuickQuestions => 'Pertanyaan Cepat';
+
+  @override
+  String get aiChatQuickQuestion1 => 'Bagaimana cara reset password SIAKAD?';
+
+  @override
+  String get aiChatQuickQuestion2 =>
+      'Saya lupa melakukan input penawaran mata kuliah?';
+
+  @override
+  String get aiChatQuickQuestion3 => 'Saya lupa melakukan input KRS?';
+
+  @override
+  String get aiChatQuickQuestion4 => 'Berapa jumlah SKS yang bisa saya ambil?';
 }

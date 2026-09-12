@@ -436,5 +436,48 @@
   "csClosedReasonPrefix": "* Mungkin pesan anda tidak segera dibalas karena",
   "csClosedReasonSuffix": "Tinggalkan pesan dan kami akan membalas pada jam kerja.",
   "whatsappNotFound": "Aplikasi WhatsApp tidak ditemukan",
-  "emptyCsList": "Belum ada daftar layanan yang tersedia"
+  "emptyCsList": "Belum ada daftar layanan yang tersedia",
+  "aiChatTitle": "Asisten AI",
+  "aiChatHelpdeskOption": "Chat dengan Asisten AI",
+  "aiChatHelpdeskSubtitle": "Tanya jawab dengan AI",
+  "aiChatDisclaimer": "Asisten ini adalah robot virtual, jawaban mungkin bisa salah.",
+  "aiChatGreeting": "Halo {name} 👋, ada yang bisa saya bantu?",
+  "@aiChatGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatInputHint": "Tulis pertanyaan...",
+  "aiChatWaitLonger": "Asisten AI sedang memproses, mohon tunggu sebentar...",
+  "aiChatTimeout": "Koneksi timeout. Server membutuhkan waktu terlalu lama untuk merespon.",
+  "aiChatError": "Gagal mengirim pesan. Silakan coba lagi.",
+  "aiChatRetry": "Coba Lagi",
+  "aiChatContactCs": "Hubungi {label} via WhatsApp",
+  "@aiChatContactCs": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatFeedbackTitle": "Berikan Penilaian",
+  "aiChatFeedbackPositive": "Apa yang membuat jawaban ini membantu?",
+  "aiChatFeedbackNegative": "Apa kendala pada jawaban ini?",
+  "aiChatFeedbackThankYou": "Terima kasih atas penilaian dan masukan Anda!",
+  "aiChatFeedbackAccurate": "Jawaban akurat dan lengkap",
+  "aiChatFeedbackEasyToUnderstand": "Mudah dipahami",
+  "aiChatFeedbackVeryHelpful": "Sangat membantu",
+  "aiChatFeedbackNotRelevant": "Jawaban tidak sesuai pertanyaan",
+  "aiChatFeedbackIncomplete": "Informasi kurang lengkap",
+  "aiChatFeedbackTooSlow": "Respon terlalu lama",
+  "aiChatFeedbackHardToUnderstand": "Jawaban sulit dipahami",
+  "aiChatFeedbackCustomPlaceholder": "Tulis komentar lainnya (opsional, maks 50 karakter)...",
+  "aiChatFeedbackSubmit": "Kirim Penilaian",
+  "aiChatQuickQuestions": "Pertanyaan Cepat",
+  "aiChatQuickQuestion1": "Bagaimana cara reset password SIAKAD?",
+  "aiChatQuickQuestion2": "Saya lupa melakukan input penawaran mata kuliah?",
+  "aiChatQuickQuestion3": "Saya lupa melakukan input KRS?",
+  "aiChatQuickQuestion4": "Berapa jumlah SKS yang bisa saya ambil?"
 }

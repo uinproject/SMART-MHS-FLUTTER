@@ -1117,4 +1117,100 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get emptyCsList => 'لا توجد قائمة خدمات متاحة حالياً';
+
+  @override
+  String get aiChatTitle => 'المساعد الذكي';
+
+  @override
+  String get aiChatHelpdeskOption => 'محادثة مع المساعد الذكي';
+
+  @override
+  String get aiChatHelpdeskSubtitle => 'أسئلة وأجوبة مع الذكاء الاصطناعي';
+
+  @override
+  String get aiChatDisclaimer =>
+      'هذا المساعد هو روبوت افتراضي، قد تحتمل الإجابات بعض الخطأ.';
+
+  @override
+  String aiChatGreeting(String name) {
+    return 'مرحباً $name 👋، كيف يمكنني مساعدتك؟';
+  }
+
+  @override
+  String get aiChatInputHint => 'اكتب سؤالاً...';
+
+  @override
+  String get aiChatWaitLonger =>
+      'المساعد الذكي يقوم بالمعالجة، يرجى الانتظار قليلاً...';
+
+  @override
+  String get aiChatTimeout =>
+      'انتهت مهلة الاتصال. استغرق الخادم وقتاً طويلاً للرد.';
+
+  @override
+  String get aiChatError => 'فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get aiChatRetry => 'إعادة المحاولة';
+
+  @override
+  String aiChatContactCs(String label) {
+    return 'تواصل مع $label عبر واتساب';
+  }
+
+  @override
+  String get aiChatFeedbackTitle => 'تقييم الإجابة';
+
+  @override
+  String get aiChatFeedbackPositive => 'ما الذي جعل هذه الإجابة مفيدة؟';
+
+  @override
+  String get aiChatFeedbackNegative => 'ما المشكلة في هذه الإجابة؟';
+
+  @override
+  String get aiChatFeedbackThankYou => 'شكراً لك على تقييمك وملاحظاتك!';
+
+  @override
+  String get aiChatFeedbackAccurate => 'إجابة دقيقة وشاملة';
+
+  @override
+  String get aiChatFeedbackEasyToUnderstand => 'سهل الفهم';
+
+  @override
+  String get aiChatFeedbackVeryHelpful => 'مفيد جداً';
+
+  @override
+  String get aiChatFeedbackNotRelevant => 'الإجابة غير مطابقة للسؤال';
+
+  @override
+  String get aiChatFeedbackIncomplete => 'معلومات غير مكتملة';
+
+  @override
+  String get aiChatFeedbackTooSlow => 'استجابة بطيئة جداً';
+
+  @override
+  String get aiChatFeedbackHardToUnderstand => 'إجابة يصعب فهمها';
+
+  @override
+  String get aiChatFeedbackCustomPlaceholder =>
+      'اكتب ملاحظات إضافية (اختياري، 50 حرفاً كحد أقصى)...';
+
+  @override
+  String get aiChatFeedbackSubmit => 'إرسال التقييم';
+
+  @override
+  String get aiChatQuickQuestions => 'أسئلة سريعة';
+
+  @override
+  String get aiChatQuickQuestion1 => 'كيف يمكن إعادة تعيين كلمة مرور سياكاد؟';
+
+  @override
+  String get aiChatQuickQuestion2 => 'نسيت إدخال عروض المواد الدراسية؟';
+
+  @override
+  String get aiChatQuickQuestion3 => 'نسيت إدخال خطة الدراسة (KRS)؟';
+
+  @override
+  String get aiChatQuickQuestion4 =>
+      'كم عدد الساعات المعتمدة (SKS) التي يمكنني تسجيلها؟';
 }

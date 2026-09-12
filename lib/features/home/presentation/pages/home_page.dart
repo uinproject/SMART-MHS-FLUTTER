@@ -15,6 +15,7 @@ import 'package:smartmahsiswaflutter/features/edom/presentation/pages/edom_semes
 import '../../../../core/utils/device_utils.dart';
 import '../../../../core/widgets/action_required_dialog.dart';
 import '../../../helpdesk/presentation/pages/cs_list_page.dart';
+import '../../../helpdesk/presentation/pages/ai_chat_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -480,6 +481,7 @@ class _HomePageState extends State<HomePage>
 
   /// Open Customer Service modal bottom sheet
   void _openCustomerService(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -535,12 +537,28 @@ class _HomePageState extends State<HomePage>
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
+            // Chat dengan Asisten AI
+            _buildCsActionTile(
+              icon: Icons.support_agent_rounded,
+              iconColor: const Color(0xFF7C3AED),
+              iconBgColor: const Color(0xFFEDE9FE),
+              title: l10n?.aiChatHelpdeskOption ?? 'Chat dengan Asisten AI',
+              subtitle: l10n?.aiChatHelpdeskSubtitle ?? 'Tanya jawab dengan AI',
+              onTap: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const AiChatPage()),
+                );
+              },
+            ),
+            const SizedBox(height: 12),
             _buildCsActionTile(
               icon: Icons.chat_rounded,
               iconColor: const Color(0xFF10B981),
               iconBgColor: const Color(0xFFD1FAE5),
               title: 'WhatsApp Helpdesk',
-              subtitle: 'Layanan cepat via WhatsApp resmi',
+              subtitle: 'Layanan via WhatsApp',
               onTap: () {
                 Navigator.pop(context);
                 Navigator.push(

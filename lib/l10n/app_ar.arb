@@ -436,5 +436,48 @@
   "csClosedReasonPrefix": "* قد لا يتم الرد على رسالتك فوراً بسبب",
   "csClosedReasonSuffix": "اترك رسالة وسنرد خلال ساعات العمل.",
   "whatsappNotFound": "لم يتم العثور على تطبيق واتساب",
-  "emptyCsList": "لا توجد قائمة خدمات متاحة حالياً"
+  "emptyCsList": "لا توجد قائمة خدمات متاحة حالياً",
+  "aiChatTitle": "المساعد الذكي",
+  "aiChatHelpdeskOption": "محادثة مع المساعد الذكي",
+  "aiChatHelpdeskSubtitle": "أسئلة وأجوبة مع الذكاء الاصطناعي",
+  "aiChatDisclaimer": "هذا المساعد هو روبوت افتراضي، قد تحتمل الإجابات بعض الخطأ.",
+  "aiChatGreeting": "مرحباً {name} 👋، كيف يمكنني مساعدتك؟",
+  "@aiChatGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatInputHint": "اكتب سؤالاً...",
+  "aiChatWaitLonger": "المساعد الذكي يقوم بالمعالجة، يرجى الانتظار قليلاً...",
+  "aiChatTimeout": "انتهت مهلة الاتصال. استغرق الخادم وقتاً طويلاً للرد.",
+  "aiChatError": "فشل إرسال الرسالة. يرجى المحاولة مرة أخرى.",
+  "aiChatRetry": "إعادة المحاولة",
+  "aiChatContactCs": "تواصل مع {label} عبر واتساب",
+  "@aiChatContactCs": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatFeedbackTitle": "تقييم الإجابة",
+  "aiChatFeedbackPositive": "ما الذي جعل هذه الإجابة مفيدة؟",
+  "aiChatFeedbackNegative": "ما المشكلة في هذه الإجابة؟",
+  "aiChatFeedbackThankYou": "شكراً لك على تقييمك وملاحظاتك!",
+  "aiChatFeedbackAccurate": "إجابة دقيقة وشاملة",
+  "aiChatFeedbackEasyToUnderstand": "سهل الفهم",
+  "aiChatFeedbackVeryHelpful": "مفيد جداً",
+  "aiChatFeedbackNotRelevant": "الإجابة غير مطابقة للسؤال",
+  "aiChatFeedbackIncomplete": "معلومات غير مكتملة",
+  "aiChatFeedbackTooSlow": "استجابة بطيئة جداً",
+  "aiChatFeedbackHardToUnderstand": "إجابة يصعب فهمها",
+  "aiChatFeedbackCustomPlaceholder": "اكتب ملاحظات إضافية (اختياري، 50 حرفاً كحد أقصى)...",
+  "aiChatFeedbackSubmit": "إرسال التقييم",
+  "aiChatQuickQuestions": "أسئلة سريعة",
+  "aiChatQuickQuestion1": "كيف يمكن إعادة تعيين كلمة مرور سياكاد؟",
+  "aiChatQuickQuestion2": "نسيت إدخال عروض المواد الدراسية؟",
+  "aiChatQuickQuestion3": "نسيت إدخال خطة الدراسة (KRS)؟",
+  "aiChatQuickQuestion4": "كم عدد الساعات المعتمدة (SKS) التي يمكنني تسجيلها؟"
 }

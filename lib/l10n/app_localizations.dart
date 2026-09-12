@@ -2211,6 +2211,180 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Belum ada daftar layanan yang tersedia'**
   String get emptyCsList;
+
+  /// No description provided for @aiChatTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Asisten AI'**
+  String get aiChatTitle;
+
+  /// No description provided for @aiChatHelpdeskOption.
+  ///
+  /// In id, this message translates to:
+  /// **'Chat dengan Asisten AI'**
+  String get aiChatHelpdeskOption;
+
+  /// No description provided for @aiChatHelpdeskSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Tanya jawab dengan AI'**
+  String get aiChatHelpdeskSubtitle;
+
+  /// No description provided for @aiChatDisclaimer.
+  ///
+  /// In id, this message translates to:
+  /// **'Asisten ini adalah robot virtual, jawaban mungkin bisa salah.'**
+  String get aiChatDisclaimer;
+
+  /// No description provided for @aiChatGreeting.
+  ///
+  /// In id, this message translates to:
+  /// **'Halo {name} 👋, ada yang bisa saya bantu?'**
+  String aiChatGreeting(String name);
+
+  /// No description provided for @aiChatInputHint.
+  ///
+  /// In id, this message translates to:
+  /// **'Tulis pertanyaan...'**
+  String get aiChatInputHint;
+
+  /// No description provided for @aiChatWaitLonger.
+  ///
+  /// In id, this message translates to:
+  /// **'Asisten AI sedang memproses, mohon tunggu sebentar...'**
+  String get aiChatWaitLonger;
+
+  /// No description provided for @aiChatTimeout.
+  ///
+  /// In id, this message translates to:
+  /// **'Koneksi timeout. Server membutuhkan waktu terlalu lama untuk merespon.'**
+  String get aiChatTimeout;
+
+  /// No description provided for @aiChatError.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal mengirim pesan. Silakan coba lagi.'**
+  String get aiChatError;
+
+  /// No description provided for @aiChatRetry.
+  ///
+  /// In id, this message translates to:
+  /// **'Coba Lagi'**
+  String get aiChatRetry;
+
+  /// No description provided for @aiChatContactCs.
+  ///
+  /// In id, this message translates to:
+  /// **'Hubungi {label} via WhatsApp'**
+  String aiChatContactCs(String label);
+
+  /// No description provided for @aiChatFeedbackTitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Berikan Penilaian'**
+  String get aiChatFeedbackTitle;
+
+  /// No description provided for @aiChatFeedbackPositive.
+  ///
+  /// In id, this message translates to:
+  /// **'Apa yang membuat jawaban ini membantu?'**
+  String get aiChatFeedbackPositive;
+
+  /// No description provided for @aiChatFeedbackNegative.
+  ///
+  /// In id, this message translates to:
+  /// **'Apa kendala pada jawaban ini?'**
+  String get aiChatFeedbackNegative;
+
+  /// No description provided for @aiChatFeedbackThankYou.
+  ///
+  /// In id, this message translates to:
+  /// **'Terima kasih atas penilaian dan masukan Anda!'**
+  String get aiChatFeedbackThankYou;
+
+  /// No description provided for @aiChatFeedbackAccurate.
+  ///
+  /// In id, this message translates to:
+  /// **'Jawaban akurat dan lengkap'**
+  String get aiChatFeedbackAccurate;
+
+  /// No description provided for @aiChatFeedbackEasyToUnderstand.
+  ///
+  /// In id, this message translates to:
+  /// **'Mudah dipahami'**
+  String get aiChatFeedbackEasyToUnderstand;
+
+  /// No description provided for @aiChatFeedbackVeryHelpful.
+  ///
+  /// In id, this message translates to:
+  /// **'Sangat membantu'**
+  String get aiChatFeedbackVeryHelpful;
+
+  /// No description provided for @aiChatFeedbackNotRelevant.
+  ///
+  /// In id, this message translates to:
+  /// **'Jawaban tidak sesuai pertanyaan'**
+  String get aiChatFeedbackNotRelevant;
+
+  /// No description provided for @aiChatFeedbackIncomplete.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi kurang lengkap'**
+  String get aiChatFeedbackIncomplete;
+
+  /// No description provided for @aiChatFeedbackTooSlow.
+  ///
+  /// In id, this message translates to:
+  /// **'Respon terlalu lama'**
+  String get aiChatFeedbackTooSlow;
+
+  /// No description provided for @aiChatFeedbackHardToUnderstand.
+  ///
+  /// In id, this message translates to:
+  /// **'Jawaban sulit dipahami'**
+  String get aiChatFeedbackHardToUnderstand;
+
+  /// No description provided for @aiChatFeedbackCustomPlaceholder.
+  ///
+  /// In id, this message translates to:
+  /// **'Tulis komentar lainnya (opsional, maks 50 karakter)...'**
+  String get aiChatFeedbackCustomPlaceholder;
+
+  /// No description provided for @aiChatFeedbackSubmit.
+  ///
+  /// In id, this message translates to:
+  /// **'Kirim Penilaian'**
+  String get aiChatFeedbackSubmit;
+
+  /// No description provided for @aiChatQuickQuestions.
+  ///
+  /// In id, this message translates to:
+  /// **'Pertanyaan Cepat'**
+  String get aiChatQuickQuestions;
+
+  /// No description provided for @aiChatQuickQuestion1.
+  ///
+  /// In id, this message translates to:
+  /// **'Bagaimana cara reset password SIAKAD?'**
+  String get aiChatQuickQuestion1;
+
+  /// No description provided for @aiChatQuickQuestion2.
+  ///
+  /// In id, this message translates to:
+  /// **'Saya lupa melakukan input penawaran mata kuliah?'**
+  String get aiChatQuickQuestion2;
+
+  /// No description provided for @aiChatQuickQuestion3.
+  ///
+  /// In id, this message translates to:
+  /// **'Saya lupa melakukan input KRS?'**
+  String get aiChatQuickQuestion3;
+
+  /// No description provided for @aiChatQuickQuestion4.
+  ///
+  /// In id, this message translates to:
+  /// **'Berapa jumlah SKS yang bisa saya ambil?'**
+  String get aiChatQuickQuestion4;
 }
 
 class _AppLocalizationsDelegate

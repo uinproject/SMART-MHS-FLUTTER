@@ -1126,4 +1126,99 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get emptyCsList => 'No service list available yet';
+
+  @override
+  String get aiChatTitle => 'AI Assistant';
+
+  @override
+  String get aiChatHelpdeskOption => 'Chat with AI Assistant';
+
+  @override
+  String get aiChatHelpdeskSubtitle => 'Q&A with AI';
+
+  @override
+  String get aiChatDisclaimer =>
+      'This is a virtual robot assistant, answers may contain inaccuracies.';
+
+  @override
+  String aiChatGreeting(String name) {
+    return 'Hello $name 👋, how can I help you?';
+  }
+
+  @override
+  String get aiChatInputHint => 'Type a question...';
+
+  @override
+  String get aiChatWaitLonger =>
+      'AI Assistant is still processing, please wait a moment...';
+
+  @override
+  String get aiChatTimeout =>
+      'Connection timeout. The server took too long to respond.';
+
+  @override
+  String get aiChatError => 'Failed to send message. Please try again.';
+
+  @override
+  String get aiChatRetry => 'Retry';
+
+  @override
+  String aiChatContactCs(String label) {
+    return 'Contact $label via WhatsApp';
+  }
+
+  @override
+  String get aiChatFeedbackTitle => 'Rate this answer';
+
+  @override
+  String get aiChatFeedbackPositive => 'What made this answer helpful?';
+
+  @override
+  String get aiChatFeedbackNegative => 'What was the issue with this answer?';
+
+  @override
+  String get aiChatFeedbackThankYou => 'Thank you for your feedback!';
+
+  @override
+  String get aiChatFeedbackAccurate => 'Accurate and complete answer';
+
+  @override
+  String get aiChatFeedbackEasyToUnderstand => 'Easy to understand';
+
+  @override
+  String get aiChatFeedbackVeryHelpful => 'Very helpful';
+
+  @override
+  String get aiChatFeedbackNotRelevant => 'Answer not relevant to question';
+
+  @override
+  String get aiChatFeedbackIncomplete => 'Incomplete information';
+
+  @override
+  String get aiChatFeedbackTooSlow => 'Response took too long';
+
+  @override
+  String get aiChatFeedbackHardToUnderstand => 'Hard to understand';
+
+  @override
+  String get aiChatFeedbackCustomPlaceholder =>
+      'Additional comments (optional, max 50 chars)...';
+
+  @override
+  String get aiChatFeedbackSubmit => 'Submit Feedback';
+
+  @override
+  String get aiChatQuickQuestions => 'Quick Questions';
+
+  @override
+  String get aiChatQuickQuestion1 => 'How to reset SIAKAD password?';
+
+  @override
+  String get aiChatQuickQuestion2 => 'I forgot to input course offerings?';
+
+  @override
+  String get aiChatQuickQuestion3 => 'I forgot to input my KRS?';
+
+  @override
+  String get aiChatQuickQuestion4 => 'How many credits (SKS) can I take?';
 }

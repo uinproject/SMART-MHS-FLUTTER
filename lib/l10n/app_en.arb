@@ -436,5 +436,48 @@
   "csClosedReasonPrefix": "* Maybe your message was not answered immediately because",
   "csClosedReasonSuffix": "Leave a message and we will reply during business hours.",
   "whatsappNotFound": "WhatsApp application not found",
-  "emptyCsList": "No service list available yet"
+  "emptyCsList": "No service list available yet",
+  "aiChatTitle": "AI Assistant",
+  "aiChatHelpdeskOption": "Chat with AI Assistant",
+  "aiChatHelpdeskSubtitle": "Q&A with AI",
+  "aiChatDisclaimer": "This is a virtual robot assistant, answers may contain inaccuracies.",
+  "aiChatGreeting": "Hello {name} 👋, how can I help you?",
+  "@aiChatGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatInputHint": "Type a question...",
+  "aiChatWaitLonger": "AI Assistant is still processing, please wait a moment...",
+  "aiChatTimeout": "Connection timeout. The server took too long to respond.",
+  "aiChatError": "Failed to send message. Please try again.",
+  "aiChatRetry": "Retry",
+  "aiChatContactCs": "Contact {label} via WhatsApp",
+  "@aiChatContactCs": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "aiChatFeedbackTitle": "Rate this answer",
+  "aiChatFeedbackPositive": "What made this answer helpful?",
+  "aiChatFeedbackNegative": "What was the issue with this answer?",
+  "aiChatFeedbackThankYou": "Thank you for your feedback!",
+  "aiChatFeedbackAccurate": "Accurate and complete answer",
+  "aiChatFeedbackEasyToUnderstand": "Easy to understand",
+  "aiChatFeedbackVeryHelpful": "Very helpful",
+  "aiChatFeedbackNotRelevant": "Answer not relevant to question",
+  "aiChatFeedbackIncomplete": "Incomplete information",
+  "aiChatFeedbackTooSlow": "Response took too long",
+  "aiChatFeedbackHardToUnderstand": "Hard to understand",
+  "aiChatFeedbackCustomPlaceholder": "Additional comments (optional, max 50 chars)...",
+  "aiChatFeedbackSubmit": "Submit Feedback",
+  "aiChatQuickQuestions": "Quick Questions",
+  "aiChatQuickQuestion1": "How to reset SIAKAD password?",
+  "aiChatQuickQuestion2": "I forgot to input course offerings?",
+  "aiChatQuickQuestion3": "I forgot to input my KRS?",
+  "aiChatQuickQuestion4": "How many credits (SKS) can I take?"
 }
