@@ -1802,5 +1802,49 @@ class ApiService {
       };
     }
   }
+
+  /// Upload Foto Profil Mahasiswa ke SI-MONA
+  Future<Map<String, dynamic>> uploadProfilePhoto({
+    required String nim,
+    required String angkatan,
+    required String imageBase64,
+  }) async {
+    try {
+      final uploadDio = Dio(
+        BaseOptions(
+          baseUrl: 'https://si-mona.uinsalatiga.ac.id/user_log/',
+          connectTimeout: const Duration(seconds: 30),
+          receiveTimeout: const Duration(seconds: 30),
+        ),
+      );
+
+      final response = await uploadDio.post(
+        'upload_fp_pribadi',
+        data: {
+          'nim': nim,
+          'angkatan': angkatan,
+          'image': imageBase64,
+        },
+        options: Options(
+          headers: {
+            'Authorization':
+                'Basic bWFzYXl1Ymt1eWFuZ2dhbnRlbmc6aXppbnVwbG9hZGZvdG8=',
+          },
+          contentType: Headers.formUrlEncodedContentType,
+        ),
+      );
+
+      final Map<String, dynamic> responseData = response.data is String
+          ? jsonDecode(response.data)
+          : (response.data as Map<String, dynamic>);
+
+      return responseData;
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Gagal mengunggah foto profil: $e',
+      };
+    }
+  }
 }
 

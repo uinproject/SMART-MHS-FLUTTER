@@ -2847,6 +2847,162 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'FAKULTAS'**
   String get facultyPrefix;
+
+  /// No description provided for @otherMenu.
+  ///
+  /// In id, this message translates to:
+  /// **'Menu Lainnya'**
+  String get otherMenu;
+
+  /// No description provided for @faq.
+  ///
+  /// In id, this message translates to:
+  /// **'FAQ'**
+  String get faq;
+
+  /// No description provided for @aboutAppDescriptionP1.
+  ///
+  /// In id, this message translates to:
+  /// **'Smart MHS adalah aplikasi akademik mahasiswa yang dikembangkan oleh TIPD UIN Salatiga. Aplikasi ini dirancang untuk mahasiswa UIN Salatiga dalam menunjang dan mempermudah berbagai aktivitas akademik perkuliahan. Konsep dari aplikasi ini adalah mengintegrasikan berbagai layanan akademik dan kemahasiswaan ke dalam satu platform mobile yang modern, cepat, dan mudah digunakan.'**
+  String get aboutAppDescriptionP1;
+
+  /// No description provided for @aboutAppDescriptionP2.
+  ///
+  /// In id, this message translates to:
+  /// **'Aplikasi ini akan terus dikembangkan secara berkelanjutan dengan penambahan fitur dan layanan baru. Masukan serta saran dari Anda sangat kami butuhkan untuk kemajuan aplikasi ini. Anda dapat menyampaikan aspirasi, saran, maupun kendala kepada tim pengembang kami melalui tombol di bawah.'**
+  String get aboutAppDescriptionP2;
+
+  /// No description provided for @helpUsGrow.
+  ///
+  /// In id, this message translates to:
+  /// **'Bantu Kami untuk Berkembang'**
+  String get helpUsGrow;
+
+  /// No description provided for @officialWebsite.
+  ///
+  /// In id, this message translates to:
+  /// **'Website Resmi'**
+  String get officialWebsite;
+
+  /// No description provided for @copiedToClipboard.
+  ///
+  /// In id, this message translates to:
+  /// **'Berhasil disalin ke papan klip'**
+  String get copiedToClipboard;
+
+  /// No description provided for @couldNotOpenUrl.
+  ///
+  /// In id, this message translates to:
+  /// **'Tidak dapat membuka tautan'**
+  String get couldNotOpenUrl;
+
+  /// No description provided for @developer.
+  ///
+  /// In id, this message translates to:
+  /// **'Pengembang'**
+  String get developer;
+
+  /// No description provided for @institution.
+  ///
+  /// In id, this message translates to:
+  /// **'Institusi'**
+  String get institution;
+
+  /// No description provided for @academicPortal.
+  ///
+  /// In id, this message translates to:
+  /// **'Portal Akademik Mahasiswa UIN Salatiga'**
+  String get academicPortal;
+
+  /// No description provided for @allRightsReserved.
+  ///
+  /// In id, this message translates to:
+  /// **'Seluruh hak cipta dilindungi undang-undang.'**
+  String get allRightsReserved;
+
+  /// No description provided for @helpUsGrowSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Sampaikan saran, masukan, atau kendala Anda melalui Helpdesk TIPD'**
+  String get helpUsGrowSubtitle;
+
+  /// No description provided for @personalData.
+  ///
+  /// In id, this message translates to:
+  /// **'Data Pribadi'**
+  String get personalData;
+
+  /// No description provided for @personalDataSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi biodata, identitas, dan kontak mahasiswa'**
+  String get personalDataSubtitle;
+
+  /// No description provided for @parentsData.
+  ///
+  /// In id, this message translates to:
+  /// **'Data Orang Tua'**
+  String get parentsData;
+
+  /// No description provided for @parentsDataSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi identitas dan kontak orang tua / wali'**
+  String get parentsDataSubtitle;
+
+  /// No description provided for @studentInfo.
+  ///
+  /// In id, this message translates to:
+  /// **'Informasi Mahasiswa'**
+  String get studentInfo;
+
+  /// No description provided for @changeProfilePhoto.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah Foto Profil'**
+  String get changeProfilePhoto;
+
+  /// No description provided for @takePhoto.
+  ///
+  /// In id, this message translates to:
+  /// **'Ambil Foto'**
+  String get takePhoto;
+
+  /// No description provided for @chooseFromGallery.
+  ///
+  /// In id, this message translates to:
+  /// **'Pilih dari Galeri'**
+  String get chooseFromGallery;
+
+  /// No description provided for @viewFullPhoto.
+  ///
+  /// In id, this message translates to:
+  /// **'Lihat Foto Profil'**
+  String get viewFullPhoto;
+
+  /// No description provided for @featureUnderDevelopment.
+  ///
+  /// In id, this message translates to:
+  /// **'Fitur ini sedang dalam pengembangan'**
+  String get featureUnderDevelopment;
+
+  /// No description provided for @uploadingPhoto.
+  ///
+  /// In id, this message translates to:
+  /// **'Mengunggah foto profil...'**
+  String get uploadingPhoto;
+
+  /// No description provided for @profilePhotoUpdated.
+  ///
+  /// In id, this message translates to:
+  /// **'Foto profil berhasil diperbarui'**
+  String get profilePhotoUpdated;
+
+  /// No description provided for @profilePhotoFailed.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal mengunggah foto profil'**
+  String get profilePhotoFailed;
 }
 
 class _AppLocalizationsDelegate

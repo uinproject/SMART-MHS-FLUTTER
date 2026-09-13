@@ -8,6 +8,8 @@ import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/app_constants.dart';
 import 'login_screen.dart';
 
+import '../../../../core/utils/webview_helper.dart';
+
 class TermsConditionsPage extends StatefulWidget {
   const TermsConditionsPage({super.key});
 
@@ -35,17 +37,12 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
     final controller = WebViewController();
 
     controller
-      // JavaScript diperlukan oleh sebagian halaman modern.
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      // User agent standar. Jangan memaksa versi OS/browser tertentu.
-      ..setUserAgent(
-        'Mozilla/5.0 (Mobile) AppleWebKit/537.36 '
-        '(KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
-      )
-      // Konfigurasi navigasi.
+      ..setUserAgent(AppWebViewHelper.defaultUserAgent)
       ..setNavigationDelegate(
         NavigationDelegate(
           onPageStarted: (String url) {
+            AppWebViewHelper.injectAntiBotScripts(_controller);
             if (!mounted) return;
 
             setState(() {
@@ -57,6 +54,7 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
           },
 
           onPageFinished: (String url) {
+            AppWebViewHelper.injectAntiBotScripts(_controller);
             if (!mounted) return;
 
             setState(() {
@@ -74,9 +72,10 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
               'URL: ${error.url}',
             );
 
-            // Jangan langsung menampilkan error untuk semua resource.
-            // Beberapa resource seperti gambar/JS dapat gagal tetapi
-            // halaman utama tetap bisa ditampilkan.
+            if (AppWebViewHelper.isIgnorableError(error)) {
+              return;
+            }
+
             if (error.isForMainFrame == true) {
               if (!mounted) return;
 
@@ -93,11 +92,15 @@ class _TermsConditionsPageState extends State<TermsConditionsPage> {
             return NavigationDecision.navigate;
           },
         ),
-      )
-      // Load halaman setelah seluruh konfigurasi selesai.
-      ..loadRequest(Uri.parse(_termsUrl));
+      );
 
     _controller = controller;
+    _configureAndLoad();
+  }
+
+  Future<void> _configureAndLoad() async {
+    await AppWebViewHelper.configureForCloudflare(_controller);
+    await _controller.loadRequest(Uri.parse(_termsUrl));
   }
 
   Future<void> _reloadPage() async {

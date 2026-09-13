@@ -1479,4 +1479,87 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get facultyPrefix => 'FAKULTAS';
+
+  @override
+  String get otherMenu => 'Menu Lainnya';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get aboutAppDescriptionP1 =>
+      'Smart MHS adalah aplikasi akademik mahasiswa yang dikembangkan oleh TIPD UIN Salatiga. Aplikasi ini dirancang untuk mahasiswa UIN Salatiga dalam menunjang dan mempermudah berbagai aktivitas akademik perkuliahan. Konsep dari aplikasi ini adalah mengintegrasikan berbagai layanan akademik dan kemahasiswaan ke dalam satu platform mobile yang modern, cepat, dan mudah digunakan.';
+
+  @override
+  String get aboutAppDescriptionP2 =>
+      'Aplikasi ini akan terus dikembangkan secara berkelanjutan dengan penambahan fitur dan layanan baru. Masukan serta saran dari Anda sangat kami butuhkan untuk kemajuan aplikasi ini. Anda dapat menyampaikan aspirasi, saran, maupun kendala kepada tim pengembang kami melalui tombol di bawah.';
+
+  @override
+  String get helpUsGrow => 'Bantu Kami untuk Berkembang';
+
+  @override
+  String get officialWebsite => 'Website Resmi';
+
+  @override
+  String get copiedToClipboard => 'Berhasil disalin ke papan klip';
+
+  @override
+  String get couldNotOpenUrl => 'Tidak dapat membuka tautan';
+
+  @override
+  String get developer => 'Pengembang';
+
+  @override
+  String get institution => 'Institusi';
+
+  @override
+  String get academicPortal => 'Portal Akademik Mahasiswa UIN Salatiga';
+
+  @override
+  String get allRightsReserved => 'Seluruh hak cipta dilindungi undang-undang.';
+
+  @override
+  String get helpUsGrowSubtitle =>
+      'Sampaikan saran, masukan, atau kendala Anda melalui Helpdesk TIPD';
+
+  @override
+  String get personalData => 'Data Pribadi';
+
+  @override
+  String get personalDataSubtitle =>
+      'Informasi biodata, identitas, dan kontak mahasiswa';
+
+  @override
+  String get parentsData => 'Data Orang Tua';
+
+  @override
+  String get parentsDataSubtitle =>
+      'Informasi identitas dan kontak orang tua / wali';
+
+  @override
+  String get studentInfo => 'Informasi Mahasiswa';
+
+  @override
+  String get changeProfilePhoto => 'Ubah Foto Profil';
+
+  @override
+  String get takePhoto => 'Ambil Foto';
+
+  @override
+  String get chooseFromGallery => 'Pilih dari Galeri';
+
+  @override
+  String get viewFullPhoto => 'Lihat Foto Profil';
+
+  @override
+  String get featureUnderDevelopment => 'Fitur ini sedang dalam pengembangan';
+
+  @override
+  String get uploadingPhoto => 'Mengunggah foto profil...';
+
+  @override
+  String get profilePhotoUpdated => 'Foto profil berhasil diperbarui';
+
+  @override
+  String get profilePhotoFailed => 'Gagal mengunggah foto profil';
 }

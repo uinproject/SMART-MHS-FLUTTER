@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:smartmahsiswaflutter/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/storage/session_manager.dart';
@@ -8,6 +10,11 @@ import '../widgets/language_selector_dialog.dart';
 import '../../../keamanan_akun/presentation/pages/security_page.dart';
 import '../../../announcement/presentation/pages/announcement_image_view_page.dart';
 import '../../../ektm/presentation/pages/ektm_page.dart';
+import '../../../faq/presentation/pages/faq_page.dart';
+import '../../../terms/presentation/pages/terms_page.dart';
+import '../../../about/presentation/pages/about_page.dart';
+import '../../../profile/presentation/pages/profile_page.dart';
+import '../../../../core/utils/app_constants.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -28,6 +35,18 @@ class _AccountPageState extends State<AccountPage> {
         ),
       ),
     );
+  }
+
+  Future<void> _openStore() async {
+    final url = Platform.isIOS
+        ? AppConstants.appStoreUrl
+        : AppConstants.playStoreUrl;
+    final uri = Uri.parse(url);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (_) {
+      await launchUrl(uri, mode: LaunchMode.platformDefault);
+    }
   }
 
   void _handleLogout() {
@@ -210,7 +229,14 @@ class _AccountPageState extends State<AccountPage> {
                   _buildMenuItem(
                     Icons.person_outline,
                     l10n.profile,
-                    () {},
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const ProfilePage(),
+                        ),
+                      );
+                    },
                   ),
                   _buildMenuItem(
                     Icons.badge_outlined,
@@ -241,10 +267,44 @@ class _AccountPageState extends State<AccountPage> {
 
                 const SizedBox(height: 24),
 
-                _buildMenuSection(l10n.help, [
-                  _buildMenuItem(Icons.help_outline, l10n.help, () {}),
-                  _buildMenuItem(Icons.info_outline, l10n.about, () {}),
-                  _buildMenuItem(Icons.star_outline, l10n.rateApp, () {}),
+                _buildMenuSection(l10n.otherMenu, [
+                  _buildMenuItem(
+                    Icons.help_outline,
+                    l10n.faq,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FaqPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildMenuItem(
+                    Icons.description_outlined,
+                    l10n.termsConditions,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const TermsPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildMenuItem(
+                    Icons.info_outline,
+                    l10n.about,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AboutPage(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildMenuItem(Icons.star_outline, l10n.rateApp, _openStore),
                 ]),
 
                 const SizedBox(height: 32),

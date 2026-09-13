@@ -1464,4 +1464,88 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get facultyPrefix => 'كلية';
+
+  @override
+  String get otherMenu => 'قائمة أخرى';
+
+  @override
+  String get faq => 'الأسئلة الشائعة';
+
+  @override
+  String get aboutAppDescriptionP1 =>
+      'تطبيق Smart MHS هو تطبيق أكاديمي للطلاب تم تطويره بواسطة وحدة تكنولوجيا المعلومات وقاعدة البيانات (TIPD) في جامعة سالاتيجا الإسلامية الحكومية (UIN Salatiga). تم تصميم هذا التطبيق لطلاب الجامعة لدعم وتسهيل جميع أنشطتهم ومسيرتهم الأكاديمية. تهدف فكرة التطبيق إلى دمج مختلف الخدمات الأكاديمية والطلابية في منصة هاتف ذكي واحدة حديثة وسريعة وسهلة الاستخدام.';
+
+  @override
+  String get aboutAppDescriptionP2 =>
+      'سيستمر تطوير هذا التطبيق باستمرار مع إضافة المزيد من الميزات والخدمات المتكاملة الجديدة. نحن نقدر بشدة ملاحظاتكم واقتراحاتكم القيمة لتطوير وتحسين هذا التطبيق. يمكنك إرسال اقتراحاتك وملاحظاتك أو الإبلاغ عن أي مشاكل تواجهك إلى فريق التطوير عبر الزر أدناه.';
+
+  @override
+  String get helpUsGrow => 'ساعدنا على التطور';
+
+  @override
+  String get officialWebsite => 'الموقع الرسمي';
+
+  @override
+  String get copiedToClipboard => 'تم النسخ إلى الحافظة';
+
+  @override
+  String get couldNotOpenUrl => 'تعذر فتح الرابط';
+
+  @override
+  String get developer => 'المطور';
+
+  @override
+  String get institution => 'المؤسسة';
+
+  @override
+  String get academicPortal =>
+      'البوابة الأكاديمية لطلاب جامعة سالاتيجا الإسلامية';
+
+  @override
+  String get allRightsReserved => 'جميع الحقوق محفوظة.';
+
+  @override
+  String get helpUsGrowSubtitle =>
+      'شارك اقتراحاتك وملاحظاتك أو أبلغ عن أي مشكلة عبر مكتب الدعم الفني TIPD';
+
+  @override
+  String get personalData => 'البيانات الشخصية';
+
+  @override
+  String get personalDataSubtitle =>
+      'معلومات السيرة الذاتية والهوية وبيانات الاتصال للطالب';
+
+  @override
+  String get parentsData => 'بيانات الوالدين';
+
+  @override
+  String get parentsDataSubtitle =>
+      'معلومات الهوية وبيانات الاتصال بالوالدين أو الوصي';
+
+  @override
+  String get studentInfo => 'معلومات الطالب';
+
+  @override
+  String get changeProfilePhoto => 'تغيير الصورة الشخصية';
+
+  @override
+  String get takePhoto => 'التقاط صورة';
+
+  @override
+  String get chooseFromGallery => 'اختيار من المعرض';
+
+  @override
+  String get viewFullPhoto => 'عرض الصورة الشخصية';
+
+  @override
+  String get featureUnderDevelopment => 'هذه الميزة قيد التطوير حالياً';
+
+  @override
+  String get uploadingPhoto => 'جارٍ تحميل الصورة الشخصية...';
+
+  @override
+  String get profilePhotoUpdated => 'تم تحديث الصورة الشخصية بنجاح';
+
+  @override
+  String get profilePhotoFailed => 'فشل تحميل الصورة الشخصية';
 }

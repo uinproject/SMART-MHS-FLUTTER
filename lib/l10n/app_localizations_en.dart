@@ -1477,4 +1477,87 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get facultyPrefix => 'FACULTY OF';
+
+  @override
+  String get otherMenu => 'Other Menu';
+
+  @override
+  String get faq => 'FAQ';
+
+  @override
+  String get aboutAppDescriptionP1 =>
+      'Smart MHS is a student academic application developed by TIPD UIN Salatiga. This application is designed for UIN Salatiga students to support and facilitate their academic journey. The concept of this application is to integrate various academic and student services into a single modern, fast, and user-friendly mobile platform.';
+
+  @override
+  String get aboutAppDescriptionP2 =>
+      'This application will continue to be developed continuously with the addition of new features and services. Your valuable feedback and suggestions are vital for the improvement of this application. You can share your suggestions, feedback, or report issues to our development team via the button below.';
+
+  @override
+  String get helpUsGrow => 'Help Us Grow';
+
+  @override
+  String get officialWebsite => 'Official Website';
+
+  @override
+  String get copiedToClipboard => 'Copied to clipboard';
+
+  @override
+  String get couldNotOpenUrl => 'Could not open link';
+
+  @override
+  String get developer => 'Developer';
+
+  @override
+  String get institution => 'Institution';
+
+  @override
+  String get academicPortal => 'UIN Salatiga Student Academic Portal';
+
+  @override
+  String get allRightsReserved => 'All rights reserved.';
+
+  @override
+  String get helpUsGrowSubtitle =>
+      'Share your suggestions, feedback, or report issues via TIPD Helpdesk';
+
+  @override
+  String get personalData => 'Personal Data';
+
+  @override
+  String get personalDataSubtitle =>
+      'Student biodata, identity, and contact information';
+
+  @override
+  String get parentsData => 'Parents Data';
+
+  @override
+  String get parentsDataSubtitle =>
+      'Parents or guardian identity and contact details';
+
+  @override
+  String get studentInfo => 'Student Information';
+
+  @override
+  String get changeProfilePhoto => 'Change Profile Photo';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get viewFullPhoto => 'View Profile Photo';
+
+  @override
+  String get featureUnderDevelopment => 'This feature is under development';
+
+  @override
+  String get uploadingPhoto => 'Uploading profile photo...';
+
+  @override
+  String get profilePhotoUpdated => 'Profile photo updated successfully';
+
+  @override
+  String get profilePhotoFailed => 'Failed to upload profile photo';
 }
