@@ -44,41 +44,18 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    _loadCachedData();
     _loadData(isRefresh: false);
-  }
-
-  /// Loads cached pengumuman immediately so the UI is responsive even offline
-  Future<void> _loadCachedData() async {
-    final user = _sessionManager.getUser();
-    final cached = await HomeCacheStorage.loadPengumuman(user?.nim);
-    if (cached != null && mounted) {
-      setState(() {
-        _pengumuman = cached;
-        _isLoading = false;
-      });
-    }
   }
 
   Future<void> _loadData({bool isRefresh = false}) async {
     if (!mounted) return;
-    if (_pengumuman == null) {
-      setState(() => _isLoading = true);
-    }
+    setState(() => _isLoading = true);
+
+    final startTime = DateTime.now();
+
     try {
       final user = _sessionManager.getUser();
       if (user != null) {
-        // Fallback: load cache if _pengumuman is still null
-        if (_pengumuman == null) {
-          final cached = await HomeCacheStorage.loadPengumuman(user.nim);
-          if (cached != null && mounted) {
-            setState(() {
-              _pengumuman = cached;
-              _isLoading = false;
-            });
-          }
-        }
-
         final bool shouldRefresh = isRefresh || !_sessionManager.isJustLoggedIn;
         if (shouldRefresh) {
           try {
@@ -110,11 +87,18 @@ class _HomePageState extends State<HomePage>
           await HomeCacheStorage.savePengumuman(user.nim, pengumuman);
         }
 
+        // Ensure shimmer has time to display smoothly (at least 600ms)
+        final elapsed = DateTime.now().difference(startTime);
+        if (elapsed.inMilliseconds < 600) {
+          await Future.delayed(Duration(milliseconds: 600 - elapsed.inMilliseconds));
+        }
+
         if (mounted) {
+          PengumumanResponse? effectivePengumuman = pengumuman;
+          effectivePengumuman ??= await HomeCacheStorage.loadPengumuman(user.nim);
+
           setState(() {
-            if (pengumuman != null) {
-              _pengumuman = pengumuman;
-            }
+            _pengumuman = effectivePengumuman;
             _isLoading = false;
           });
 
@@ -123,7 +107,7 @@ class _HomePageState extends State<HomePage>
           // Null-safe: response can be null and `cekeval` can be null
           // (server omits / sends null) — only an explicit `false` shows
           // the dialog.
-          if (pengumuman?.cekEval == false && !_evalDialogShown) {
+          if (effectivePengumuman?.cekEval == false && !_evalDialogShown) {
             _evalDialogShown = true;
             _showEvalReminderDialog();
           }
@@ -141,18 +125,21 @@ class _HomePageState extends State<HomePage>
       );
     } catch (e) {
       debugPrint('[HomePage] Network error loading pengumuman: $e');
+      final elapsed = DateTime.now().difference(startTime);
+      if (elapsed.inMilliseconds < 600) {
+        await Future.delayed(Duration(milliseconds: 600 - elapsed.inMilliseconds));
+      }
+
       if (mounted) {
         // Fallback to cache if network fails
-        if (_pengumuman == null) {
-          final user = _sessionManager.getUser();
-          final cached = await HomeCacheStorage.loadPengumuman(user?.nim);
+        final user = _sessionManager.getUser();
+        final cached = await HomeCacheStorage.loadPengumuman(user?.nim);
+        setState(() {
           if (cached != null) {
-            setState(() {
-              _pengumuman = cached;
-            });
+            _pengumuman = cached;
           }
-        }
-        setState(() => _isLoading = false);
+          _isLoading = false;
+        });
       }
     }
   }
@@ -311,8 +298,7 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             const SliverToBoxAdapter(child: MainMenuGrid()),
-            if (_isLoading &&
-                (_pengumuman?.data == null || _pengumuman!.data!.isEmpty))
+            if (_isLoading)
               const SliverToBoxAdapter(
                 child: AnnouncementShimmer(),
               )
