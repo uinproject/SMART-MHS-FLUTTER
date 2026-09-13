@@ -9,13 +9,47 @@ import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../data/models/active_device_model.dart';
 import 'change_password_use_old_pass_page.dart';
+import 'verified_email_page.dart';
+import 'email_verification_page.dart';
 
-class SecurityPage extends StatelessWidget {
+class SecurityPage extends StatefulWidget {
   const SecurityPage({super.key});
+
+  @override
+  State<SecurityPage> createState() => _SecurityPageState();
+}
+
+class _SecurityPageState extends State<SecurityPage> {
+  final _sessionManager = SessionManager();
+
+  Future<void> _handleEmailMenu() async {
+    final user = _sessionManager.getUser();
+    final isVerified = user?.emailVerification == true;
+
+    if (isVerified) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const VerifiedEmailPage(),
+        ),
+      );
+    } else {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const EmailVerificationPage(isFromLogin: false),
+        ),
+      );
+    }
+
+    if (mounted) setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final user = _sessionManager.getUser();
+    final isEmailVerified = user?.emailVerification == true;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -27,7 +61,7 @@ class SecurityPage extends StatelessWidget {
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         titleSpacing: 0,
@@ -71,6 +105,18 @@ class SecurityPage extends StatelessWidget {
                     l10n.deviceManagement,
                     l10n.deviceManagementSubtitle,
                     () => _showDeviceManagement(context, l10n),
+                  ),
+                  _buildMenuItem(
+                    isEmailVerified
+                        ? Icons.mark_email_read_rounded
+                        : Icons.email_outlined,
+                    isEmailVerified
+                        ? l10n.emailAccount
+                        : l10n.emailVerif,
+                    isEmailVerified
+                        ? l10n.emailAccountSubtitle
+                        : l10n.emailVerificationSubtitle,
+                    _handleEmailMenu,
                   ),
                 ]),
               ]),

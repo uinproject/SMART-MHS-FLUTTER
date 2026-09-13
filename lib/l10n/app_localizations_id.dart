@@ -1417,4 +1417,66 @@ class AppLocalizationsId extends AppLocalizations {
 
   @override
   String get firstLogin => 'Login Pertama';
+
+  @override
+  String get emailAccount => 'Akun Email';
+
+  @override
+  String get emailAccountSubtitle =>
+      'Kelola dan amankan alamat email yang terhubung';
+
+  @override
+  String get verifiedEmail => 'Email Terverifikasi';
+
+  @override
+  String get verifiedEmailDesc =>
+      'Alamat email ini aktif dan digunakan untuk menerima notifikasi serta pemulihan akun Anda.';
+
+  @override
+  String get verified => 'Terverifikasi';
+
+  @override
+  String get changeEmail => 'Ubah Alamat Email';
+
+  @override
+  String get changeEmailSubtitle => 'Ganti dengan alamat email baru yang aktif';
+
+  @override
+  String get emailVerificationSubtitle =>
+      'Amankan akun Anda dengan menghubungkan email';
+
+  @override
+  String get enterNewEmailInstruction =>
+      'Masukkan alamat email baru Anda untuk menerima kode verifikasi OTP';
+
+  @override
+  String get ektm => 'E-KTM';
+
+  @override
+  String get ektmSubtitle => 'Kartu Tanda Mahasiswa Elektronik';
+
+  @override
+  String get qrCode => 'QR Code';
+
+  @override
+  String get barcode => 'Barcode';
+
+  @override
+  String get useQrInstruction =>
+      'Gunakan QR Code Diatas Hanya Untuk Keperluan Akademik';
+
+  @override
+  String get useBarcodeInstruction =>
+      'Gunakan Barcode Diatas Hanya Untuk Keperluan Akademik';
+
+  @override
+  String get failedLoadKtmPhoto =>
+      'Foto EKTM gagal dimuat, mungkin kamu belum pernah mengunggah foto melalui aplikasi SIAKAD';
+
+  @override
+  String get failedConnectAcademicServer =>
+      'Gagal terhubung dengan server akademik, EKTM yang ditampilkan mungkin tidak sesuai';
+
+  @override
+  String get facultyPrefix => 'FAKULTAS';
 }

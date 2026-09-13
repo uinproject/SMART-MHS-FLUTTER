@@ -436,6 +436,7 @@ class ApiService {
     required String kdpst,
     required String email,
     required String otp,
+    String? ganti,
   }) async {
     try {
       final data = {
@@ -459,6 +460,7 @@ class ApiService {
           AppConstants.cid,
           AppConstants.secretKey,
         ),
+        if (ganti != null) 'ganti': ganti,
       };
 
       final response = await _dio.post(

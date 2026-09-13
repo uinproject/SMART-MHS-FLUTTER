@@ -1415,4 +1415,66 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get firstLogin => 'First Login';
+
+  @override
+  String get emailAccount => 'Email Account';
+
+  @override
+  String get emailAccountSubtitle =>
+      'Manage and secure your connected email address';
+
+  @override
+  String get verifiedEmail => 'Verified Email';
+
+  @override
+  String get verifiedEmailDesc =>
+      'This email address is active and used for receiving notifications and account recovery.';
+
+  @override
+  String get verified => 'Verified';
+
+  @override
+  String get changeEmail => 'Change Email Address';
+
+  @override
+  String get changeEmailSubtitle => 'Replace with a new active email address';
+
+  @override
+  String get emailVerificationSubtitle =>
+      'Secure your account by linking your email';
+
+  @override
+  String get enterNewEmailInstruction =>
+      'Enter your new email address to receive OTP verification code';
+
+  @override
+  String get ektm => 'E-KTM';
+
+  @override
+  String get ektmSubtitle => 'Electronic Student Identity Card';
+
+  @override
+  String get qrCode => 'QR Code';
+
+  @override
+  String get barcode => 'Barcode';
+
+  @override
+  String get useQrInstruction =>
+      'Use the above QR code only for academic purposes';
+
+  @override
+  String get useBarcodeInstruction =>
+      'Use the barcode above for academic purposes only';
+
+  @override
+  String get failedLoadKtmPhoto =>
+      'Failed to load E-KTM photo, you may not have uploaded a photo through SIAKAD yet';
+
+  @override
+  String get failedConnectAcademicServer =>
+      'Failed to connect to academic server, the displayed E-KTM may not be accurate';
+
+  @override
+  String get facultyPrefix => 'FACULTY OF';
 }

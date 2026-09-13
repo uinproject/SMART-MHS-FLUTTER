@@ -9,7 +9,14 @@ import '../../../home/presentation/pages/main_page.dart';
 import 'otp_verification_page.dart';
 
 class EmailVerificationPage extends StatefulWidget {
-  const EmailVerificationPage({super.key});
+  final bool isChangeEmail;
+  final bool isFromLogin;
+
+  const EmailVerificationPage({
+    super.key,
+    this.isChangeEmail = false,
+    this.isFromLogin = true,
+  });
 
   @override
   State<EmailVerificationPage> createState() => _EmailVerificationPageState();
@@ -29,9 +36,11 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   @override
   void initState() {
     super.initState();
-    final user = _sessionManager.getUser();
-    if (user?.email != null) {
-      _emailController.text = user!.email!;
+    if (!widget.isChangeEmail) {
+      final user = _sessionManager.getUser();
+      if (user?.email != null) {
+        _emailController.text = user!.email!;
+      }
     }
   }
 
@@ -76,7 +85,6 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         nim: user.nim ?? '',
         kdpst: user.kodePst ?? '',
         email: _emailController.text.trim(),
-
       );
 
       if (response != null) {
@@ -85,17 +93,22 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
         final int countdown = response['countdown'] ?? 0;
 
         if (success) {
-          await _sessionManager.updateEmail(_emailController.text.trim());
           if (!mounted) return;
-          Navigator.push(
+          final result = await Navigator.push<bool>(
             context,
             MaterialPageRoute(
               builder: (context) => OtpVerificationPage(
                 email: _emailController.text.trim(),
                 initialCountdown: countdown,
+                isChangeEmail: widget.isChangeEmail,
+                isFromLogin: widget.isFromLogin,
               ),
             ),
           );
+
+          if (result == true && mounted) {
+            Navigator.pop(context, true);
+          }
         } else {
           if (countdown > 0) {
             _startTimer(countdown);
@@ -118,50 +131,67 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: [
-          // Background Top Gradient
-          Container(
-            height: MediaQuery.of(context).size.height * 0.45,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topRight,
-                end: Alignment.bottomLeft,
-                colors: [
-                  Color(0xFF0056B3),
-                  Color(0xFF003D82),
-                  Color(0xFF002452),
-                ],
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(80),
+    return PopScope(
+      canPop: !widget.isFromLogin,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        if (widget.isFromLogin) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MainPage()),
+          );
+        }
+      },
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Stack(
+          children: [
+            // Background Top Gradient
+            Container(
+              height: MediaQuery.of(context).size.height * 0.45,
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomLeft,
+                  colors: [
+                    Color(0xFF0056B3),
+                    Color(0xFF003D82),
+                    Color(0xFF002452),
+                  ],
+                ),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(80),
+                ),
               ),
             ),
-          ),
-          
-          SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MainPage()),
-                          );
-                        },
+            
+            SafeArea(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                          onPressed: () {
+                            if (!widget.isFromLogin) {
+                              Navigator.pop(context);
+                            } else if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            } else {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => const MainPage()),
+                              );
+                            }
+                          },
+                        ),
                       ),
-                    ),
                     const SizedBox(height: 10),
                     // Header Icon
                     Center(
@@ -183,7 +213,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                     Column(
                       children: [
                         Text(
-                          l10n.emailVerif.toUpperCase(),
+                          (widget.isChangeEmail ? l10n.changeEmail : l10n.emailVerif).toUpperCase(),
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 24,
@@ -223,7 +253,7 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l10n.welcome,
+                            widget.isChangeEmail ? l10n.changeEmail : l10n.welcome,
                             style: const TextStyle(
                               fontSize: 22,
                               fontWeight: FontWeight.bold,
@@ -232,7 +262,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                           ),
                           const SizedBox(height: 12),
                           Text(
-                            l10n.linkActiveEmailInstruction,
+                            widget.isChangeEmail
+                                ? l10n.enterNewEmailInstruction
+                                : l10n.linkActiveEmailInstruction,
                             style: const TextStyle(
                               fontSize: 13,
                               color: AppColors.textSecondary,
@@ -297,22 +329,28 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const MainPage()),
-                        );
-                      },
-                      child: Text(
-                        l10n.examineLater,
-                        style: const TextStyle(
-                          color: AppColors.textSecondary,
-                          fontWeight: FontWeight.bold,
-                          decoration: TextDecoration.underline,
+                    if (!widget.isChangeEmail) ...[
+                      TextButton(
+                        onPressed: () {
+                          if (widget.isFromLogin) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => const MainPage()),
+                            );
+                          } else {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: Text(
+                          l10n.examineLater,
+                          style: const TextStyle(
+                            color: AppColors.textSecondary,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline,
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -321,8 +359,9 @@ class _EmailVerificationPageState extends State<EmailVerificationPage> {
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTextField({
     required TextEditingController controller,

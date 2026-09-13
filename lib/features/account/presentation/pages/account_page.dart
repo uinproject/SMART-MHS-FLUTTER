@@ -6,6 +6,8 @@ import '../../../../core/utils/home_helpers.dart';
 import '../../../auth/presentation/pages/login_screen.dart';
 import '../widgets/language_selector_dialog.dart';
 import '../../../keamanan_akun/presentation/pages/security_page.dart';
+import '../../../announcement/presentation/pages/announcement_image_view_page.dart';
+import '../../../ektm/presentation/pages/ektm_page.dart';
 
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -16,6 +18,17 @@ class AccountPage extends StatefulWidget {
 
 class _AccountPageState extends State<AccountPage> {
   final _sessionManager = SessionManager();
+
+  void _openProfileImageViewer(String imageUrl, String title) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => AnnouncementImageViewPage(
+          imageUrl: imageUrl,
+          title: title,
+        ),
+      ),
+    );
+  }
 
   void _handleLogout() {
     final l10n = AppLocalizations.of(context)!;
@@ -199,7 +212,18 @@ class _AccountPageState extends State<AccountPage> {
                     l10n.profile,
                     () {},
                   ),
-                  _buildMenuItem(Icons.badge_outlined, 'E-KTM', () {}),
+                  _buildMenuItem(
+                    Icons.badge_outlined,
+                    l10n.ektm,
+                    () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const EktmPage(),
+                        ),
+                      );
+                    },
+                  ),
                   _buildMenuItem(Icons.language, l10n.language, () {
                     showDialog(
                       context: context,
@@ -268,27 +292,33 @@ class _AccountPageState extends State<AccountPage> {
         children: [
           Row(
             children: [
-              Container(
-                padding: const EdgeInsets.all(2.5),
-                decoration: BoxDecoration(
-                  color: Colors.white, // Plain white background
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    width: 1,
-                  ),
+              GestureDetector(
+                onTap: () => _openProfileImageViewer(
+                  profileUrl,
+                  user.nama ?? l10n.profile,
                 ),
-                child: SizedBox(
-                  width: 50,
-                  height: 50,
-                  child: ClipOval(
-                    child: Image.network(
-                      profileUrl,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Icon(
-                        Icons.person,
-                        color: AppColors.primary,
-                        size: 30,
+                child: Container(
+                  padding: const EdgeInsets.all(2.5),
+                  decoration: BoxDecoration(
+                    color: Colors.white, // Plain white background
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: AppColors.primary.withValues(alpha: 0.1),
+                      width: 1,
+                    ),
+                  ),
+                  child: SizedBox(
+                    width: 50,
+                    height: 50,
+                    child: ClipOval(
+                      child: Image.network(
+                        profileUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => const Icon(
+                          Icons.person,
+                          color: AppColors.primary,
+                          size: 30,
+                        ),
                       ),
                     ),
                   ),

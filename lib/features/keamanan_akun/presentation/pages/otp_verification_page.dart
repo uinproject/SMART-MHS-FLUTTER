@@ -13,11 +13,15 @@ import '../../../home/presentation/pages/main_page.dart';
 class OtpVerificationPage extends StatefulWidget {
   final String email;
   final int initialCountdown;
+  final bool isChangeEmail;
+  final bool isFromLogin;
 
   const OtpVerificationPage({
     super.key,
     required this.email,
     required this.initialCountdown,
+    this.isChangeEmail = false,
+    this.isFromLogin = true,
   });
 
   @override
@@ -84,7 +88,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         kdpst: user.kodePst ?? '',
         email: widget.email,
         otp: _otpController.text,
-
+        ganti: widget.isChangeEmail ? 'okganti' : null,
       );
 
       if (response != null) {
@@ -92,6 +96,7 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
         final String message = response['message'] ?? '';
 
         if (success) {
+          await _sessionManager.updateEmail(widget.email);
           await _sessionManager.setEmailVerified(true);
           if (!mounted) return;
           _showSuccessDialog(message);
@@ -189,12 +194,18 @@ class _OtpVerificationPageState extends State<OtpVerificationPage> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () {
-                    final navigator = Navigator.of(context, rootNavigator: true);
-                    Navigator.pop(context);
-                    navigator.pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) => const MainPage()),
-                      (route) => false,
-                    );
+                    if (widget.isChangeEmail || !widget.isFromLogin) {
+                      // Pop dialog, then pop OTP page back to EmailVerificationPage with result=true
+                      Navigator.pop(context); // close dialog
+                      Navigator.pop(this.context, true); // pop OTP page with result
+                    } else {
+                      final navigator = Navigator.of(context, rootNavigator: true);
+                      Navigator.pop(context);
+                      navigator.pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => const MainPage()),
+                        (route) => false,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,

@@ -2739,6 +2739,114 @@ abstract class AppLocalizations {
   /// In id, this message translates to:
   /// **'Login Pertama'**
   String get firstLogin;
+
+  /// No description provided for @emailAccount.
+  ///
+  /// In id, this message translates to:
+  /// **'Akun Email'**
+  String get emailAccount;
+
+  /// No description provided for @emailAccountSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kelola dan amankan alamat email yang terhubung'**
+  String get emailAccountSubtitle;
+
+  /// No description provided for @verifiedEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Email Terverifikasi'**
+  String get verifiedEmail;
+
+  /// No description provided for @verifiedEmailDesc.
+  ///
+  /// In id, this message translates to:
+  /// **'Alamat email ini aktif dan digunakan untuk menerima notifikasi serta pemulihan akun Anda.'**
+  String get verifiedEmailDesc;
+
+  /// No description provided for @verified.
+  ///
+  /// In id, this message translates to:
+  /// **'Terverifikasi'**
+  String get verified;
+
+  /// No description provided for @changeEmail.
+  ///
+  /// In id, this message translates to:
+  /// **'Ubah Alamat Email'**
+  String get changeEmail;
+
+  /// No description provided for @changeEmailSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Ganti dengan alamat email baru yang aktif'**
+  String get changeEmailSubtitle;
+
+  /// No description provided for @emailVerificationSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Amankan akun Anda dengan menghubungkan email'**
+  String get emailVerificationSubtitle;
+
+  /// No description provided for @enterNewEmailInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Masukkan alamat email baru Anda untuk menerima kode verifikasi OTP'**
+  String get enterNewEmailInstruction;
+
+  /// No description provided for @ektm.
+  ///
+  /// In id, this message translates to:
+  /// **'E-KTM'**
+  String get ektm;
+
+  /// No description provided for @ektmSubtitle.
+  ///
+  /// In id, this message translates to:
+  /// **'Kartu Tanda Mahasiswa Elektronik'**
+  String get ektmSubtitle;
+
+  /// No description provided for @qrCode.
+  ///
+  /// In id, this message translates to:
+  /// **'QR Code'**
+  String get qrCode;
+
+  /// No description provided for @barcode.
+  ///
+  /// In id, this message translates to:
+  /// **'Barcode'**
+  String get barcode;
+
+  /// No description provided for @useQrInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan QR Code Diatas Hanya Untuk Keperluan Akademik'**
+  String get useQrInstruction;
+
+  /// No description provided for @useBarcodeInstruction.
+  ///
+  /// In id, this message translates to:
+  /// **'Gunakan Barcode Diatas Hanya Untuk Keperluan Akademik'**
+  String get useBarcodeInstruction;
+
+  /// No description provided for @failedLoadKtmPhoto.
+  ///
+  /// In id, this message translates to:
+  /// **'Foto EKTM gagal dimuat, mungkin kamu belum pernah mengunggah foto melalui aplikasi SIAKAD'**
+  String get failedLoadKtmPhoto;
+
+  /// No description provided for @failedConnectAcademicServer.
+  ///
+  /// In id, this message translates to:
+  /// **'Gagal terhubung dengan server akademik, EKTM yang ditampilkan mungkin tidak sesuai'**
+  String get failedConnectAcademicServer;
+
+  /// No description provided for @facultyPrefix.
+  ///
+  /// In id, this message translates to:
+  /// **'FAKULTAS'**
+  String get facultyPrefix;
 }
 
 class _AppLocalizationsDelegate

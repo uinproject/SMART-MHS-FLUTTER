@@ -1402,4 +1402,66 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get firstLogin => 'أول تسجيل دخول';
+
+  @override
+  String get emailAccount => 'حساب البريد الإلكتروني';
+
+  @override
+  String get emailAccountSubtitle =>
+      'إدارة وحماية عنوان البريد الإلكتروني المتصل';
+
+  @override
+  String get verifiedEmail => 'البريد الإلكتروني الموثق';
+
+  @override
+  String get verifiedEmailDesc =>
+      'عنوان البريد الإلكتروني هذا نشط ويستخدم لتلقي الإشعارات واسترداد الحساب.';
+
+  @override
+  String get verified => 'تم التحقق';
+
+  @override
+  String get changeEmail => 'تغيير عنوان البريد الإلكتروني';
+
+  @override
+  String get changeEmailSubtitle => 'استبدله بعنوان بريد إلكتروني جديد نشط';
+
+  @override
+  String get emailVerificationSubtitle =>
+      'قم بحماية حسابك عن طريق ربط بريدك الإلكتروني';
+
+  @override
+  String get enterNewEmailInstruction =>
+      'أدخل عنوان بريدك الإلكتروني الجديد لتلقي رمز التحقق OTP';
+
+  @override
+  String get ektm => 'البطاقة الجامعية الإلكترونية';
+
+  @override
+  String get ektmSubtitle => 'بطاقة الهوية الجامعية الإلكترونية';
+
+  @override
+  String get qrCode => 'رمز الاستجابة السريعة (QR)';
+
+  @override
+  String get barcode => 'الباركود';
+
+  @override
+  String get useQrInstruction =>
+      'استخدم رمز الاستجابة السريعة أعلاه للأغراض الأكاديمية فقط';
+
+  @override
+  String get useBarcodeInstruction =>
+      'استخدم الباركود أعلاه للأغراض الأكاديمية فقط';
+
+  @override
+  String get failedLoadKtmPhoto =>
+      'فشل تحميل صورة البطاقة، ربما لم تقم برفع صورة عبر تطبيق سياكاد بعد';
+
+  @override
+  String get failedConnectAcademicServer =>
+      'فشل الاتصال بالخادم الأكاديمي، قد لا تكون البطاقة المعروضة دقيقة';
+
+  @override
+  String get facultyPrefix => 'كلية';
 }

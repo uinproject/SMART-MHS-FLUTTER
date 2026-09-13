@@ -7,7 +7,7 @@ import '../../../../core/network/api_service.dart';
 import '../../../../core/storage/session_manager.dart';
 import '../../../../core/utils/device_utils.dart';
 import '../../../../core/utils/app_notifications.dart';
-import 'email_verification_page.dart';
+import '../../../keamanan_akun/presentation/pages/email_verification_page.dart';
 import 'forgot_password_page.dart';
 import '../../../account/presentation/widgets/language_selector_dialog.dart';
 import '../../../home/presentation/pages/main_page.dart';
