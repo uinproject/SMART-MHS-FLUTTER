@@ -62,7 +62,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Smart MHS',
+      title: 'Smart Student',
       debugShowCheckedModeBanner: false,
       theme: _locale.languageCode == 'ar' 
         ? AppTheme.lightTheme.copyWith(

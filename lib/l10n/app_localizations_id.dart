@@ -9,7 +9,7 @@ class AppLocalizationsId extends AppLocalizations {
   AppLocalizationsId([String locale = 'id']) : super(locale);
 
   @override
-  String get appTitle => 'SMART Mahasiswa';
+  String get appTitle => 'Smart Student';
 
   @override
   String get appDesc => 'Sistem Informasi Akademik Mahasiswa';
