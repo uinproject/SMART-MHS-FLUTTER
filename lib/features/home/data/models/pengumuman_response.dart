@@ -23,6 +23,17 @@ class PengumumanResponse {
     this.data,
   });
 
+  Map<String, dynamic> toJson() {
+    return {
+      'success': success,
+      'message': message,
+      'pesanpenting': pesanPenting,
+      'aksipesan': aksiPesan,
+      'cekeval': cekEval,
+      'data': data?.map((x) => x.toJson()).toList(),
+    };
+  }
+
   factory PengumumanResponse.fromJson(Map<String, dynamic> json) {
     return PengumumanResponse(
       success: json['success'] ?? false,
@@ -78,6 +89,18 @@ class PengumumanData {
     required this.publisher,
     required this.cekEval,
   });
+
+  Map<String, dynamic> toJson() {
+    return {
+      'judul': judul,
+      'linkpicture': linkPicture,
+      'isi': isi,
+      'tanggal': tanggal,
+      'kategori': kategori,
+      'publisher': publisher,
+      'cekeval': cekEval,
+    };
+  }
 
   factory PengumumanData.fromJson(Map<String, dynamic> json) {
     return PengumumanData(

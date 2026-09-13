@@ -546,6 +546,8 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
                   children: [
                     Text(
                       gregStr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 13,
                         color: Colors.white70,
@@ -555,6 +557,8 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
                     const SizedBox(height: 3),
                     Text(
                       hijriStr,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 15,
                         color: Color(0xFFFBBF24), // Gold accent
@@ -607,37 +611,46 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    l10n.nextPrayer,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.white70,
-                      fontWeight: FontWeight.w500,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.nextPrayer,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    nextPrayerLabel,
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                    const SizedBox(height: 4),
+                    Text(
+                      nextPrayerLabel,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    nextPrayerTime,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFFFBBF24),
+                    const SizedBox(height: 4),
+                    Text(
+                      nextPrayerTime,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFFBBF24),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(width: 12),
               // Clean digital countdown display
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
@@ -814,6 +827,8 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
                   children: [
                     Text(
                       l10n.fastingSchedule,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
@@ -822,6 +837,8 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
                     ),
                     Text(
                       fastingName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: const TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.bold,
@@ -997,14 +1014,18 @@ class _PrayerTimePageState extends State<PrayerTimePage> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      name,
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: isNext ? FontWeight.bold : FontWeight.w600,
-                        color: isSecondary
-                            ? const Color(0xFF64748B)
-                            : const Color(0xFF1E293B),
+                    Flexible(
+                      child: Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: isNext ? FontWeight.bold : FontWeight.w600,
+                          color: isSecondary
+                              ? const Color(0xFF64748B)
+                              : const Color(0xFF1E293B),
+                        ),
                       ),
                     ),
                     if (isNext) ...[

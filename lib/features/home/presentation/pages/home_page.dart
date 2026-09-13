@@ -9,7 +9,9 @@ import '../../../auth/data/models/login_data.dart';
 import '../widgets/home_header.dart';
 import '../widgets/main_menu_grid.dart';
 import '../widgets/announcement_carousel.dart';
+import '../widgets/announcement_shimmer.dart';
 import '../../data/models/pengumuman_response.dart';
+import '../../data/storage/home_cache_storage.dart';
 import 'package:smartmahsiswaflutter/features/auth/presentation/pages/login_screen.dart';
 import 'package:smartmahsiswaflutter/features/edom/presentation/pages/edom_semesters_page.dart';
 import '../../../../core/utils/device_utils.dart';
@@ -42,26 +44,56 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
+    _loadCachedData();
     _loadData(isRefresh: false);
+  }
+
+  /// Loads cached pengumuman immediately so the UI is responsive even offline
+  Future<void> _loadCachedData() async {
+    final user = _sessionManager.getUser();
+    final cached = await HomeCacheStorage.loadPengumuman(user?.nim);
+    if (cached != null && mounted) {
+      setState(() {
+        _pengumuman = cached;
+        _isLoading = false;
+      });
+    }
   }
 
   Future<void> _loadData({bool isRefresh = false}) async {
     if (!mounted) return;
-    setState(() => _isLoading = true);
+    if (_pengumuman == null) {
+      setState(() => _isLoading = true);
+    }
     try {
       final user = _sessionManager.getUser();
       if (user != null) {
+        // Fallback: load cache if _pengumuman is still null
+        if (_pengumuman == null) {
+          final cached = await HomeCacheStorage.loadPengumuman(user.nim);
+          if (cached != null && mounted) {
+            setState(() {
+              _pengumuman = cached;
+              _isLoading = false;
+            });
+          }
+        }
+
         final bool shouldRefresh = isRefresh || !_sessionManager.isJustLoggedIn;
         if (shouldRefresh) {
-          final deviceId = await DeviceUtils.getDeviceId();
+          try {
+            final deviceId = await DeviceUtils.getDeviceId();
 
-          final updatedUser = await _apiService.refreshSession(
-            nim: user.nim ?? '',
-            deviceId: deviceId,
-          );
+            final updatedUser = await _apiService.refreshSession(
+              nim: user.nim ?? '',
+              deviceId: deviceId,
+            );
 
-          if (updatedUser != null) {
-            await _sessionManager.saveUser(updatedUser);
+            if (updatedUser != null) {
+              await _sessionManager.saveUser(updatedUser);
+            }
+          } catch (e) {
+            debugPrint('[HomePage] refreshSession error: $e');
           }
         }
         _sessionManager.isJustLoggedIn = false;
@@ -73,9 +105,16 @@ class _HomePageState extends State<HomePage>
           kodePst: user.kodePst,
         );
 
+        if (pengumuman != null) {
+          // Cache pengumuman penting and slider data for offline use
+          await HomeCacheStorage.savePengumuman(user.nim, pengumuman);
+        }
+
         if (mounted) {
           setState(() {
-            _pengumuman = pengumuman;
+            if (pengumuman != null) {
+              _pengumuman = pengumuman;
+            }
             _isLoading = false;
           });
 
@@ -101,7 +140,20 @@ class _HomePageState extends State<HomePage>
         (route) => false,
       );
     } catch (e) {
-      if (mounted) setState(() => _isLoading = false);
+      debugPrint('[HomePage] Network error loading pengumuman: $e');
+      if (mounted) {
+        // Fallback to cache if network fails
+        if (_pengumuman == null) {
+          final user = _sessionManager.getUser();
+          final cached = await HomeCacheStorage.loadPengumuman(user?.nim);
+          if (cached != null) {
+            setState(() {
+              _pengumuman = cached;
+            });
+          }
+        }
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -259,19 +311,16 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             const SliverToBoxAdapter(child: MainMenuGrid()),
-            if (_isLoading)
+            if (_isLoading &&
+                (_pengumuman?.data == null || _pengumuman!.data!.isEmpty))
               const SliverToBoxAdapter(
-                child: Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: CircularProgressIndicator(),
-                  ),
-                ),
+                child: AnnouncementShimmer(),
               )
-            else
+            else if (_pengumuman?.data != null &&
+                _pengumuman!.data!.isNotEmpty)
               SliverToBoxAdapter(
                 child: AnnouncementCarousel(
-                  announcements: _pengumuman?.data ?? [],
+                  announcements: _pengumuman!.data!,
                 ),
               ),
             const SliverPadding(padding: EdgeInsets.only(bottom: 80)),

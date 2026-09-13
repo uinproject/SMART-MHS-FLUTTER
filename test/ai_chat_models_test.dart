@@ -1,10 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartmahsiswaflutter/features/helpdesk/data/models/ai_chat_message.dart';
 import 'package:smartmahsiswaflutter/features/helpdesk/data/models/ai_chat_response.dart';
 import 'package:smartmahsiswaflutter/features/helpdesk/data/models/ai_feedback_response.dart';
 import 'package:smartmahsiswaflutter/features/helpdesk/data/storage/ai_chat_storage.dart';
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('AiChatResponse Tests', () {
     test('parse successful regular response', () {
       final json = {
@@ -110,24 +117,9 @@ void main() {
       expect(sessionId.length, '14118431-20260912'.length);
     });
 
-    test('isSessionValid returns true for today session', () {
-      final sessionId = AiChatStorage.generateTodaySessionId('14118431');
-      expect(AiChatStorage.isSessionValid(sessionId), true);
-    });
-
-    test('isSessionValid returns false for expired session older than 2 days', () {
-      expect(AiChatStorage.isSessionValid('14118431-20200101'), false);
-    });
-
-    test('getSessionExpiry calculates next day 23:59:59', () {
-      final expiry = AiChatStorage.getSessionExpiry('14118431-20260912');
-      expect(expiry, isNotNull);
-      expect(expiry!.year, 2026);
-      expect(expiry.month, 9);
-      expect(expiry.day, 13);
-      expect(expiry.hour, 23);
-      expect(expiry.minute, 59);
-      expect(expiry.second, 59);
+    test('isSessionExpired returns false for fresh session without prior chat', () async {
+      final isExpired = await AiChatStorage.isSessionExpired('14118431');
+      expect(isExpired, false);
     });
   });
 }

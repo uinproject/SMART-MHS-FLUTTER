@@ -20,7 +20,7 @@ class AiChatPage extends StatefulWidget {
   State<AiChatPage> createState() => _AiChatPageState();
 }
 
-class _AiChatPageState extends State<AiChatPage> {
+class _AiChatPageState extends State<AiChatPage> with WidgetsBindingObserver {
   final _sessionManager = SessionManager();
   final _chatService = AiChatService();
   final _textController = TextEditingController();
@@ -35,15 +35,34 @@ class _AiChatPageState extends State<AiChatPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initializeChat();
   }
 
   @override
   void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
     _processingTimer?.cancel();
     _textController.dispose();
     _scrollController.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _checkSessionExpiration();
+    }
+  }
+
+  Future<void> _checkSessionExpiration() async {
+    final user = _sessionManager.getUser();
+    final nim = user?.nim ?? 'guest';
+    final expired = await AiChatStorage.isSessionExpired(nim);
+    if (expired && mounted) {
+      debugPrint('[AiChatPage] Session expired (>24h since last chat), resetting chat.');
+      _initializeChat();
+    }
   }
 
   Future<void> _initializeChat() async {
@@ -53,7 +72,7 @@ class _AiChatPageState extends State<AiChatPage> {
     // Clean up expired sessions in background
     AiChatStorage.cleanExpiredSessions();
 
-    // Get active session ID (carries over if valid within next-day 23:59)
+    // Get active session ID (persists if within 24h of last chat, otherwise fresh)
     _sessionId = await AiChatStorage.getOrInitActiveSessionId(nim);
 
     // Load saved messages
@@ -131,6 +150,16 @@ class _AiChatPageState extends State<AiChatPage> {
     final namaFakultas = user?.fakultas ?? '';
     final kodeProdi = user?.kodePst ?? '';
     final namaProdi = user?.programStudi ?? '';
+
+    // Verify session validity (must be within 24h of last chat)
+    // If expired, clear messages and adopt new session ID with current date
+    final activeSessionId = await AiChatStorage.getOrInitActiveSessionId(nim);
+    if (activeSessionId != _sessionId) {
+      setState(() {
+        _sessionId = activeSessionId;
+        _messages.clear();
+      });
+    }
 
     final userMessage = AiChatMessage(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
